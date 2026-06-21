@@ -1,6 +1,6 @@
 services:
   lva-tldr:
-    image: ghcr.io/martin-projekte1/lva-tldr:latest
+    image: ghcr.io/martinreisinger/lva-tldr:latest
     container_name: lva-tldr
     restart: unless-stopped
     environment:
