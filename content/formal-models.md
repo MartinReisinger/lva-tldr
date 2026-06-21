@@ -427,7 +427,7 @@ THEOREM Spec1 => Abstract!Spec
 
 ### Fairness 
 - **No Fairness:**
-  - Use this when the action is optional for the liveness (aka. progress)
+  - Use this when the action is optional for the liveness.
   - An external event that is not required to occur.
 - **Weak fairness:**
   - If an action is continuously enabled, it must eventually fire.
