@@ -418,15 +418,14 @@ THEOREM Spec1 => Abstract!Spec
 | `<>P`    | eventually `P`               | liveness       |
 | `P ~> Q` | whenever `P`, eventually `Q` | leads-to       |
 
-#### Stuttering:
+#### Definitions:
 
-- An enabled action may be ignored forever.
+- **Stuttering:** An enabled action may be ignored forever.
+- **Fairness:** properties are required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
+- **Liveness:** is the guarantee that progress eventually happens.
 
-### Fairness:
 
-- Fairness properties are required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
-- Liveness is the guarantee that progress eventually happens.
-
+### Fairness 
 - **No Fairness:**
   - Use this when the action is optional for the liveness (aka. progress), for example an external event that is not required to occur.
 - **Weak fairness:**
