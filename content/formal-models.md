@@ -421,17 +421,18 @@ THEOREM Spec1 => Abstract!Spec
 #### Definitions:
 
 - **Stuttering:** An enabled action may be ignored forever.
-- **Fairness:** properties are required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
-- **Liveness:** is the guarantee that progress eventually happens.
+- **Fairness:** May be required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
+- **Liveness:** Is the guarantee that progress eventually happens.
 
 
 ### Fairness 
 - **No Fairness:**
-  - Use this when the action is optional for the liveness (aka. progress), for example an external event that is not required to occur.
+  - Use this when the action is optional for the liveness (aka. progress)
+  - An external event that is not required to occur.
 - **Weak fairness:**
-  - If an action is coniniously enabled, it must eventually fire.
+  - If an action is continuously enabled, it must eventually fire.
   - It is not enough when the precondition keeps becoming false and true.
-- **Strong fairness :**
+- **Strong fairness:**
   - If an action is infinitely often enabled, it must eventually fire.
   - Use if the action flickers between false and true.
 
