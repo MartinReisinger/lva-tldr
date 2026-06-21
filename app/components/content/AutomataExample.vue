@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type Variant = 'basics' | 'power' | 'oracle' | 'optimized' | 'complement' | 'product'
+type Variant = 'basics' | 'power' | 'oracle' | 'oracle-optimized' | 'complement' | 'product'
 
 const props = defineProps<{ variant: Variant }>()
 const basicsDeterministic = ref(true)
@@ -12,6 +12,7 @@ const titles: Record<string, string> = {
   basics: 'Example: deterministic and complete',
   power: 'Example: power automaton',
   oracle: 'Example: oracle labels',
+  'oracle-optimized': 'Example: optimized oracle',
   complement: 'Example: complement',
   product: 'Example: product states',
 }
