@@ -5,6 +5,8 @@ const props = defineProps<{ variant: Variant }>()
 const basicsDeterministic = ref(true)
 const basicsComplete = ref(true)
 const complementTransformed = ref(false)
+const oracleTransformed = ref(false)
+const oracleOptimized = ref(false)
 
 const titles: Record<string, string> = {
   basics: 'Example: deterministic and complete',
@@ -13,7 +15,6 @@ const titles: Record<string, string> = {
   complement: 'Example: complement',
   product: 'Example: product states',
 }
-const oracleOptimized = ref(false)
 </script>
 
 <template>
@@ -204,8 +205,8 @@ const oracleOptimized = ref(false)
     <!-- ORACLE -->
     <template v-else-if="variant === 'oracle'">
       <div class="mb-4 flex gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
-        <UButton size="xs" :variant="!oracleOptimized ? 'solid' : 'ghost'" label="Original" @click="oracleOptimized = false" />
-        <UButton size="xs" :variant="oracleOptimized ? 'solid' : 'ghost'" label="Optimized" @click="oracleOptimized = true" />
+        <UButton size="xs" :variant="!oracleTransformed ? 'solid' : 'ghost'" label="Original" @click="oracleTransformed = false" />
+        <UButton size="xs" :variant="oracleTransformed ? 'solid' : 'ghost'" label="Oracle" @click="oracleTransformed = true" />
       </div>
 
       <div class="flex justify-center">
@@ -213,13 +214,58 @@ const oracleOptimized = ref(false)
           <defs><marker id="arrow-oracle" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
           <path d="M20 75 L55 75" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
           
-          <!-- Merge a/{B} and b/{B} into one straight angled arrow -->
-          <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-          <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? 'B' : 0 }}, b / {{ !oracleOptimized ? 'B' : 0 }}</text>
+          <template v-if="!oracleTransformed">
+            <!-- Non-deterministic Original -->
+            <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a, b</text>
+            
+            <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+            <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a</text>
+          </template>
+          <template v-else>
+            <!-- Unoptimized Oracle -->
+            <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / B, b / B</text>
+            
+            <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+            <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / C</text>
+          </template>
           
-          <!-- a/{C} as a straight angled arrow downwards -->
-          <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-          <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? 'C' : 1 }}</text>
+          <g transform="translate(80 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
+          <g transform="translate(260 40)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
+          <g transform="translate(260 110)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">C</text></g>
+        </svg>
+      </div>
+    </template>
+
+    <!-- OPTIMIZED ORACLE -->
+    <template v-else-if="variant === 'oracle-optimized'">
+      <div class="mb-4 flex gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
+        <UButton size="xs" :variant="!oracleOptimized ? 'solid' : 'ghost'" label="Unoptimized" @click="oracleOptimized = false" />
+        <UButton size="xs" :variant="oracleOptimized ? 'solid' : 'ghost'" label="Optimized" @click="oracleOptimized = true" />
+      </div>
+
+      <div class="flex justify-center">
+        <svg viewBox="0 -10 350 160" class="w-full max-w-md text-highlighted" role="img" aria-label="Optimized Oracle Automaton">
+          <defs><marker id="arrow-opt" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+          <path d="M20 75 L55 75" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
+          
+          <template v-if="!oracleOptimized">
+            <!-- Unoptimized Oracle -->
+            <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / B, b / B</text>
+            
+            <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
+            <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / C</text>
+          </template>
+          <template v-else>
+            <!-- Optimized Oracle -->
+            <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / 0, b / 0</text>
+            
+            <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
+            <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / 1</text>
+          </template>
           
           <g transform="translate(80 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
           <g transform="translate(260 40)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
