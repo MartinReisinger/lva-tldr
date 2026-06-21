@@ -1,3 +1,9 @@
+---
+title: Formal Models
+description: Dense summary of the most important concepts.
+order: 1
+---
+
 # Formal Models TL;DR
 
 ## Automata
@@ -30,8 +36,8 @@
 
 #### Optimized oracle automaton
 
-- Advantage: linear state space; deterministic; smaller alphabet than unoptimized
-- Disadvantage: still different alphabet; can still be incomplete if original was incomplte; needs external oracle for choices
+- Advantage: linear state space; deterministic & complete (if original has only 1 initial state); smaller alphabet than unoptimized
+- Disadvantage: still different alphabet; needs external oracle for choices
 - TODO: minimize oracle alphabet by mapping transition targets to the smallest possible set of numeric indices; n has to be minimal on a per-state and per-alphabet-symbol level
 
 #### Complement automaton
@@ -75,19 +81,19 @@
 
 ## Subset checking
 
-$$
+```math
 L(A_1) \subseteq L(A_2)
 \iff
 L(A_1) \cap \overline{L(A_2)} = \varnothing
-$$
+```
 
-In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ and rejected by $A_2$.
+In words: A1 is a subset of A2 exactly when no word is accepted by A1 and rejected by A2.
 
-1. Build the complete deterministic power automaton $P(A_2)$.
-2. Complement it to obtain $C(P(A_2))$.
-3. Build the product automaton $A_1 \times C(P(A_2))$.
-   - **No accepting state is reachable:** $L(A_1) \subseteq L(A_2)$.
-   - **An accepting state is reachable:** $L(A_1) \nsubseteq L(A_2)$; the path to it gives a counterexample.
+1. Build the complete deterministic power automaton P(A2).
+2. Complement it to obtain C(P(A2)).
+3. Build the product automaton A1 × C(P(A2)).
+   - **No accepting state is reachable:** L(A1) ⊆ L(A2).
+   - **An accepting state is reachable:** L(A1) ⊈ L(A2); the path to it gives a counterexample.
 
 ---
 
@@ -97,14 +103,14 @@ In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ a
 
 #### Markings
 
-A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
+A CEN with |C| conditions has 2^|C| possible markings.
 
 - Each event consumes exactly 1 token
 - Each node can hold exactly 1 token
 
 ### Conditions
 
-- **Precondition $G^{-1}$ of e**: What needs to hold to make a transition possible (incoming arrows).
+- **Precondition G^-1 of e**: What needs to hold to make a transition possible (incoming arrows).
 - **Postcondition G of e**: What holds after a transition happened (outgoing arrows).
 
 ---
@@ -141,37 +147,37 @@ Just a graph of nodes (=states) whose directed edges (=state transitions) have l
 | `P`, `Q`, `R` | process    | A behavior that may perform actions.                               |
 | `a.P`         | prefix     | Perform `a`, then continue as `P`.                                 |
 | `P + Q`       | choice     | Choose either `P` or `Q`, then discard the other.                  |
-| `P \|\| Q`    | parallel   | Do `P` and `Q` simultaneously; if one is not affected, it is kept. |
+| `P || Q`    | parallel   | Do `P` and `Q` simultaneously; if one is not affected, it is kept. |
 | `Σ(P)`        | alphabet   | Set of all actions that can occur in `P`.                          |
 | `P -a-> Q`    | transition | `P` can perform `a` and become `Q`.                                |
 
 #### Prefix
 
-$$
+```math
 a.Q \xrightarrow{a} Q
-$$
+```
 
 #### Choice
 
 Choose to perform the action on one side; the other side can then be discarded.
 
-$$
+```math
 \begin{aligned}
 a.P + b.Q &\xrightarrow{a} P \\
 a.P + b.Q &\xrightarrow{b} Q
 \end{aligned}
-$$
+```
 
 #### Parallel
 
 Do the same action on the right and left (a.k.a. in parallel); if one is not affected, it stays.
 
-$$
+```math
 \begin{aligned}
 a.P \parallel b.Q &\xrightarrow{a} P \parallel b.Q \\
 a.P \parallel b.Q &\xrightarrow{b} a.P \parallel Q
 \end{aligned}
-$$
+```
 
 ### Composition
 
@@ -179,7 +185,7 @@ $$
 
 Just a set of all action symbols of the given process.
 
-$$
+```math
 \begin{aligned}
 P &= a.b.b.P & \Sigma(P) &= \{a,b\} \\
 Q &= a.R \parallel c.Q & \Sigma(Q) &= \{a,c\} \\
@@ -189,18 +195,18 @@ S &= a.P + c.R & \Sigma(S) &= \{a,b,c\} \\
 = \{a,b\}\cup\{a,c\}
 = \{a,b,c\}
 \end{aligned}
-$$
+```
 
 #### Synchronization set
 
 Forces all actions in it to happen in lockstep. If `P` and `Q` share `a`, this makes it a rendezvous point, meaning `a` can never happen in only one process. All other actions, such as `b` and `c`, can interleave freely.
 
-$$
+```math
 \Theta_{pq}
 = \Sigma(P)\cap\Sigma(Q)
 = \{a,b\}\cap\{a,c\}
 = \{a\}
-$$
+```
 
 ### Specifications
 
