@@ -70,6 +70,29 @@ test('shows outputs on every Moore state', async ({ page }) => {
   await expect(page.getByText('q1 / 1', { exact: true })).toBeVisible()
 })
 
+test('shows the focused TLA+ examples', async ({ page }) => {
+  await page.goto('/formal-models')
+  await waitForHydration(page)
+
+  const tlaCode = page.locator('pre.shiki').filter({ hasText: 'MODULE Vending' })
+  await expect(tlaCode).toBeVisible()
+  const tokenColors = await tlaCode.locator('code span').evaluateAll((tokens) =>
+    [...new Set(tokens.map((token) => getComputedStyle(token).color))],
+  )
+  expect(tokenColors.length).toBeGreaterThan(1)
+
+  await page.getByRole('button', { name: 'Example: correct a TLA+ action' }).click()
+  await expect(page.getByText('coins becomes 1; brewing keeps its value.')).toBeVisible()
+  await page.getByRole('button', { name: 'Missing UNCHANGED' }).click()
+  await expect(page.getByText('brewing is neither updated nor declared UNCHANGED.')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Example: TLC checks and fairness' }).click()
+  await page.getByRole('button', { name: 'Reachability' }).click()
+  await expect(page.getByText('TLC violates this invariant with the trace InsertCoin → Brew.')).toBeVisible()
+  await page.getByRole('button', { name: 'Fairness' }).click()
+  await expect(page.getByText('If Brew remains enabled, stuttering cannot postpone it forever.')).toBeVisible()
+})
+
 test('persists a manual color-mode change', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' })
   await page.goto('/formal-models')

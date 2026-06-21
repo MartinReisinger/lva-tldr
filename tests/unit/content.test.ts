@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const content = readFileSync('content/formal-models.md', 'utf8')
+const nuxtConfig = readFileSync('nuxt.config.ts', 'utf8')
 
 describe('Formal Models content', () => {
   it('contains metadata and no print-only spacing', () => {
@@ -30,10 +31,24 @@ describe('Formal Models content', () => {
       'moore', 'mealy', 'subset', 'markings', 'cen', 'ptn', 'lts',
       'combined', 'alphabet', 'synchronization',
       'satisfiable', 'underspecification', 'operators',
+      'action', 'checking',
     ]
 
     for (const variant of variants) {
       expect(content).toContain(`variant="${variant}"`)
     }
+  })
+
+  it('keeps TLA+ focused on the exercise syntax', () => {
+    expect(content).toContain('## TLA+')
+    expect(content).toContain('### Specification')
+    expect(content).toContain('### Model checking')
+    expect(content).toContain('### Temporal behavior')
+    expect(content).toContain("Spec == Init /\\ [][Next]_vars")
+    expect(content).toContain('WF_vars(A)')
+    expect(content).toContain('SF_vars(A)')
+    expect(content).not.toContain('For the exam')
+    expect(content.match(/^```c$/gm)).toHaveLength(3)
+    expect(nuxtConfig).toContain('highlight: { langs: ["c"] }')
   })
 })

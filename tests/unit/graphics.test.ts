@@ -7,6 +7,7 @@ const componentPaths = [
   'app/components/content/MachineExample.vue',
   'app/components/content/NetExample.vue',
   'app/components/content/ProcessExample.vue',
+  'app/components/content/TlaExample.vue',
 ]
 
 describe('graph styling', () => {

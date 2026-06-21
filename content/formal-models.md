@@ -129,7 +129,7 @@ In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ a
 3. Build the product automaton $A_1 \times C(P(A_2))$.
    - **No accepting state is reachable:** $L(A_1) \subseteq L(A_2)$.
    - **An accepting state is reachable:** $L(A_1) \nsubseteq L(A_2)$; the path to it gives a counterexample.
-::
+   ::
 
 ---
 
@@ -341,3 +341,113 @@ $$
 | `AF φ`  | `¬EG(¬φ)`  |
 | `EG φ`  | `¬AF(¬φ)`  |
 | `EF φ`  | `¬AG(¬φ)`  |
+
+---
+
+## TLA+
+
+TLA+ describes a state machine with logic: variables are the state, actions are the transitions.
+
+### Specification
+
+#### Syntax
+
+| Syntax | Meaning |
+| --- | --- |
+| `/\`, `\/` | and, or |
+| `x` | value in the current state (eg. precondition) |
+| `x'` | value in the next state (eg. postcondition) |
+| `UNCHANGED x` | shorthand for `x' = x` |
+| `Init` | allowed initial states |
+| `Next` | disjunction of all actions |
+
+#### Structure
+
+```c
+---- MODULE Vending ----
+EXTENDS Naturals
+
+VARIABLES coins, brewing
+vars == <<coins, brewing>>
+
+Init == /\ coins = 0
+        /\ brewing = FALSE
+
+InsertCoin == /\ coins = 0
+              /\ coins' = 1
+              /\ UNCHANGED brewing
+
+Next == \/ InsertCoin
+
+Spec == Init /\ [][Next]_vars
+```
+
+::tla-example{variant="action"}
+::
+
+### Model checking
+
+#### Invariants and reachability
+
+```c
+TypeOK == coins \in 0..1 /\ brewing \in BOOLEAN
+BrewingNotReachable == brewing = FALSE
+```
+
+- Invariant: 
+  - Must hold in every reachable state.
+
+- Reachability: 
+  - Negate the target and check it as an invariant. A violation gives the path to the target.
+
+- Counterexample: 
+  - Read the error top-to-bottom
+  - Each step shows the action and changed variables.
+
+- Deadlock: 
+  - The system is stuck because no actions in `Next` are enabled in this state.
+
+
+#### Refinement
+
+```c
+Abstract == INSTANCE Vending
+THEOREM Spec1 => Abstract!Spec
+```
+
+- A refinement adds detail but must preserve the abstract behavior.
+- Check `Spec1` and add `Abstract!Spec` under Properties; `THEOREM` alone is not run by TLC.
+- Use `INSTANCE ... WITH x <- expression` when the refined representation differs.
+- Time is explicit: use a bounded counter in a wait action. More counter values mean more states.
+
+### Temporal behavior
+
+#### Operators
+
+| Syntax | Meaning | Classification |
+| --- | --- | --- |
+| `[]P` | always `P` | safety |
+| `<>P` | eventually `P` | liveness |
+| `P ~> Q` | whenever `P`, eventually `Q` | leads-to |
+#### Stuttering:
+
+- An enabled action may be ignored forever.
+
+### Fairness:
+
+- Fairness properties are required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
+- Liveness is the guarantee that progress eventually happens.
+
+
+
+- No Fairness:
+  - Use this when the action is optional for the liveness (aka. progress), for example an external event that is not required to occur.
+- Weak fairness:
+  - If an action is coniniously enabled, it must eventually fire.
+  - It is not enough when the precondition keeps becoming false and true.
+- Strong fairness :
+  - If an action is infinitely often enabled, it must eventually fire.
+  - Use if the action flickers between false and true.
+
+::tla-example{variant="checking"}
+::
