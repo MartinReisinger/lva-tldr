@@ -77,7 +77,7 @@ const oracleOptimized = ref(false)
         <div>
           <h4 class="font-semibold text-sm mb-2">1. Original Graph</h4>
           <div class="flex justify-center">
-            <svg viewBox="0 20 400 180" class="w-full max-w-sm text-highlighted" role="img">
+            <svg viewBox="0 -20 400 210" class="w-full max-w-sm text-highlighted" role="img">
               <defs><marker id="arrow-pow0" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
               
               <!-- Init -> A -->
@@ -85,7 +85,7 @@ const oracleOptimized = ref(false)
               
               <!-- A loop (a) -->
               <path d="M110 36 C90 -10, 150 -10, 130 36" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
-              <text x="120" y="5" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+              <text x="120" y="-8" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
               <!-- A -> B (a) -->
               <path d="M145 60 L255 60" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
