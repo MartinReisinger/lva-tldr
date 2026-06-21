@@ -14,9 +14,7 @@ useSeoMeta({
     <div class="max-w-2xl">
       <p class="mb-2 text-sm font-medium text-primary">Study notes</p>
       <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">LVA TL;DR</h1>
-      <p class="mt-3 text-muted">
-        Compact references and examples for exam preparation.
-      </p>
+      <p class="mt-3 text-muted">Lehrveranstaltung war to long; didn't read.</p>
     </div>
 
     <div class="mt-8 grid gap-4 sm:grid-cols-2">
