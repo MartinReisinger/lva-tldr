@@ -6,8 +6,6 @@ order: 1
 
 # Formal Models TL;DR
 
-
-
 ## Automata
 
 5-Tuple automaton spec = {`S`tates, `I`nitial, `∑`alphabet, `F`accept, `T`ransitions}
@@ -24,7 +22,6 @@ order: 1
 
 ::automata-example{variant="basics"}
 ::
-
 
 ### Constructions
 
@@ -54,7 +51,6 @@ order: 1
 
 ::automata-example{variant="oracle-optimized"}
 ::
-
 
 #### Complement automaton
 
@@ -109,8 +105,6 @@ order: 1
 ::machine-example{variant="mealy"}
 ::
 
-
-
 ### Language relations
 
 #### Subset checking
@@ -124,12 +118,14 @@ $$
 In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ and rejected by $A_2$.
 
 ::machine-example{variant="subset"}
+
 1. Build the complete deterministic power automaton $P(A_2)$.
 2. Complement it to obtain $C(P(A_2))$.
 3. Build the product automaton $A_1 \times C(P(A_2))$.
    - **No accepting state is reachable:** $L(A_1) \subseteq L(A_2)$.
    - **An accepting state is reachable:** $L(A_1) \nsubseteq L(A_2)$; the path to it gives a counterexample.
-   ::
+
+::
 
 ---
 
@@ -149,8 +145,6 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 ::net-example{variant="markings"}
 ::
 
-
-
 ### Event semantics
 
 #### Preconditions and postconditions
@@ -163,12 +157,9 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 
 ---
 
-
 ## Place Transition Net (PTN)
 
 5-Tuple PTN spec = {`P`laces, `T`ransitions, `F`low relation, edge `W`eight mapping, Initial `M`arkings}
-
-
 
 ### Token semantics
 
@@ -185,8 +176,6 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 ::net-example{variant="ptn"}
 ::
 
-
-
 ## Labeled Transition System (LTS)
 
 Just a graph of nodes (=states) whose directed edges (=state transitions) have labels (=actions/events) that trigger them.
@@ -202,15 +191,15 @@ Just a graph of nodes (=states) whose directed edges (=state transitions) have l
 
 #### Terminology
 
-| Syntax        | Name       | Meaning                                                      |
-| ------------- | ---------- | ------------------------------------------------------------ |
-| `a`, `b`, `c` | action     | A step that can be performed.                                |
-| `P`, `Q`, `R` | process    | A behavior that may perform actions.                         |
-| `a.P`         | prefix     | Perform `a`, then continue as `P`.                           |
-| `P + Q`       | choice     | Choose either `P` or `Q`, then discard the other.            |
-| `P \|\| Q`   | parallel   | Do `P` and `Q` simultaneously; if one is not affected, it is kept. |
-| `Σ(P)`        | alphabet   | Set of all actions that can occur in `P`.                    |
-| `P -a-> Q`    | transition | `P` can perform `a` and become `Q`.                          |
+| Syntax        | Name       | Meaning                                                            |
+| ------------- | ---------- | ------------------------------------------------------------------ |
+| `a`, `b`, `c` | action     | A step that can be performed.                                      |
+| `P`, `Q`, `R` | process    | A behavior that may perform actions.                               |
+| `a.P`         | prefix     | Perform `a`, then continue as `P`.                                 |
+| `P + Q`       | choice     | Choose either `P` or `Q`, then discard the other.                  |
+| `P \|\| Q`    | parallel   | Do `P` and `Q` simultaneously; if one is not affected, it is kept. |
+| `Σ(P)`        | alphabet   | Set of all actions that can occur in `P`.                          |
+| `P -a-> Q`    | transition | `P` can perform `a` and become `Q`.                                |
 
 #### Prefix
 
@@ -250,6 +239,7 @@ $$
 Just a set of all action symbols of the given process.
 
 ::formula-scroll
+
 $$
 \begin{aligned}
 P &= a.b.b.P & \Sigma(P) &= \{a,b\} \\
@@ -261,6 +251,7 @@ S &= a.P + c.R & \Sigma(S) &= \{a,b,c\} \\
 = \{a,b,c\}
 \end{aligned}
 $$
+
 ::
 
 ::process-example{variant="alphabet"}
@@ -297,8 +288,6 @@ $$
 
 ::process-example{variant="underspecification"}
 ::
-
-
 
 ---
 
@@ -352,18 +341,18 @@ TLA+ describes a state machine with logic: variables are the state, actions are 
 
 #### Syntax
 
-| Syntax | Meaning |
-| --- | --- |
-| `/\`, `\/` | and, or |
-| `x` | value in the current state (eg. precondition) |
-| `x'` | value in the next state (eg. postcondition) |
-| `UNCHANGED x` | shorthand for `x' = x` |
-| `Init` | allowed initial states |
-| `Next` | disjunction of all actions |
+| Syntax        | Meaning                                       |
+| ------------- | --------------------------------------------- |
+| `/\`, `\/`    | and, or                                       |
+| `x`           | value in the current state (eg. precondition) |
+| `x'`          | value in the next state (eg. postcondition)   |
+| `UNCHANGED x` | shorthand for `x' = x`                        |
+| `Init`        | allowed initial states                        |
+| `Next`        | disjunction of all actions                    |
 
 #### Structure
 
-```c
+```haskell
 ---- MODULE Vending ----
 EXTENDS Naturals
 
@@ -389,24 +378,23 @@ Spec == Init /\ [][Next]_vars
 
 #### Invariants and reachability
 
-```c
+```haskell
 TypeOK == coins \in 0..1 /\ brewing \in BOOLEAN
 BrewingNotReachable == brewing = FALSE
 ```
 
-- Invariant: 
+- Invariant:
   - Must hold in every reachable state.
 
-- Reachability: 
+- Reachability:
   - Negate the target and check it as an invariant. A violation gives the path to the target.
 
-- Counterexample: 
+- Counterexample:
   - Read the error top-to-bottom
   - Each step shows the action and changed variables.
 
-- Deadlock: 
+- Deadlock:
   - The system is stuck because no actions in `Next` are enabled in this state.
-
 
 #### Refinement
 
@@ -424,11 +412,12 @@ THEOREM Spec1 => Abstract!Spec
 
 #### Operators
 
-| Syntax | Meaning | Classification |
-| --- | --- | --- |
-| `[]P` | always `P` | safety |
-| `<>P` | eventually `P` | liveness |
-| `P ~> Q` | whenever `P`, eventually `Q` | leads-to |
+| Syntax   | Meaning                      | Classification |
+| -------- | ---------------------------- | -------------- |
+| `[]P`    | always `P`                   | safety         |
+| `<>P`    | eventually `P`               | liveness       |
+| `P ~> Q` | whenever `P`, eventually `Q` | leads-to       |
+
 #### Stuttering:
 
 - An enabled action may be ignored forever.
@@ -438,14 +427,12 @@ THEOREM Spec1 => Abstract!Spec
 - Fairness properties are required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
 - Liveness is the guarantee that progress eventually happens.
 
-
-
-- No Fairness:
+- **No Fairness:**
   - Use this when the action is optional for the liveness (aka. progress), for example an external event that is not required to occur.
-- Weak fairness:
+- **Weak fairness:**
   - If an action is coniniously enabled, it must eventually fire.
   - It is not enough when the precondition keeps becoming false and true.
-- Strong fairness :
+- **Strong fairness :**
   - If an action is infinitely often enabled, it must eventually fire.
   - Use if the action flickers between false and true.
 

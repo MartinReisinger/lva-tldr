@@ -19,7 +19,9 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         toc: { depth: 2, searchDepth: 2 },
-        highlight: { langs: ["c"] },
+        highlight: {
+          langs: ["c", "haskell"],
+        },
         remarkPlugins: { "remark-math": {} },
         rehypePlugins: { "rehype-katex": {} },
       },
