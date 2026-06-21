@@ -68,8 +68,8 @@ deploy/vps/compose.yml  VPS container definition
 ## Docker
 
 ```bash
-docker build -t jku-learning .
-docker run --rm -p 3000:3000 jku-learning
+docker build -t lva-tldr .
+docker run --rm -p 3000:3000 lva-tldr
 ```
 
 The production container runs the Nitro output with Node.js 24.
@@ -81,12 +81,12 @@ Pushes to `main` run type checking, tests, build, publish the image to GHCR, and
 - `SSH_HOST`
 - `SSH_PRIVATE_KEY`
 
-On the VPS, store the Compose file at `/home/deploy/jku-learning/compose.yml`. The app binds to `127.0.0.1:3009`.
+On the VPS, store the Compose file at `/home/deploy/lva-tldr/compose.yml`. The app binds to `127.0.0.1:3009`.
 
-Minimal host Caddy configuration:
+Set up a reverse proxy pointing `lva-tldr.martindev.at` to `3009` (e.g. using Caddy):
 
-```caddy
-learning.martindev.at {
+```caddyfile
+lva-tldr.martindev.at {
     reverse_proxy 127.0.0.1:3009
 }
 ```

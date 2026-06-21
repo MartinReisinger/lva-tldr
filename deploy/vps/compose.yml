@@ -1,7 +1,7 @@
 services:
-  jku-learning:
-    image: ghcr.io/martin-projekte1/jku-learning:latest
-    container_name: jku-learning
+  lva-tldr:
+    image: ghcr.io/martin-projekte1/lva-tldr:latest
+    container_name: lva-tldr
     restart: unless-stopped
     environment:
       NODE_ENV: production

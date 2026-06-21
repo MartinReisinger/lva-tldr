@@ -56,8 +56,8 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
           ssh -i ~/.ssh/deploy_key "deploy@${{ secrets.SSH_HOST }}" '
-            cd /home/deploy/jku-learning &&
-            docker compose pull &&
+            docker pull ghcr.io/martin-projekte1/lva-tldr:latest &&
+            cd /home/deploy/lva-tldr &&
             docker compose up -d &&
             docker image prune -f
           '

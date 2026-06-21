@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       meta: [
         {
           name: "description",
-          content: "Compact interactive learning notes for JKU courses.",
+          content: "Compact interactive learning notes for LVAs.",
         },
         { name: "color-scheme", content: "light dark" },
       ],
