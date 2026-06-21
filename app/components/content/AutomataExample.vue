@@ -77,25 +77,32 @@ const oracleOptimized = ref(false)
         <div>
           <h4 class="font-semibold text-sm mb-2">1. Original Graph</h4>
           <div class="flex justify-center">
-            <svg viewBox="0 0 300 200" class="w-full max-w-sm text-highlighted" role="img">
+            <svg viewBox="0 20 400 180" class="w-full max-w-sm text-highlighted" role="img">
               <defs><marker id="arrow-pow0" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
-              <path d="M20 100 L45 100" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
               
-              <path d="M60 75 C60 20 80 20 80 75" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
-              <text x="70" y="30" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+              <!-- Init -> A -->
+              <path d="M60 60 L95 60" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              
+              <!-- A loop (a) -->
+              <path d="M110 36 C90 -10, 150 -10, 130 36" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="120" y="5" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
-              <path d="M95 100 L165 100" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
-              <text x="130" y="90" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+              <!-- A -> B (a) -->
+              <path d="M145 60 L255 60" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="200" y="50" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
-              <path d="M80 120 L130 160 L180 160" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
-              <text x="130" y="150" text-anchor="middle" fill="currentColor" font-size="14">b</text>
+              <!-- A -> C (b) -->
+              <path d="M136 80 L184 140" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="150" y="115" text-anchor="middle" fill="currentColor" font-size="14">b</text>
 
-              <path d="M215 100 C240 100 240 140 215 140" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
-              <text x="240" y="125" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+              <!-- B -> C (a) -->
+              <path d="M264 80 L216 140" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="250" y="115" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
-              <g transform="translate(70 100)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
-              <g transform="translate(190 100)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
-              <g transform="translate(190 160)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">C</text></g>
+              <!-- Nodes -->
+              <g transform="translate(120 60)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
+              <g transform="translate(280 60)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
+              <g transform="translate(200 160)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">C</text></g>
             </svg>
           </div>
         </div>
