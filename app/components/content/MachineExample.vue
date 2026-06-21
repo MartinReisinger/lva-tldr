@@ -33,7 +33,7 @@ const titles: Record<Variant, string> = {
       <div class="flex justify-center">
         <svg
           viewBox="0 -10 350 160"
-          class="w-full max-w-sm text-highlighted"
+          class="graph-svg w-full max-w-sm"
           role="img"
           :aria-label="titles[variant]"
         >
@@ -93,10 +93,11 @@ const titles: Record<Variant, string> = {
               stroke-width="2"
             />
             <text y="5" text-anchor="middle" fill="currentColor" font-size="14">
-              <template v-if="!converted">
-                {{ variant === "moore" ? "q0 / 1" : "q0" }}
-              </template>
-              <template v-else>q0</template>
+              {{
+                variant === "moore"
+                  ? converted ? "q0" : "q0 / 1"
+                  : converted ? "q0 / 0" : "q0"
+              }}
             </text>
           </g>
 
@@ -108,10 +109,11 @@ const titles: Record<Variant, string> = {
               stroke-width="2"
             />
             <text y="5" text-anchor="middle" fill="currentColor" font-size="14">
-              <template v-if="!converted">q1</template>
-              <template v-else>
-                {{ variant === "moore" ? "q1" : "q1 / 1" }}
-              </template>
+              {{
+                variant === "moore"
+                  ? converted ? "q1" : "q1 / 0"
+                  : converted ? "q1 / 1" : "q1"
+              }}
             </text>
           </g>
         </svg>
@@ -125,16 +127,8 @@ const titles: Record<Variant, string> = {
       </p>
     </template>
 
-    <ol v-else class="space-y-3 text-sm">
-      <li>
-        <UBadge class="mr-2">1</UBadge>Build the complete deterministic power
-        automaton P(A2).
-      </li>
-      <li><UBadge class="mr-2">2</UBadge>Complement it to obtain C(P(A2)).</li>
-      <li>
-        <UBadge class="mr-2">3</UBadge>Build A1 × C(P(A2)); a reachable final
-        state is a counterexample.
-      </li>
-    </ol>
+    <div v-else class="text-sm">
+      <slot />
+    </div>
   </ExampleBlock>
 </template>

@@ -12,11 +12,13 @@ order: 1
 
 5-Tuple automaton spec = {`S`tates, `I`nitial, `∑`alphabet, `F`accept, `T`ransitions}
 
-### 1. Deterministic:
+### Properties
+
+#### Deterministic
 
 - At most one path per symbol
 
-### 2. Complete:
+#### Complete
 
 - At least one path per symbol
 
@@ -24,7 +26,9 @@ order: 1
 ::
 
 
-### 3. Power automaton:
+### Constructions
+
+#### Power automaton
 
 - Advantage: always deterministic & complete; same alphabet
 - Disadvantage: exponential state space
@@ -33,7 +37,7 @@ order: 1
 ::automata-example{variant="power"}
 ::
 
-### 4. Oracle automaton:
+#### Oracle automaton
 
 - Advantage: linear state space; deterministic (if original has only 1 initial state)
 - Disadvantage: can become incomplete; has a different & bigger alphabet; needs external oracle for choices
@@ -42,7 +46,7 @@ order: 1
 ::automata-example{variant="oracle"}
 ::
 
-### 5. Optimized oracle automaton:
+#### Optimized oracle automaton
 
 - Advantage: linear state space; deterministic & complete (if original has only 1 initial state); smaller alphabet than unoptimized
 - Disadvantage: still different alphabet; needs external oracle for choices
@@ -52,7 +56,7 @@ order: 1
 ::
 
 
-### 6. Complement automaton:
+#### Complement automaton
 
 - If deterministic & complete
   - Just flip the final states
@@ -66,7 +70,7 @@ order: 1
 ::automata-example{variant="complement"}
 ::
 
-### 7. Product automaton:
+#### Product automaton
 
 - TODO: make a merger of both, walking through all transitions simultaneously
   - A transition can only be taken if both have the transition
@@ -80,7 +84,9 @@ order: 1
 
 ## Machines (Moore & Mealy)
 
-### Moore machine:
+### Machine types
+
+#### Moore machine
 
 - Output bound to state (NTS: while stuck in a moor)
 - Convert to Mealy:
@@ -92,7 +98,7 @@ order: 1
 ::machine-example{variant="moore"}
 ::
 
-### Mealy machine:
+#### Mealy machine
 
 - Output bound to transition (NTS: while eating a meal)
 - Convert to Moore:
@@ -105,20 +111,24 @@ order: 1
 
 
 
-### Subset checking
+### Language relations
 
-- L(A1) ⊆ L(A2) ⇔ L(A1) ∩ ¬L(A2) = ∅
-- In words: proving that language A1 is a subset of A2 is the same as proving that the intersection of language A1 and the complement of language A2 is empty
-- TODO: A1 × C(P(A2)) = ∅
-  1. Make a power automaton of A2 (it has to be deterministic and complete)
-  2. Make the complement automaton of P(A2)
-  3. Make the product automaton of A1 and C(P(A2))
-     1. No accepting state can be reached: language A1 is a subset of A2
-        1. L(A1) ⊆ L(A2)
-     2. An accepting state can be reached: language A1 is not a subset of A2
-        1. L(A1) ⊈ L(A2)
+#### Subset checking
+
+$$
+L(A_1) \subseteq L(A_2)
+\iff
+L(A_1) \cap \overline{L(A_2)} = \varnothing
+$$
+
+In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ and rejected by $A_2$.
 
 ::machine-example{variant="subset"}
+1. Build the complete deterministic power automaton $P(A_2)$.
+2. Complement it to obtain $C(P(A_2))$.
+3. Build the product automaton $A_1 \times C(P(A_2))$.
+   - **No accepting state is reachable:** $L(A_1) \subseteq L(A_2)$.
+   - **An accepting state is reachable:** $L(A_1) \nsubseteq L(A_2)$; the path to it gives a counterexample.
 ::
 
 ---
@@ -127,7 +137,11 @@ order: 1
 
 4-Tuple CEN spec = {`C`onditions, `I`nitial, `E`vents, `G`raph}
 
-### In a CEN there are $2^{|C|}$ possible markings (C = number of conditions)
+### State space
+
+#### Markings
+
+A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 
 - Each event consumes exactly 1 token
 - Each node can hold exactly 1 token
@@ -137,7 +151,9 @@ order: 1
 
 
 
-### Precondition $G^{-1}$ and Postcondition $G$:
+### Event semantics
+
+#### Preconditions and postconditions
 
 - **Precondition $G^{-1}$ of e**: What needs to hold to make a transition possible (incoming arrows).
 - **Postcondition G of e**: What holds after a transition happened (outgoing arrows).
@@ -154,7 +170,9 @@ order: 1
 
 
 
-### Difference to CEN:
+### Token semantics
+
+#### PTN vs. CEN
 
 - Can have multiple tokens per place
   - The limit is the number next to the places
@@ -169,7 +187,7 @@ order: 1
 
 
 
-### Labeled Transition System (LTS)
+## Labeled Transition System (LTS)
 
 Just a graph of nodes (=states) whose directed edges (=state transitions) have labels (=actions/events) that trigger them.
 
@@ -180,7 +198,9 @@ Just a graph of nodes (=states) whose directed edges (=state transitions) have l
 
 ## Process Algebra (PA)
 
-### Process Algebra Terminology
+### Foundations
+
+#### Terminology
 
 | Syntax        | Name       | Meaning                                                      |
 | ------------- | ---------- | ------------------------------------------------------------ |
@@ -192,13 +212,13 @@ Just a graph of nodes (=states) whose directed edges (=state transitions) have l
 | `Σ(P)`        | alphabet   | Set of all actions that can occur in `P`.                    |
 | `P -a-> Q`    | transition | `P` can perform `a` and become `Q`.                          |
 
-### Prefix
+#### Prefix
 
 $$
 a.Q \xrightarrow{a} Q
 $$
 
-### Choice
+#### Choice
 
 Choose to perform the action on one side; the other side can then be discarded.
 
@@ -209,7 +229,7 @@ a.P + b.Q &\xrightarrow{b} Q
 \end{aligned}
 $$
 
-### Parallel
+#### Parallel
 
 Do the same action on the right and left (a.k.a. in parallel); if one is not affected, it stays.
 
@@ -223,7 +243,9 @@ $$
 ::process-example{variant="combined"}
 ::
 
-### Alphabet (Set of Actions)
+### Composition
+
+#### Alphabet
 
 Just a set of all action symbols of the given process.
 
@@ -244,7 +266,7 @@ $$
 ::process-example{variant="alphabet"}
 ::
 
-### Synchronization Set
+#### Synchronization set
 
 Forces all actions in it to happen in lockstep. If `P` and `Q` share `a`, this makes it a rendezvous point, meaning `a` can never happen in only one process. All other actions, such as `b` and `c`, can interleave freely.
 
@@ -258,7 +280,9 @@ $$
 ::process-example{variant="synchronization"}
 ::
 
-### Satisfiable
+### Specifications
+
+#### Satisfiable
 
 - For every allowed input, there exists at least one valid output.
 - NTS: At least one solution exists.
@@ -266,7 +290,7 @@ $$
 ::process-example{variant="satisfiable"}
 ::
 
-### Underspecification
+#### Underspecification
 
 - Multiple outputs are possible for the same input.
 - NTS: Too many solutions.
@@ -280,7 +304,9 @@ $$
 
 ## CTL Operators
 
-### General Operators
+### Operators
+
+#### Combined operators
 
 | Formula    | Meaning                                              | NTS                        |
 | ---------- | ---------------------------------------------------- | -------------------------- |
@@ -296,7 +322,7 @@ $$
 ::ctl-example{variant="operators"}
 ::
 
-### Singular Operators
+#### Operator symbols
 
 | Symbol | Meaning             |
 | ------ | ------------------- |

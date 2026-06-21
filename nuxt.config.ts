@@ -11,9 +11,14 @@ export default defineNuxtConfig({
   },
 
   content: {
+    _localDatabase: {
+      type: "sqlite",
+      filename:
+        process.env.NUXT_CONTENT_DB_PATH ?? ".data/content/contents.sqlite",
+    },
     build: {
       markdown: {
-        toc: { depth: 3, searchDepth: 3 },
+        toc: { depth: 2, searchDepth: 2 },
         remarkPlugins: { "remark-math": {} },
         rehypePlugins: { "rehype-katex": {} },
       },

@@ -22,7 +22,7 @@ const tocLinks = computed(() => page.value?.body?.toc?.links ?? []);
 <template>
   <UContainer v-if="page" class="py-6 sm:py-10">
     <div class="mb-6 lg:hidden">
-      <UContentToc highlight :links="tocLinks" />
+      <UContentToc highlight highlight-variant="circuit" :links="tocLinks" />
     </div>
 
     <div class="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
@@ -31,7 +31,7 @@ const tocLinks = computed(() => page.value?.body?.toc?.links ?? []);
       </article>
 
       <aside class="hidden lg:block">
-        <UContentToc highlight :links="tocLinks" />
+        <UContentToc highlight highlight-variant="circuit" :links="tocLinks" />
       </aside>
     </div>
   </UContainer>

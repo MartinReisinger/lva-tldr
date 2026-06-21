@@ -16,13 +16,58 @@ test('renders the TOC and expands examples', async ({ page }) => {
   await page.goto('/formal-models')
   await waitForHydration(page)
   await expect(page.getByRole('link', { name: 'Automata', exact: true }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Properties', exact: true }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Deterministic', exact: true })).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Example: deterministic and complete' }).click()
   await expect(page.locator('button:has-text("Deterministic")').first()).toBeVisible()
+  await expect(page.getByText('Every state has at most one outgoing transition per action.')).toBeVisible()
+  await expect(page.getByText('Every state has a transition for both a and b.')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Complete', exact: true }).click()
+  await expect(page.getByText('The alphabet is {a, b}, but states B and C are missing transitions.')).toBeVisible()
+  await expect(page.locator('svg[aria-label="Basics Automaton"]').getByText('b')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Deterministic', exact: true }).click()
+  await expect(page.getByText('State A has two outgoing transitions for action a.')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Complete', exact: true }).click()
+  await expect(page.getByText('Every state has a transition for both a and b.')).toBeVisible()
+  await expect(page.getByText('State A has two outgoing transitions for action a.')).toBeVisible()
 
   await page.getByRole('button', { name: 'Example: CTL state highlighting' }).click()
   await expect(page.getByText('EF q').first()).toBeVisible()
   await expect(page.getByText('Some path eventually reaches q.')).toBeVisible()
+  await expect(page.getByText('AF q').first()).toBeVisible()
+  await expect(page.getByText('Every path eventually reaches q.')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Example: subset check' }).click()
+  await expect(page.getByText('Build the complete deterministic power automaton')).toBeVisible()
+})
+
+test('uses the shared graph style across example families', async ({ page }) => {
+  await page.goto('/formal-models')
+  await waitForHydration(page)
+
+  await page.getByRole('button', { name: 'Example: pre-/postconditions and fire event' }).click()
+  await expect(page.locator('svg.graph-svg[aria-label="Example: Pre-/Postconditions and Fire Event"]')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Example: process algebra semantics' }).click()
+  await expect(page.locator('svg.graph-svg[aria-label="Process Algebra Evaluation Tree"]')).toBeVisible()
+})
+
+test('shows outputs on every Moore state', async ({ page }) => {
+  await page.goto('/formal-models')
+  await waitForHydration(page)
+
+  await page.getByRole('button', { name: 'Example: Moore to Mealy' }).click()
+  await expect(page.getByText('q0 / 1', { exact: true })).toBeVisible()
+  await expect(page.getByText('q1 / 0', { exact: true })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Example: Mealy to Moore' }).click()
+  await page.getByRole('button', { name: 'Convert to Moore' }).click()
+  await expect(page.getByText('q0 / 0', { exact: true })).toBeVisible()
+  await expect(page.getByText('q1 / 1', { exact: true })).toBeVisible()
 })
 
 test('persists a manual color-mode change', async ({ page }) => {

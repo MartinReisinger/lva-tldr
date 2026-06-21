@@ -26,28 +26,28 @@ const titles: Record<string, string> = {
         <UButton size="xs" :variant="basicsDeterministic ? 'solid' : 'ghost'" label="Deterministic" @click="basicsDeterministic = !basicsDeterministic" />
         <UButton size="xs" :variant="basicsComplete ? 'solid' : 'ghost'" label="Complete" @click="basicsComplete = !basicsComplete" />
       </div>
-      <svg viewBox="0 -20 440 180" class="w-full max-w-xl text-highlighted" role="img" aria-label="Basics Automaton">
+      <svg viewBox="0 -20 440 180" class="graph-svg w-full max-w-xl" role="img" aria-label="Basics Automaton">
         <defs><marker id="arrow-basics" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
         
-        <!-- A loop (b) for completeness -->
-        <path v-if="basicsComplete" d="M 88 53 C 65 -10, 135 -10, 112 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
-        <text v-if="basicsComplete" x="100" y="0" text-anchor="middle" fill="currentColor">b</text>
+        <!-- Keep b visible so the alphabet remains explicit when incomplete. -->
+        <path d="M 88 53 C 65 -10, 135 -10, 112 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
+        <text x="100" y="0" text-anchor="middle" fill="currentColor">b</text>
 
         <!-- A to B (a) -->
         <path d="M125 75 L205 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
         <text x="165" y="65" text-anchor="middle" fill="currentColor">a</text>
         
-        <!-- B to C (a, b) -->
+        <!-- B to C (entire alphabet) -->
         <path d="M255 75 L335 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
-        <text x="295" y="65" text-anchor="middle" fill="currentColor">{{ basicsComplete ? 'a, b' : 'a' }}</text>
+        <text x="295" y="65" text-anchor="middle" fill="currentColor">{{ basicsComplete ? '*' : 'a' }}</text>
         
         <!-- B loop (b) -->
         <path v-if="basicsComplete" d="M 218 53 C 195 -10, 265 -10, 242 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
         <text v-if="basicsComplete" x="230" y="0" text-anchor="middle" fill="currentColor">b</text>
 
-        <!-- C loop (a, b) -->
+        <!-- C loop (entire alphabet) -->
         <path v-if="basicsComplete" d="M 348 53 C 325 -10, 395 -10, 372 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
-        <text v-if="basicsComplete" x="360" y="0" text-anchor="middle" fill="currentColor">a, b</text>
+        <text v-if="basicsComplete" x="360" y="0" text-anchor="middle" fill="currentColor">*</text>
 
         <!-- A to C non-deterministic branch (if toggled) -->
         <path v-if="!basicsDeterministic" d="M 115 95 C 140 150, 320 150, 345 95" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
@@ -71,6 +71,33 @@ const titles: Record<string, string> = {
           <text y="5" text-anchor="middle" fill="currentColor" font-size="14">C</text>
         </g>
       </svg>
+
+      <div class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        <div class="flex min-w-0 flex-col items-start gap-1.5">
+          <UBadge :color="basicsDeterministic ? 'primary' : 'neutral'">
+            {{ basicsDeterministic ? 'Deterministic' : 'Non-deterministic' }}
+          </UBadge>
+          <p class="w-full text-muted">
+            {{
+              basicsDeterministic
+                ? 'Every state has at most one outgoing transition per action.'
+                : 'State A has two outgoing transitions for action a.'
+            }}
+          </p>
+        </div>
+        <div class="flex min-w-0 flex-col items-start gap-1.5">
+          <UBadge :color="basicsComplete ? 'primary' : 'neutral'">
+            {{ basicsComplete ? 'Complete' : 'Incomplete' }}
+          </UBadge>
+          <p class="w-full text-muted">
+            {{
+              basicsComplete
+                ? 'Every state has a transition for both a and b.'
+                : 'The alphabet is {a, b}, but states B and C are missing transitions.'
+            }}
+          </p>
+        </div>
+      </div>
     </template>
 
     <!-- POWER AUTOMATON -->
@@ -79,7 +106,7 @@ const titles: Record<string, string> = {
         <div>
           <h4 class="font-semibold text-sm mb-2">1. Original Graph</h4>
           <div class="flex justify-center">
-            <svg viewBox="0 -20 400 210" class="w-full max-w-sm text-highlighted" role="img">
+            <svg viewBox="0 -20 400 210" class="graph-svg w-full max-w-sm" role="img">
               <defs><marker id="arrow-pow0" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
               
               <!-- Init -> A -->
@@ -154,7 +181,7 @@ const titles: Record<string, string> = {
         <div>
           <h4 class="font-semibold text-sm mb-2">4. Power Automaton</h4>
           <div class="flex justify-center">
-            <svg viewBox="0 20 500 200" class="w-full max-w-xl text-highlighted" role="img">
+            <svg viewBox="0 20 500 200" class="graph-svg w-full max-w-xl" role="img">
               <defs><marker id="arrow-pow3" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
               <!-- Init -> {A} -->
               <path d="M40 60 L75 60" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
@@ -168,8 +195,8 @@ const titles: Record<string, string> = {
               <text x="325" y="50" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
               <!-- {A,B,C} loop -->
-              <path d="M425 60 C460 30, 460 90, 425 60" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
-              <text x="465" y="65" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+              <path d="M421.65 47.5 C475 20, 475 100, 421.65 72.5" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="470" y="65" text-anchor="middle" fill="currentColor" font-size="14">a</text>
 
               <!-- {A} -> {C} -->
               <path d="M121 74 L229 146" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
@@ -185,11 +212,11 @@ const titles: Record<string, string> = {
 
               <!-- {C} -> ∅ -->
               <path d="M275 160 L375 160" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
-              <text x="325" y="150" text-anchor="middle" fill="currentColor" font-size="14">a, b</text>
+              <text x="325" y="156" text-anchor="middle" fill="currentColor" font-size="14">*</text>
 
               <!-- ∅ loop -->
-              <path d="M425 160 C460 130, 460 190, 425 160" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
-              <text x="465" y="165" text-anchor="middle" fill="currentColor" font-size="14">a, b</text>
+              <path d="M421.65 147.5 C475 120, 475 200, 421.65 172.5" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="470" y="165" text-anchor="middle" fill="currentColor" font-size="14">*</text>
 
               <!-- Nodes -->
               <g transform="translate(100 60)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor" font-size="13">A</text></g>
@@ -211,14 +238,14 @@ const titles: Record<string, string> = {
       </div>
 
       <div class="flex justify-center">
-        <svg viewBox="0 -10 350 160" class="w-full max-w-md text-highlighted" role="img" aria-label="Oracle Automaton">
+        <svg viewBox="0 -10 350 160" class="graph-svg w-full max-w-md" role="img" aria-label="Oracle Automaton">
           <defs><marker id="arrow-oracle" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
           <path d="M20 75 L55 75" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
           
           <template v-if="!oracleTransformed">
             <!-- Non-deterministic Original -->
             <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a, b</text>
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">*</text>
             
             <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
             <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a</text>
@@ -226,7 +253,7 @@ const titles: Record<string, string> = {
           <template v-else>
             <!-- Unoptimized Oracle -->
             <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / B, b / B</text>
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">* / B</text>
             
             <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
             <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / C</text>
@@ -247,14 +274,14 @@ const titles: Record<string, string> = {
       </div>
 
       <div class="flex justify-center">
-        <svg viewBox="0 -10 350 160" class="w-full max-w-md text-highlighted" role="img" aria-label="Optimized Oracle Automaton">
+        <svg viewBox="0 -10 350 160" class="graph-svg w-full max-w-md" role="img" aria-label="Optimized Oracle Automaton">
           <defs><marker id="arrow-opt" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
           <path d="M20 75 L55 75" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
           
           <template v-if="!oracleOptimized">
             <!-- Unoptimized Oracle -->
             <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
-            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / B, b / B</text>
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">* / B</text>
             
             <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
             <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / C</text>
@@ -262,7 +289,7 @@ const titles: Record<string, string> = {
           <template v-else>
             <!-- Optimized Oracle -->
             <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
-            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / 0, b / 0</text>
+            <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">* / 0</text>
             
             <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-opt)" />
             <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / 1</text>
@@ -283,7 +310,7 @@ const titles: Record<string, string> = {
       </div>
 
       <div class="flex justify-center">
-        <svg viewBox="0 -20 350 170" class="w-full max-w-sm text-highlighted" role="img" aria-label="Complement Example">
+        <svg viewBox="0 -20 350 170" class="graph-svg w-full max-w-sm" role="img" aria-label="Complement Example">
           <defs><marker id="arrow-comp" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
           <path d="M50 75 L115 75" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
           
@@ -299,7 +326,7 @@ const titles: Record<string, string> = {
           
           <!-- Loop a,b on state 2 -->
           <path d="M 253 53 C 230 -10, 300 -10, 277 53" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
-          <text x="265" y="0" text-anchor="middle" fill="currentColor">a, b</text>
+          <text x="265" y="0" text-anchor="middle" fill="currentColor">*</text>
         </svg>
       </div>
     </template>
@@ -311,7 +338,7 @@ const titles: Record<string, string> = {
         <div class="flex flex-col gap-3">
           <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-2 flex flex-col items-center">
             <div class="text-[10px] font-semibold uppercase text-muted mb-1">Automaton A</div>
-            <svg viewBox="0 20 160 60" class="w-full max-w-[140px] text-highlighted">
+            <svg viewBox="0 20 160 60" class="graph-svg w-full max-w-[140px]">
               <defs><marker id="arrow-prod-s" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
               <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
               <path d="M60 40 L100 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
@@ -323,13 +350,14 @@ const titles: Record<string, string> = {
           
           <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-2 flex flex-col items-center">
             <div class="text-[10px] font-semibold uppercase text-muted mb-1">Automaton B</div>
-            <svg viewBox="0 0 160 80" class="w-full max-w-[140px] text-highlighted">
-              <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+            <svg viewBox="0 0 160 80" class="graph-svg w-full max-w-[140px]">
+              <defs><marker id="arrow-prod-b" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+              <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
               <!-- Top curve from X to Y -->
-              <path d="M 56 30 Q 80 5 104 30" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <path d="M 56 30 Q 80 5 104 30" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
               <text x="80" y="10" text-anchor="middle" fill="currentColor" font-size="11">b</text>
               <!-- Bottom curve from Y to X -->
-              <path d="M 104 50 Q 80 75 56 50" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <path d="M 104 50 Q 80 75 56 50" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
               <text x="80" y="76" text-anchor="middle" fill="currentColor" font-size="11">a</text>
               
               <g transform="translate(45 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">X</text></g>
@@ -343,7 +371,7 @@ const titles: Record<string, string> = {
         <!-- Product Automaton -->
         <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-3 flex flex-col items-center h-full justify-center min-h-[160px]">
           <div class="text-[10px] font-semibold uppercase text-muted mb-2">Product A × B</div>
-          <svg viewBox="0 20 250 110" class="w-full h-full text-highlighted">
+          <svg viewBox="0 20 250 110" class="graph-svg h-full w-full">
             <defs><marker id="arrow-prod-l" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
             <path d="M20 75 L50 75" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-l)" />
             

@@ -33,7 +33,7 @@ function reset() {
     <template v-else-if="variant === 'lts'">
       <svg
         viewBox="0 0 400 130"
-        class="w-full max-w-lg text-highlighted"
+        class="graph-svg mx-auto w-full max-w-md"
         role="img"
         aria-label="LTS with three markings"
       >
@@ -52,27 +52,26 @@ function reset() {
           </marker>
         </defs>
         <path
-          d="M110 65 L175 65"
+          d="M101 65 L174 65"
           stroke="currentColor"
           fill="none"
           marker-end="url(#lts-arrow)"
         />
         <path
-          d="M250 65 L315 65"
+          d="M226 65 L299 65"
           stroke="currentColor"
           fill="none"
           marker-end="url(#lts-arrow)"
         />
-        <text x="145" y="54" fill="currentColor" text-anchor="middle">a</text>
-        <text x="285" y="54" fill="currentColor" text-anchor="middle">b</text>
+        <text x="137.5" y="54" fill="currentColor" text-anchor="middle">a</text>
+        <text x="262.5" y="54" fill="currentColor" text-anchor="middle">b</text>
         <g
           v-for="(label, index) in ['(1,0)', '(0,1)', '(1,1)']"
           :key="label"
-          :transform="`translate(${75 + index * 140} 65)`"
+          :transform="`translate(${75 + index * 125} 65)`"
         >
-          <ellipse
-            rx="36"
-            ry="23"
+          <circle
+            r="25"
             fill="var(--ui-bg)"
             stroke="currentColor"
             stroke-width="2"
@@ -87,7 +86,7 @@ function reset() {
     <template v-else>
       <svg
         viewBox="0 0 420 150"
-        class="w-full max-w-xl text-highlighted"
+        class="graph-svg mx-auto w-full max-w-md"
         role="img"
         :aria-label="titles[variant]"
       >
@@ -108,7 +107,7 @@ function reset() {
 
         <!-- Precondition arrow -->
         <path
-          d="M124 75H175"
+          d="M121 75H185"
           fill="none"
           stroke="currentColor"
           :marker-end="`url(#net-arrow-${variant})`"
@@ -117,7 +116,7 @@ function reset() {
 
         <!-- Postcondition arrow -->
         <path
-          d="M235 75H285"
+          d="M235 75H299"
           fill="none"
           stroke="currentColor"
           :marker-end="`url(#net-arrow-${variant})`"
@@ -127,7 +126,7 @@ function reset() {
         <circle
           cx="95"
           cy="75"
-          r="29"
+          r="25"
           fill="var(--ui-bg)"
           stroke="currentColor"
           stroke-width="2"
@@ -144,7 +143,7 @@ function reset() {
         <circle
           cx="325"
           cy="75"
-          r="29"
+          r="25"
           fill="var(--ui-bg)"
           stroke="currentColor"
           stroke-width="2"
