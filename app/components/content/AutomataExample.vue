@@ -215,11 +215,11 @@ const oracleOptimized = ref(false)
           
           <!-- Merge a/{B} and b/{B} into one straight angled arrow -->
           <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-          <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? '{B}' : 0 }}, b / {{ !oracleOptimized ? '{B}' : 0 }}</text>
+          <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? 'B' : 0 }}, b / {{ !oracleOptimized ? 'B' : 0 }}</text>
           
           <!-- a/{C} as a straight angled arrow downwards -->
           <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
-          <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? '{C}' : 1 }}</text>
+          <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / {{ !oracleOptimized ? 'C' : 1 }}</text>
           
           <g transform="translate(80 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
           <g transform="translate(260 40)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
