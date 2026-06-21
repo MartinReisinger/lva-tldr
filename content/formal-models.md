@@ -35,21 +35,13 @@ order: 1
 
 ### 4. Oracle automaton:
 
-- Advantage: linear state space; deterministic (if original has only 1 initial state)
+- Advantage: linear state space; deterministic (if original has only 1 initial state); complete (if optimized)
 - Disadvantage: can become incomplete; has a different & bigger alphabet; needs external oracle for choices
-- TODO: just add the targets state to the transition name
+- TODO: Transitions mapped to symbols ($a / x$). Allows early reactions without a new state. Minimize oracle alphabet by mapping transition targets to the smallest possible set of numeric indices; n has to be minimal on a per-state and per-alphabet-symbol level.
 
 ::automata-example{variant="oracle"}
 ::
 
-### 5. Optimized oracle automaton:
-
-- Advantage: linear state space; deterministic & complete (if original has only 1 initial state); smaller alphabet than unoptimized
-- Disadvantage: still different alphabet; needs external oracle for choices
-- TODO: minimize oracle alphabet by mapping transition targets to the smallest possible set of numeric indices; n has to be minimal on a per-state and per-alphabet-symbol level
-
-::automata-example{variant="optimized"}
-::
 
 ### 6. Complement automaton:
 
