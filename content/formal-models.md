@@ -1,5 +1,5 @@
 ---
-title: Formal Models TL;DR
+title: Formal Models
 description: Compact exam preparation notes for Formal Models.
 order: 1
 ---
