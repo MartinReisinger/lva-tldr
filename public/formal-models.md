@@ -1,9 +1,3 @@
----
-title: Formal Models
-description: Dense summary of the most important concepts.
-order: 1
----
-
 # Formal Models TL;DR
 
 ## Automata
