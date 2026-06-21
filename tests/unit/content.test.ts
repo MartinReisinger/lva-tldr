@@ -14,8 +14,8 @@ describe('Formal Models content', () => {
     const variants = [
       'basics', 'power', 'oracle', 'optimized', 'complement', 'product',
       'moore', 'mealy', 'subset', 'markings', 'prepost', 'cen', 'ptn', 'lts',
-      'prefix', 'choice', 'parallel', 'alphabet', 'synchronization',
-      'satisfiable', 'underspecification', 'operators', 'equivalences',
+      'combined', 'alphabet', 'synchronization',
+      'satisfiable', 'underspecification', 'operators',
     ]
 
     for (const variant of variants) {

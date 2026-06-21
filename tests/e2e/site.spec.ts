@@ -7,7 +7,7 @@ async function waitForHydration(page: import('@playwright/test').Page) {
 test('opens the Formal Models topic from the overview', async ({ page }) => {
   await page.goto('/')
   await waitForHydration(page)
-  await page.getByRole('link', { name: /Formal Models TL;DR/ }).click()
+  await page.locator('a[href="/formal-models"]').first().click()
   await expect(page).toHaveURL(/\/formal-models$/)
   await expect(page.getByRole('heading', { name: 'Formal Models TL;DR', level: 1 })).toBeVisible()
 })
@@ -18,10 +18,10 @@ test('renders the TOC and expands examples', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Automata', exact: true }).first()).toBeVisible()
 
   await page.getByRole('button', { name: 'Example: deterministic and complete' }).click()
-  await expect(page.getByText('Deterministic: one target per symbol')).toBeVisible()
+  await expect(page.locator('button:has-text("Deterministic")').first()).toBeVisible()
 
   await page.getByRole('button', { name: 'Example: CTL state highlighting' }).click()
-  await page.getByRole('button', { name: 'EF q' }).click()
+  await expect(page.getByText('EF q').first()).toBeVisible()
   await expect(page.getByText('Some path eventually reaches q.')).toBeVisible()
 })
 

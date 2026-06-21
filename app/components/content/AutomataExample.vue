@@ -2,7 +2,9 @@
 type Variant = 'basics' | 'power' | 'oracle' | 'optimized' | 'complement' | 'product'
 
 const props = defineProps<{ variant: Variant }>()
-const transformed = ref(false)
+const basicsDeterministic = ref(true)
+const basicsComplete = ref(true)
+const complementTransformed = ref(false)
 
 const titles: Record<Variant, string> = {
   basics: 'Example: deterministic and complete',
@@ -12,84 +14,265 @@ const titles: Record<Variant, string> = {
   complement: 'Example: complement',
   product: 'Example: product states',
 }
-
-const labels = computed(() => {
-  if (props.variant === 'power' && transformed.value) return ['{A}', '{A,B}', '∅']
-  if (props.variant === 'product') return ['A1', 'B2', 'B1']
-  return ['A', 'B', 'C']
-})
-
-const edgeLabels = computed(() => {
-  if (props.variant === 'oracle') return ['a/1', 'a/2']
-  if (props.variant === 'optimized') return ['a/0', 'a/1']
-  return ['a', 'b']
-})
-
-const finalIndex = computed(() => {
-  if (props.variant === 'complement' && transformed.value) return 0
-  return 1
-})
 </script>
 
 <template>
   <ExampleBlock :title="titles[variant]">
-    <div v-if="variant === 'power' || variant === 'complement'" class="mb-4 flex gap-2">
-      <UButton
-        :variant="!transformed ? 'solid' : 'outline'"
-        size="xs"
-        label="Original"
-        @click="transformed = false"
-      />
-      <UButton
-        :variant="transformed ? 'solid' : 'outline'"
-        size="xs"
-        :label="variant === 'power' ? 'Power automaton' : 'Complement'"
-        @click="transformed = true"
-      />
-    </div>
+    <!-- BASICS AUTOMATON -->
+    <template v-if="variant === 'basics'">
+      <div class="mb-4 flex gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
+        <UButton size="xs" :variant="basicsDeterministic ? 'solid' : 'ghost'" label="Deterministic" @click="basicsDeterministic = true; basicsComplete = true" />
+        <UButton size="xs" :variant="basicsComplete ? 'solid' : 'ghost'" label="Complete" @click="basicsComplete = true" />
+      </div>
+      <svg viewBox="0 -20 440 160" class="w-full max-w-xl text-highlighted" role="img" aria-label="Basics Automaton">
+        <defs><marker id="arrow-basics" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+        
+        <!-- A to B (a) -->
+        <path d="M125 75 L205 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
+        <text x="165" y="65" text-anchor="middle" fill="currentColor">a</text>
+        
+        <!-- B to C (a, b) -->
+        <path d="M255 75 L335 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
+        <text x="295" y="65" text-anchor="middle" fill="currentColor">a, b</text>
+        
+        <!-- B loop (b) -->
+        <path d="M 218 53 C 195 -10, 265 -10, 242 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
+        <text x="230" y="0" text-anchor="middle" fill="currentColor">b</text>
 
-    <svg
-      viewBox="0 0 440 150"
-      class="w-full max-w-xl text-highlighted"
-      role="img"
-      :aria-label="titles[variant]"
-    >
-      <title>{{ titles[variant] }}</title>
-      <defs>
-        <marker :id="`automata-arrow-${variant}`" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M0,0 L8,4 L0,8 Z" fill="currentColor" />
-        </marker>
-      </defs>
-      <path d="M18 75H75" stroke="currentColor" fill="none" :marker-end="`url(#automata-arrow-${variant})`" />
-      <path d="M125 75H205" stroke="currentColor" fill="none" :marker-end="`url(#automata-arrow-${variant})`" />
-      <path d="M255 75H335" stroke="currentColor" fill="none" :marker-end="`url(#automata-arrow-${variant})`" />
-      <path d="M100 48C75 10 130 10 105 48" stroke="currentColor" fill="none" :marker-end="`url(#automata-arrow-${variant})`" />
-      <text x="165" y="64" text-anchor="middle" fill="currentColor" font-size="14">{{ edgeLabels[0] }}</text>
-      <text x="295" y="64" text-anchor="middle" fill="currentColor" font-size="14">{{ edgeLabels[1] }}</text>
-      <text x="100" y="17" text-anchor="middle" fill="currentColor" font-size="14">b</text>
+        <!-- A to C non-deterministic branch (if toggled) -->
+        <path v-if="!basicsDeterministic" d="M115 100 C 140 160, 320 160, 345 100" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" stroke-dasharray="4" />
+        <text v-if="!basicsDeterministic" x="230" y="145" text-anchor="middle" fill="currentColor">a</text>
 
-      <g v-for="(label, index) in labels" :key="label" :transform="`translate(${100 + index * 130} 75)`">
-        <circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" />
-        <circle v-if="index === finalIndex" r="20" fill="none" stroke="currentColor" stroke-width="2" />
-        <text y="5" text-anchor="middle" fill="currentColor" font-size="14">{{ label }}</text>
-      </g>
-    </svg>
+        <!-- Initial arrow -->
+        <path d="M40 75 L75 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
 
-    <div v-if="variant === 'basics'" class="mt-3 flex flex-wrap gap-2 text-sm">
-      <UBadge color="success" variant="subtle">Deterministic: one target per symbol</UBadge>
-      <UBadge color="success" variant="subtle">Complete: a and b exist at every state</UBadge>
-    </div>
-    <p v-else-if="variant === 'power'" class="mt-3 text-sm text-muted">
-      Each state is a set of original states. The empty set is the sink for missing transitions.
-    </p>
-    <p v-else-if="variant === 'complement'" class="mt-3 text-sm text-muted">
-      The transition graph stays the same; accepting and rejecting states swap.
-    </p>
-    <p v-else-if="variant === 'product'" class="mt-3 text-sm text-muted">
-      Product states pair one state from each original automaton and advance together.
-    </p>
-    <p v-else class="mt-3 text-sm text-muted">
-      The oracle index selects one of the possible targets. Optimization reuses the smallest local index set.
-    </p>
+        <!-- States -->
+        <g transform="translate(100 75)">
+          <circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" />
+          <text y="5" text-anchor="middle" fill="currentColor" font-size="14">A</text>
+        </g>
+        <g transform="translate(230 75)">
+          <circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" />
+          <circle r="20" fill="none" stroke="currentColor" stroke-width="2" />
+          <text y="5" text-anchor="middle" fill="currentColor" font-size="14">B</text>
+        </g>
+        <g transform="translate(360 75)">
+          <circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" />
+          <text y="5" text-anchor="middle" fill="currentColor" font-size="14">C</text>
+        </g>
+      </svg>
+    </template>
+
+    <!-- POWER AUTOMATON -->
+    <template v-else-if="variant === 'power'">
+      <div class="flex flex-col gap-6">
+        <div>
+          <h4 class="font-semibold text-sm mb-2">1. Original Graph</h4>
+          <div class="flex justify-center">
+            <svg viewBox="0 0 300 200" class="w-full max-w-sm text-highlighted" role="img">
+              <defs><marker id="arrow-pow0" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+              <path d="M20 100 L45 100" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              
+              <path d="M60 75 C60 20 80 20 80 75" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="70" y="30" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+
+              <path d="M95 100 L165 100" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="130" y="90" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+
+              <path d="M80 120 L130 160 L180 160" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="130" y="150" text-anchor="middle" fill="currentColor" font-size="14">b</text>
+
+              <path d="M215 100 C240 100 240 140 215 140" stroke="currentColor" fill="none" marker-end="url(#arrow-pow0)" />
+              <text x="240" y="125" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+
+              <g transform="translate(70 100)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">1</text></g>
+              <g transform="translate(190 100)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">2</text></g>
+              <g transform="translate(190 160)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">3</text></g>
+            </svg>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-sm mb-2">2. Original Table</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse border border-gray-300 dark:border-gray-700">
+              <thead>
+                <tr class="bg-gray-50 dark:bg-gray-800/50">
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">State</th>
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">a</th>
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">b</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">→ 1</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{1, 2}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{3}</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">2</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{3}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">* 3</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-sm mb-2">3. Power Table</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse border border-gray-300 dark:border-gray-700">
+              <thead>
+                <tr class="bg-gray-50 dark:bg-gray-800/50">
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">State</th>
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">a</th>
+                  <th class="py-2 px-4 border border-gray-300 dark:border-gray-700">b</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">→ {1}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{1, 2}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{3}</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{1, 2}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{1, 2, 3}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{3}</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">* {3}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">* {1, 2, 3}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{1, 2, 3}</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">{3}</td></tr>
+                <tr><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td><td class="py-2 px-4 border border-gray-300 dark:border-gray-700">∅</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold text-sm mb-2">4. Power Graph</h4>
+          <div class="flex justify-center">
+            <svg viewBox="0 0 400 250" class="w-full max-w-md text-highlighted" role="img">
+              <defs><marker id="arrow-pow3" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+              <path d="M20 50 L45 50" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              
+              <path d="M100 50 L170 50" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="135" y="40" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+
+              <path d="M100 75 L270 175" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="185" y="115" text-anchor="middle" fill="currentColor" font-size="14">b</text>
+
+              <path d="M210 50 C240 20 280 20 280 50 C280 80 240 80 210 50" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="245" y="15" text-anchor="middle" fill="currentColor" font-size="14">a</text>
+
+              <path d="M225 65 L275 165" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="250" y="115" text-anchor="middle" fill="currentColor" font-size="14">b</text>
+
+              <path d="M100 200 L270 200" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="185" y="190" text-anchor="middle" fill="currentColor" font-size="14">a, b</text>
+
+              <path d="M320 200 C350 170 380 170 380 200 C380 230 350 230 320 200" stroke="currentColor" fill="none" marker-end="url(#arrow-pow3)" />
+              <text x="350" y="170" text-anchor="middle" fill="currentColor" font-size="14">a, b</text>
+
+              <g transform="translate(70 50)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor" font-size="12">{1}</text></g>
+              <g transform="translate(200 50)"><circle r="30" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor" font-size="12">{1, 2}</text></g>
+              <g transform="translate(295 180)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor" font-size="12">{3}</text></g>
+              <g transform="translate(70 200)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor" font-size="12">∅</text></g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ORACLE / OPTIMIZED -->
+    <template v-else-if="variant === 'oracle' || variant === 'optimized'">
+      <div class="flex justify-center">
+        <svg viewBox="0 -10 350 160" class="w-full max-w-md text-highlighted" role="img" aria-label="Oracle Automaton">
+          <defs><marker id="arrow-oracle" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+          <path d="M20 75 L55 75" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+          
+          <!-- Merge a/{B} and b/{B} into one straight angled arrow -->
+          <path d="M 105 70 L 235 45" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+          <text x="160" y="45" text-anchor="middle" fill="currentColor" font-size="13">a / {{ variant === 'oracle' ? '{B}' : 1 }}, b / {{ variant === 'oracle' ? '{B}' : 1 }}</text>
+          
+          <!-- a/{C} as a straight angled arrow downwards -->
+          <path d="M 105 80 L 235 105" stroke="currentColor" fill="none" marker-end="url(#arrow-oracle)" />
+          <text x="160" y="110" text-anchor="middle" fill="currentColor" font-size="13">a / {{ variant === 'oracle' ? '{C}' : 2 }}</text>
+          
+          <g transform="translate(80 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">A</text></g>
+          <g transform="translate(260 40)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">B</text></g>
+          <g transform="translate(260 110)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">C</text></g>
+        </svg>
+      </div>
+    </template>
+
+    <!-- COMPLEMENT -->
+    <template v-else-if="variant === 'complement'">
+      <div class="mb-4 flex gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
+        <UButton size="xs" :variant="!complementTransformed ? 'solid' : 'ghost'" label="Original" @click="complementTransformed = false" />
+        <UButton size="xs" :variant="complementTransformed ? 'solid' : 'ghost'" label="Complement" @click="complementTransformed = true" />
+      </div>
+
+      <div class="flex justify-center">
+        <svg viewBox="0 -20 350 170" class="w-full max-w-sm text-highlighted" role="img" aria-label="Complement Example">
+          <defs><marker id="arrow-comp" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+          <path d="M50 75 L115 75" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
+          
+          <path d="M170 75 L235 75" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
+          <text x="205" y="65" text-anchor="middle" fill="currentColor">a</text>
+          
+          <!-- Loop b on state 1 -->
+          <path d="M 133 53 C 110 -10, 180 -10, 157 53" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
+          <text x="145" y="0" text-anchor="middle" fill="currentColor">b</text>
+          
+          <g transform="translate(145 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle v-if="complementTransformed" r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">1</text></g>
+          <g transform="translate(265 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle v-if="!complementTransformed" r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="5" text-anchor="middle" fill="currentColor">2</text></g>
+          
+          <!-- Loop a,b on state 2 -->
+          <path d="M 253 53 C 230 -10, 300 -10, 277 53" stroke="currentColor" fill="none" marker-end="url(#arrow-comp)" />
+          <text x="265" y="0" text-anchor="middle" fill="currentColor">a, b</text>
+        </svg>
+      </div>
+    </template>
+
+    <!-- PRODUCT -->
+    <template v-else-if="variant === 'product'">
+      <div class="grid gap-4 md:grid-cols-[1fr_auto_1.5fr] items-center max-w-3xl mx-auto">
+        <!-- Automaton A & B -->
+        <div class="flex flex-col gap-3">
+          <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-2 flex flex-col items-center">
+            <div class="text-[10px] font-semibold uppercase text-muted mb-1">Automaton A</div>
+            <svg viewBox="0 20 160 60" class="w-full max-w-[140px] text-highlighted">
+              <defs><marker id="arrow-prod-s" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+              <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <path d="M60 40 L100 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <text x="80" y="35" text-anchor="middle" fill="currentColor" font-size="12">a</text>
+              <g transform="translate(45 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">1</text></g>
+              <g transform="translate(115 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><circle r="11" fill="none" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">2</text></g>
+            </svg>
+          </div>
+          
+          <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-2 flex flex-col items-center">
+            <div class="text-[10px] font-semibold uppercase text-muted mb-1">Automaton B</div>
+            <svg viewBox="0 0 160 80" class="w-full max-w-[140px] text-highlighted">
+              <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <!-- Top curve from X to Y -->
+              <path d="M 56 30 Q 80 5 104 30" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <text x="80" y="10" text-anchor="middle" fill="currentColor" font-size="11">b</text>
+              <!-- Bottom curve from Y to X -->
+              <path d="M 104 50 Q 80 75 56 50" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-s)" />
+              <text x="80" y="76" text-anchor="middle" fill="currentColor" font-size="11">a</text>
+              
+              <g transform="translate(45 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">X</text></g>
+              <g transform="translate(115 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><circle r="11" fill="none" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">Y</text></g>
+            </svg>
+          </div>
+        </div>
+        
+        <UIcon name="i-lucide-arrow-right" class="hidden md:block size-6 text-muted" />
+
+        <!-- Product Automaton -->
+        <div class="border border-[var(--ui-border)] bg-[var(--ui-bg)] rounded-md p-3 flex flex-col items-center h-full justify-center min-h-[160px]">
+          <div class="text-[10px] font-semibold uppercase text-muted mb-2">Product A × B</div>
+          <svg viewBox="0 20 250 110" class="w-full h-full text-highlighted">
+            <defs><marker id="arrow-prod-l" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+            <path d="M20 75 L50 75" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-l)" />
+            
+            <path d="M100 75 L170 75" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-l)" />
+            <text x="135" y="70" text-anchor="middle" fill="currentColor" font-size="12">a</text>
+
+            <g transform="translate(75 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="4" text-anchor="middle" fill="currentColor" font-size="10">(1,X)</text></g>
+            <g transform="translate(195 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="4" text-anchor="middle" fill="currentColor" font-size="10">(2,X)</text></g>
+            
+            <text x="135" y="125" text-anchor="middle" fill="currentColor" font-size="11" class="opacity-60">Transitions missing due to mismatch</text>
+          </svg>
+        </div>
+      </div>
+    </template>
   </ExampleBlock>
 </template>

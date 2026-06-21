@@ -1,11 +1,9 @@
 <script setup lang="ts">
-type Variant = 'prefix' | 'choice' | 'parallel' | 'alphabet' | 'synchronization' | 'satisfiable' | 'underspecification'
+type Variant = 'combined' | 'alphabet' | 'synchronization' | 'satisfiable' | 'underspecification'
 const props = defineProps<{ variant: Variant }>()
 
 const examples: Record<Variant, { title: string, before: string, after: string }> = {
-  prefix: { title: 'Example: prefix', before: 'a.Q', after: '—a→ Q' },
-  choice: { title: 'Example: choice', before: 'a.P + b.Q', after: '—a→ P  or  —b→ Q' },
-  parallel: { title: 'Example: parallel', before: 'a.P ∥ b.Q', after: '—a→ P ∥ b.Q' },
+  combined: { title: 'Example: process algebra semantics', before: '', after: '' },
   alphabet: { title: 'Example: alphabet', before: 'P = a.b.b.P', after: 'Σ(P) = {a,b}' },
   synchronization: { title: 'Example: synchronization', before: 'Σ(P)={a,b}, Σ(Q)={a,c}', after: 'Θ = {a}' },
   satisfiable: { title: 'Example: satisfiable', before: 'x = 4, y² = x, y > 0', after: 'y = 2 exists' },
@@ -17,7 +15,38 @@ const example = computed(() => examples[props.variant])
 
 <template>
   <ExampleBlock :title="example.title">
-    <div class="flex flex-col gap-3 font-mono text-sm sm:flex-row sm:items-center">
+    <template v-if="variant === 'combined'">
+      <svg viewBox="0 0 500 200" class="w-full text-highlighted" role="img" aria-label="Process Algebra Evaluation Tree">
+        <defs><marker id="arrow-proc" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
+        
+        <!-- Root node -->
+        <rect x="180" y="20" width="140" height="24" rx="4" fill="var(--ui-bg)" stroke="currentColor" stroke-width="1.5" />
+        <text x="250" y="36" text-anchor="middle" fill="currentColor" font-family="monospace" font-size="10">(a.P + b.Q) || c.R</text>
+
+        <!-- Edges -->
+        <path d="M210 44 L110 120" stroke="currentColor" fill="none" marker-end="url(#arrow-proc)" stroke-width="1.5" />
+        <path d="M250 44 L250 120" stroke="currentColor" fill="none" marker-end="url(#arrow-proc)" stroke-width="1.5" />
+        <path d="M290 44 L390 120" stroke="currentColor" fill="none" marker-end="url(#arrow-proc)" stroke-width="1.5" />
+        
+        <text x="140" y="70" text-anchor="middle" fill="currentColor" font-size="12">a</text>
+        <text x="260" y="80" text-anchor="start" fill="currentColor" font-size="12">b</text>
+        <text x="360" y="70" text-anchor="middle" fill="currentColor" font-size="12">c</text>
+
+        <!-- Leaf nodes -->
+        <rect x="60" y="125" width="100" height="24" rx="4" fill="var(--ui-bg)" stroke="currentColor" stroke-width="1.5" />
+        <text x="110" y="141" text-anchor="middle" fill="currentColor" font-family="monospace" font-size="10">P || c.R</text>
+
+        <rect x="200" y="125" width="100" height="24" rx="4" fill="var(--ui-bg)" stroke="currentColor" stroke-width="1.5" />
+        <text x="250" y="141" text-anchor="middle" fill="currentColor" font-family="monospace" font-size="10">Q || c.R</text>
+
+        <rect x="330" y="125" width="120" height="24" rx="4" fill="var(--ui-bg)" stroke="currentColor" stroke-width="1.5" />
+        <text x="390" y="141" text-anchor="middle" fill="currentColor" font-family="monospace" font-size="10">(a.P + b.Q) || R</text>
+        
+        <!-- Legend/Explanation below -->
+        <text x="250" y="185" text-anchor="middle" fill="currentColor" font-size="11" class="opacity-70">Shows prefix resolution (.), choice branching (+), and parallel interleaving (||)</text>
+      </svg>
+    </template>
+    <div v-else class="flex flex-col gap-3 font-mono text-sm sm:flex-row sm:items-center">
       <code class="rounded bg-elevated px-3 py-2">{{ example.before }}</code>
       <UIcon name="i-lucide-arrow-right" class="size-5 shrink-0 text-primary" />
       <code class="rounded bg-elevated px-3 py-2 text-highlighted">{{ example.after }}</code>

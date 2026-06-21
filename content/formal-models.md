@@ -12,11 +12,11 @@ order: 1
 
 5-Tuple automaton spec = {`S`tates, `I`nitial, `∑`alphabet, `F`accept, `T`ransitions}
 
-### Deterministic:
+### 1. Deterministic:
 
 - At most one path per symbol
 
-### Complete:
+### 2. Complete:
 
 - At least one path per symbol
 
@@ -24,7 +24,7 @@ order: 1
 ::
 
 
-### Power automaton:
+### 3. Power automaton:
 
 - Advantage: always deterministic & complete; same alphabet
 - Disadvantage: exponential state space
@@ -33,7 +33,7 @@ order: 1
 ::automata-example{variant="power"}
 ::
 
-### Oracle automaton:
+### 4. Oracle automaton:
 
 - Advantage: linear state space; deterministic (if original has only 1 initial state)
 - Disadvantage: can become incomplete; has a different & bigger alphabet; needs external oracle for choices
@@ -42,7 +42,7 @@ order: 1
 ::automata-example{variant="oracle"}
 ::
 
-### Optimized oracle automaton:
+### 5. Optimized oracle automaton:
 
 - Advantage: linear state space; deterministic & complete (if original has only 1 initial state); smaller alphabet than unoptimized
 - Disadvantage: still different alphabet; needs external oracle for choices
@@ -51,7 +51,7 @@ order: 1
 ::automata-example{variant="optimized"}
 ::
 
-### Complement automaton:
+### 6. Complement automaton:
 
 - If deterministic & complete
   - Just flip the final states
@@ -65,7 +65,7 @@ order: 1
 ::automata-example{variant="complement"}
 ::
 
-### Product automaton:
+### 7. Product automaton:
 
 - TODO: make a merger of both, walking through all transitions simultaneously
   - A transition can only be taken if both have the transition
@@ -126,7 +126,7 @@ order: 1
 
 4-Tuple CEN spec = {`C`onditions, `I`nitial, `E`vents, `G`raph}
 
-### In a CEN there are 2^|C| possible markings (C = number of conditions)
+### In a CEN there are $2^{|C|}$ possible markings (C = number of conditions)
 
 - Each event consumes exactly 1 token
 - Each node can hold exactly 1 token
@@ -136,20 +136,10 @@ order: 1
 
 
 
-### Precondition G^-1 of e:
+### Precondition $G^{-1}$ and Postcondition $G$:
 
-- The condition on the input under which the function may be called
-- What needs to hold to make a transition possible
-- Incoming arrows
-
-### Postcondition G of e:
-
-- The properties the result must satisfy whenever the precondition holds
-- What holds after a transition happened
-- Outgoing arrows
-
-::net-example{variant="prepost"}
-::
+- **Precondition $G^{-1}$ of e**: What needs to hold to make a transition possible (incoming arrows).
+- **Postcondition G of e**: What holds after a transition happened (outgoing arrows).
 
 ::net-example{variant="cen"}
 ::
@@ -207,9 +197,6 @@ $$
 a.Q \xrightarrow{a} Q
 $$
 
-::process-example{variant="prefix"}
-::
-
 ### Choice
 
 Choose to perform the action on one side; the other side can then be discarded.
@@ -220,9 +207,6 @@ a.P + b.Q &\xrightarrow{a} P \\
 a.P + b.Q &\xrightarrow{b} Q
 \end{aligned}
 $$
-
-::process-example{variant="choice"}
-::
 
 ### Parallel
 
@@ -235,7 +219,7 @@ a.P \parallel b.Q &\xrightarrow{b} a.P \parallel Q
 \end{aligned}
 $$
 
-::process-example{variant="parallel"}
+::process-example{variant="combined"}
 ::
 
 ### Alphabet (Set of Actions)
@@ -330,6 +314,3 @@ $$
 | `AF φ`  | `¬EG(¬φ)`  |
 | `EG φ`  | `¬AF(¬φ)`  |
 | `EF φ`  | `¬AG(¬φ)`  |
-
-::ctl-example{variant="equivalences"}
-::
