@@ -1,6 +1,6 @@
 ---
 title: Formal Models
-description: Compact exam preparation notes for Formal Models.
+description: Dense summary of the most important concepts.
 order: 1
 ---
 
