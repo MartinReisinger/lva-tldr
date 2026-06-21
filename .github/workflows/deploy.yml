@@ -6,61 +6,46 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.6.0
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      # - run: pnpm exec playwright install --with-deps chromium
-      # - run: pnpm typecheck
-      # - run: pnpm test
-      # - run: pnpm test:e2e
-      - run: pnpm build
-
   build-and-deploy:
-    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set lower case repository name
-        run: |
-          echo "REPO=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-      - uses: docker/build-push-action@v6
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            ghcr.io/${{ env.REPO }}:latest
-            ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          tags: ghcr.io/martinreisinger/lva-tldr:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
+          provenance: false
+        env:
+          BUILDKIT_PROGRESS: plain
+
       - name: Deploy on VPS
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
-          ssh -i ~/.ssh/deploy_key "deploy@${{ secrets.SSH_HOST }}" '
-            docker pull ghcr.io/${{ env.REPO }}:latest &&
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key deploy@${{ secrets.SSH_HOST }} "
             cd /home/deploy/lva-tldr &&
+            docker compose pull &&
             docker compose up -d &&
             docker image prune -f
-          '
+          "

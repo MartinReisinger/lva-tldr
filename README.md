@@ -76,7 +76,7 @@ The production container runs the Nitro output with Node.js 24.
 
 ## Deployment
 
-Pushes to `main` run type checking, tests, build, publish the image to GHCR, and deploy it over SSH. Configure these GitHub repository secrets:
+Pushes to `main` build, publish the image to GHCR, and deploy it over SSH. Configure these GitHub repository secrets:
 
 - `SSH_HOST`
 - `SSH_PRIVATE_KEY`
