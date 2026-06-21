@@ -26,7 +26,18 @@ const tocLinks = computed(() => page.value?.body?.toc?.links ?? []);
     </div>
 
     <div class="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
-      <article class="min-w-0">
+      <article class="min-w-0 relative">
+        <div class="flex justify-end mb-2">
+          <UButton
+            icon="i-heroicons-arrow-down-tray"
+            color="neutral"
+            variant="outline"
+            label="Download .md"
+            :to="`${route.path === '/' ? '/index' : route.path}.md`"
+            download
+            external
+          />
+        </div>
         <ContentRenderer :value="page" />
       </article>
 

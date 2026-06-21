@@ -1,9 +1,3 @@
----
-title: Formal Models
-description: Dense summary of the most important concepts.
-order: 1
----
-
 # Formal Models TL;DR
 
 ## Automata
@@ -20,9 +14,6 @@ order: 1
 
 - At least one path per symbol
 
-::automata-example{variant="basics"}
-::
-
 ### Automata Types
 
 #### Power automaton
@@ -31,26 +22,17 @@ order: 1
 - Disadvantage: exponential state space
 - TODO: table of original; then make new table of all reachable states, including ∅ if original was incomplete
 
-::automata-example{variant="power"}
-::
-
 #### Oracle automaton
 
 - Advantage: linear state space; deterministic (if original has only 1 initial state)
 - Disadvantage: can become incomplete; has a different & bigger alphabet; needs external oracle for choices
 - TODO: just add the targets state to the transition name
 
-::automata-example{variant="oracle"}
-::
-
 #### Optimized oracle automaton
 
 - Advantage: linear state space; deterministic; smaller alphabet than unoptimized
 - Disadvantage: still different alphabet; can still be incomplete if original was incomplte; needs external oracle for choices
 - TODO: minimize oracle alphabet by mapping transition targets to the smallest possible set of numeric indices; n has to be minimal on a per-state and per-alphabet-symbol level
-
-::automata-example{variant="oracle-optimized"}
-::
 
 #### Complement automaton
 
@@ -63,18 +45,12 @@ order: 1
   - Make power automaton
   - Then just flip the final states
 
-::automata-example{variant="complement"}
-::
-
 #### Product automaton
 
 - TODO: make a merger of both, walking through all transitions simultaneously
   - A transition can only be taken if both have the transition
   - The product accepts only if both originals accept
   - NTS: takes a lot of time and thinking; do last in exam
-
-::automata-example{variant="product"}
-::
 
 ---
 
@@ -89,9 +65,6 @@ order: 1
     - If a state accepts, all outgoing transitions have /1
     - If a state rejects, all outgoing transitions have /0
 
-::machine-example{variant="moore"}
-::
-
 #### Mealy machine
 
 - Output bound to transition (NTS: while eating a meal)
@@ -99,9 +72,6 @@ order: 1
   - Determinism and completeness do not matter
   - The incoming accept/reject value is put into the states
   - This can require an extra state
-
-::machine-example{variant="mealy"}
-::
 
 ## Subset checking
 
@@ -113,15 +83,11 @@ $$
 
 In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ and rejected by $A_2$.
 
-::machine-example{variant="subset"}
-
 1. Build the complete deterministic power automaton $P(A_2)$.
 2. Complement it to obtain $C(P(A_2))$.
 3. Build the product automaton $A_1 \times C(P(A_2))$.
    - **No accepting state is reachable:** $L(A_1) \subseteq L(A_2)$.
    - **An accepting state is reachable:** $L(A_1) \nsubseteq L(A_2)$; the path to it gives a counterexample.
-
-::
 
 ---
 
@@ -136,16 +102,10 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 - Each event consumes exactly 1 token
 - Each node can hold exactly 1 token
 
-::net-example{variant="markings"}
-::
-
 ### Conditions
 
 - **Precondition $G^{-1}$ of e**: What needs to hold to make a transition possible (incoming arrows).
 - **Postcondition G of e**: What holds after a transition happened (outgoing arrows).
-
-::net-example{variant="cen"}
-::
 
 ---
 
@@ -163,17 +123,11 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
   - The number is shown next to the edges
   - The default is 1
 
-::net-example{variant="ptn"}
-::
-
 ---
 
 #### Labeled Transition System (LTS)
 
 Just a graph of nodes (=states) whose directed edges (=state transitions) have labels (=actions/events) that trigger them.
-
-::net-example{variant="lts"}
-::
 
 ---
 
@@ -219,16 +173,11 @@ a.P \parallel b.Q &\xrightarrow{b} a.P \parallel Q
 \end{aligned}
 $$
 
-::process-example{variant="combined"}
-::
-
 ### Composition
 
 #### Alphabet
 
 Just a set of all action symbols of the given process.
-
-::formula-scroll
 
 $$
 \begin{aligned}
@@ -242,11 +191,6 @@ S &= a.P + c.R & \Sigma(S) &= \{a,b,c\} \\
 \end{aligned}
 $$
 
-::
-
-::process-example{variant="alphabet"}
-::
-
 #### Synchronization set
 
 Forces all actions in it to happen in lockstep. If `P` and `Q` share `a`, this makes it a rendezvous point, meaning `a` can never happen in only one process. All other actions, such as `b` and `c`, can interleave freely.
@@ -258,9 +202,6 @@ $$
 = \{a\}
 $$
 
-::process-example{variant="synchronization"}
-::
-
 ### Specifications
 
 #### Satisfiable
@@ -268,16 +209,10 @@ $$
 - For every allowed input, there exists at least one valid output.
 - NTS: At least one solution exists.
 
-::process-example{variant="satisfiable"}
-::
-
 #### Underspecification
 
 - Multiple outputs are possible for the same input.
 - NTS: Too many solutions.
-
-::process-example{variant="underspecification"}
-::
 
 ---
 
@@ -297,9 +232,6 @@ $$
 | `AG φ`     | On every path `φ` holds forever                      | `φ` is never violated      |
 | `E(φ U ψ)` | There exists a path where `φ` holds until `ψ` occurs | stay in `φ` until `ψ`      |
 | `A(φ U ψ)` | On every path `φ` holds until `ψ` occurs             | must stay in `φ` until `ψ` |
-
-::ctl-example{variant="operators"}
-::
 
 #### Operator symbols
 
@@ -358,9 +290,6 @@ Next == \/ InsertCoin
 
 Spec == Init /\ [][Next]_vars
 ```
-
-::tla-example{variant="action"}
-::
 
 ### Model checking
 
@@ -421,6 +350,3 @@ THEOREM Spec1 => Abstract!Spec
 - **Strong fairness:**
   - If an action is infinitely often enabled, it must eventually fire.
   - Use if the action flickers between false and true.
-
-::tla-example{variant="checking"}
-::
