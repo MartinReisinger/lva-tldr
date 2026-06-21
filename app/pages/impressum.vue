@@ -17,7 +17,7 @@ const t = computed(() => {
     };
   }
   return {
-    title: "Legal Notice",
+    title: "Imprint",
     description: "Disclosure according to § 25 Austrian Media Act",
     provider: "Service Provider & Media Owner",
     contact: "Contact",
