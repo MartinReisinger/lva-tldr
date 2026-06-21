@@ -12,8 +12,8 @@ describe('Formal Models content', () => {
 
   it('references every fixed example variant', () => {
     const variants = [
-      'basics', 'power', 'oracle', 'optimized', 'complement', 'product',
-      'moore', 'mealy', 'subset', 'markings', 'prepost', 'cen', 'ptn', 'lts',
+      'basics', 'power', 'oracle', 'oracle-optimized', 'complement', 'product',
+      'moore', 'mealy', 'subset', 'markings', 'cen', 'ptn', 'lts',
       'combined', 'alphabet', 'synchronization',
       'satisfiable', 'underspecification', 'operators',
     ]
