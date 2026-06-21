@@ -8,7 +8,6 @@ if (!page.value) {
   throw createError({
     statusCode: 404,
     statusMessage: "Topic not found",
-    fatal: true,
   });
 }
 
