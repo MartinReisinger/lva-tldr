@@ -1,0 +1,10 @@
+services:
+  jku-learning:
+    image: ghcr.io/martin-projekte1/jku-learning:latest
+    container_name: jku-learning
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      TZ: Europe/Vienna
+    ports:
+      - "127.0.0.1:3009:3000"
