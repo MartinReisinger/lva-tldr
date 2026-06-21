@@ -23,7 +23,7 @@ order: 1
 ::automata-example{variant="basics"}
 ::
 
-### Constructions
+### Automata Types
 
 #### Power automaton
 
@@ -80,8 +80,6 @@ order: 1
 
 ## Machines (Moore & Mealy)
 
-### Machine types
-
 #### Moore machine
 
 - Output bound to state (NTS: while stuck in a moor)
@@ -105,9 +103,7 @@ order: 1
 ::machine-example{variant="mealy"}
 ::
 
-### Language relations
-
-#### Subset checking
+## Subset checking
 
 $$
 L(A_1) \subseteq L(A_2)
@@ -133,8 +129,6 @@ In words: $A_1$ is a subset of $A_2$ exactly when no word is accepted by $A_1$ a
 
 4-Tuple CEN spec = {`C`onditions, `I`nitial, `E`vents, `G`raph}
 
-### State space
-
 #### Markings
 
 A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
@@ -145,9 +139,7 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 ::net-example{variant="markings"}
 ::
 
-### Event semantics
-
-#### Preconditions and postconditions
+### Conditions
 
 - **Precondition $G^{-1}$ of e**: What needs to hold to make a transition possible (incoming arrows).
 - **Postcondition G of e**: What holds after a transition happened (outgoing arrows).
@@ -160,8 +152,6 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 ## Place Transition Net (PTN)
 
 5-Tuple PTN spec = {`P`laces, `T`ransitions, `F`low relation, edge `W`eight mapping, Initial `M`arkings}
-
-### Token semantics
 
 #### PTN vs. CEN
 
@@ -176,7 +166,9 @@ A CEN with $|C|$ conditions has $2^{|C|}$ possible markings.
 ::net-example{variant="ptn"}
 ::
 
-## Labeled Transition System (LTS)
+---
+
+#### Labeled Transition System (LTS)
 
 Just a graph of nodes (=states) whose directed edges (=state transitions) have labels (=actions/events) that trigger them.
 
@@ -187,9 +179,7 @@ Just a graph of nodes (=states) whose directed edges (=state transitions) have l
 
 ## Process Algebra (PA)
 
-### Foundations
-
-#### Terminology
+### Terminology
 
 | Syntax        | Name       | Meaning                                                            |
 | ------------- | ---------- | ------------------------------------------------------------------ |
@@ -337,9 +327,7 @@ $$
 
 TLA+ describes a state machine with logic: variables are the state, actions are the transitions.
 
-### Specification
-
-#### Syntax
+### Syntax
 
 | Syntax        | Meaning                                       |
 | ------------- | --------------------------------------------- |
@@ -350,7 +338,7 @@ TLA+ describes a state machine with logic: variables are the state, actions are 
 | `Init`        | allowed initial states                        |
 | `Next`        | disjunction of all actions                    |
 
-#### Structure
+### Structure
 
 ```haskell
 ---- MODULE Vending ----
@@ -408,24 +396,22 @@ THEOREM Spec1 => Abstract!Spec
 - Use `INSTANCE ... WITH x <- expression` when the refined representation differs.
 - Time is explicit: use a bounded counter in a wait action. More counter values mean more states.
 
-### Temporal behavior
+### Operators
 
-#### Operators
+| Syntax   | Meaning                      | Classifies |
+| -------- | ---------------------------- | ---------- |
+| `[]P`    | always `P`                   | safety     |
+| `<>P`    | eventually `P`               | liveness   |
+| `P ~> Q` | whenever `P`, eventually `Q` | leads-to   |
 
-| Syntax   | Meaning                      | Classification |
-| -------- | ---------------------------- | -------------- |
-| `[]P`    | always `P`                   | safety         |
-| `<>P`    | eventually `P`               | liveness       |
-| `P ~> Q` | whenever `P`, eventually `Q` | leads-to       |
-
-#### Definitions:
+### Definitions
 
 - **Stuttering:** An enabled action may be ignored forever.
 - **Fairness:** May be required to prove liveness when the model contains non-deterministic transitions that allow the system to stall or stutter forever.
 - **Liveness:** Is the guarantee that progress eventually happens.
 
+### Fairness
 
-### Fairness 
 - **No Fairness:**
   - Use this when the action is optional for the liveness.
   - An external event that is not required to occur.
