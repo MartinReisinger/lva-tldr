@@ -108,26 +108,31 @@ public final class LongestLineProblem
 
 # Frage 5 - Non-blocking Server mit Selector
 
-## 5.1 Write-Ereignis vormerken
+## 5.1 Client registrieren
 
 **1 Punkt**
 
 ```java
-key.attach(response);
-key.interestOps(SelectionKey.OP_WRITE);
+SelectionKey key = channel.register(
+        selector, SelectionKey.OP_READ);
+key.attach(state);
 ```
 
-## 5.2 Nicht-blockierend schreiben
+## 5.2 Client schließen
 
 **2 Punkte**
 
 ```java
-channel.write(response);
+ClientState state = (ClientState) key.attachment();
+SocketChannel channel = (SocketChannel) key.channel();
 
-if (!response.hasRemaining()) {
-    key.attach(null);
-    key.interestOps(SelectionKey.OP_READ);
+if (state.name() != null) {
+    loggedInClients.remove(state.name());
 }
+
+channelKeys.remove(channel);
+key.cancel();
+channel.close();
 ```
 
 # Frage 6 - Websockets

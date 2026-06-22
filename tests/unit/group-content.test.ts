@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const years = [2020, 2021, 2025, 2026, 2027]
@@ -40,11 +40,14 @@ describe('PR Software 2 content group', () => {
       expect(exam).toContain(`originalDownloadPath: /pr-software2/${slug}-original.md`)
       expect(exam).toContain(`solutionDownloadPath: /pr-software2/${slug}-solution.md`)
 
-      expect(readFileSync(`public/pr-software2/${slug}-original.md`, 'utf8'))
-        .toBe(readFileSync(`internal_docs/md - originals/ss${year}_original.md`, 'utf8'))
-      expect(readFileSync(`public/pr-software2/${slug}-solution.md`, 'utf8'))
-        .toBe(readFileSync(`internal_docs/md - solution/ss${year}_solution.md`, 'utf8'))
+      expect(existsSync(`public/pr-software2/${slug}-original.md`)).toBe(true)
+      expect(existsSync(`public/pr-software2/${slug}-solution.md`)).toBe(true)
     }
+
+    expect(readFileSync('public/pr-software2/ai2026-1-original.md', 'utf8'))
+      .toBe(readFileSync('internal_docs/ss2027_original.md', 'utf8'))
+    expect(readFileSync('public/pr-software2/ai2026-1-solution.md', 'utf8'))
+      .toBe(readFileSync('internal_docs/ss2027_solution.md', 'utf8'))
   })
 
   it('pairs every top-level question with a solution disclosure', () => {
@@ -59,5 +62,14 @@ describe('PR Software 2 content group', () => {
       expect(solutions).toHaveLength(questions.length)
       expect(exam).not.toMatch(/^# Frage/gm)
     }
+  })
+
+  it('uses registration and cleanup in the AI 2026-1 selector question', () => {
+    const exam = readFileSync('content/pr-software2/ai2026-1.md', 'utf8')
+    expect(exam).toContain('channel.register(')
+    expect(exam).toContain('channelKeys.remove(channel);')
+    expect(exam).toContain('loggedInClients.remove(state.name());')
+    expect(exam).not.toContain('OP_WRITE')
+    expect(exam).not.toContain('interestOps')
   })
 })

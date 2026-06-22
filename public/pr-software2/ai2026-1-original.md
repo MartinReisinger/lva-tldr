@@ -138,50 +138,71 @@ Sie können annehmen, dass der Bereich nie leer ist. Schreiben Sie die vollstän
 
 # Frage 5 - Non-blocking Server mit Selector
 
-Ein Server hat für einen Client bereits eine Antwort als `ByteBuffer response` vorbereitet. Da der Client-Channel nicht blockierend arbeitet, soll die Antwort über ein Write-Ereignis gesendet werden.
+Ein Server verwaltet nicht-blockierende Client-Verbindungen. Jeder Client besitzt einen `ClientState`, der als Attachment am zugehörigen `SelectionKey` gespeichert wird. Zusätzlich werden die Keys nach Channel und angemeldete Clients nach Benutzername in Maps verwaltet.
 
 ```java
-private static void scheduleResponse(SelectionKey key, ByteBuffer response) {
-    // TODO 5.1
+private static void acceptClient(
+        ServerSocketChannel server,
+        Selector selector,
+        Map<SocketChannel, SelectionKey> channelKeys)
+        throws IOException {
+
+    SocketChannel channel = server.accept();
+    channel.configureBlocking(false);
+
+    ClientState state = new ClientState(channel);
+
+    // TODO 5.1:
+    // Register channel for read events and attach state
+
+    channelKeys.put(channel, key);
 }
 
-private static void handleWrite(SelectionKey key) throws IOException {
-    SocketChannel channel = (SocketChannel) key.channel();
-    ByteBuffer response = (ByteBuffer) key.attachment();
+private static void closeClient(
+        SelectionKey key,
+        Map<SocketChannel, SelectionKey> channelKeys,
+        Map<String, ClientState> loggedInClients)
+        throws IOException {
 
-    // TODO 5.2
+    // TODO 5.2:
+    // Remove client from both maps, cancel key and close channel
 }
 ```
 
-## 5.1 Write-Ereignis vormerken
+## 5.1 Client registrieren
 
 **1 Punkt**
 
-Hängen Sie `response` an den `SelectionKey` und ändern Sie die interessierenden Operationen auf `OP_WRITE`.
+Registrieren Sie den neuen `channel` für `OP_READ` beim `selector`. Speichern Sie den zurückgegebenen Key in einer Variable `key` und hängen Sie `state` als Attachment an diesen Key.
 
-## 5.2 Nicht-blockierend schreiben
+## 5.2 Client schließen
 
 **2 Punkte**
 
-Schreiben Sie aus `response` in den Channel. Falls danach noch Daten vorhanden sind, bleibt `OP_WRITE` aktiv. Wurde alles geschrieben, entfernen Sie das Attachment und registrieren Sie den Key wieder nur für `OP_READ`.
+Holen Sie den `ClientState` aus dem Attachment. Falls der Client bereits einen Namen besitzt, entfernen Sie ihn aus `loggedInClients`. Entfernen Sie außerdem den Channel aus `channelKeys`, brechen Sie den Key ab und schließen Sie den Channel.
 
 ## API-Auszug
 
 ```java
 public abstract class SelectionKey {
-    public static final int OP_READ, OP_WRITE;
+    public static final int OP_READ;
     public abstract SelectableChannel channel();
     public final Object attachment();
     public final Object attach(Object object);
-    public abstract SelectionKey interestOps(int operations);
+    public abstract void cancel();
 }
 
 public abstract class SocketChannel {
-    public abstract int write(ByteBuffer source) throws IOException;
+    public final SelectionKey register(Selector selector, int operations)
+            throws IOException;
+    public abstract SocketChannel configureBlocking(boolean block)
+            throws IOException;
+    public abstract void close() throws IOException;
 }
 
-public abstract class ByteBuffer {
-    public final boolean hasRemaining();
+public final class ClientState {
+    public ClientState(SocketChannel channel);
+    public String name();
 }
 ```
 
