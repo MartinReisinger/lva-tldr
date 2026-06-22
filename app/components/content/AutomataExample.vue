@@ -37,9 +37,9 @@ const titles: Record<string, string> = {
         <path d="M125 75 L205 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
         <text x="165" y="65" text-anchor="middle" fill="currentColor">a</text>
         
-        <!-- B to C (entire alphabet) -->
+        <!-- B to C (a) -->
         <path d="M255 75 L335 75" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
-        <text x="295" y="65" text-anchor="middle" fill="currentColor">{{ basicsComplete ? '*' : 'a' }}</text>
+        <text x="295" y="65" text-anchor="middle" fill="currentColor">a</text>
         
         <!-- B loop (b) -->
         <path v-if="basicsComplete" d="M 218 53 C 195 -10, 265 -10, 242 53" stroke="currentColor" fill="none" marker-end="url(#arrow-basics)" />
