@@ -6,7 +6,7 @@ const nuxtConfig = readFileSync("nuxt.config.ts", "utf8");
 
 describe("Formal Models content", () => {
   it("contains metadata and no print-only spacing", () => {
-    expect(content).toContain("title: Formal Models");
+    expect(content).toContain("title: Formal Models TL;DR");
     expect(content).toContain("order: 1");
     expect(content).toContain("kind: topic");
     expect(content).not.toContain("<br>");
