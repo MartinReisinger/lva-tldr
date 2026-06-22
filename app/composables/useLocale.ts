@@ -8,7 +8,7 @@ export function useLocale() {
       if (acceptLanguage) {
         // Find the first language that is either English or German
         const match = acceptLanguage.match(/(en|de)/i);
-        if (match && match[1].toLowerCase() === 'de') {
+        if (match?.[1]?.toLowerCase() === 'de') {
           lang = 'de';
         }
       }

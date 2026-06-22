@@ -41,10 +41,22 @@ Topics live in `content/`. Each page needs this frontmatter:
 title: Topic title
 description: Short overview text.
 order: 1
+kind: topic
 ---
 ```
 
 The filename becomes the route. For example, `content/formal-models.md` is available at `/formal-models`.
+
+One-level collections use a folder with an `index.md` marked as `kind: group`:
+
+```text
+content/pr-software2/
+├── index.md       # /pr-software2
+├── exam2026.md    # /pr-software2/exam2026
+└── exam2025.md    # /pr-software2/exam2025
+```
+
+Child pages use `kind: topic`. Deeper nested collections are not supported.
 
 Use `$...$` for inline LaTeX and `$$...$$` for display formulas. Fixed interactive examples use Nuxt Content MDC:
 

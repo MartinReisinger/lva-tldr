@@ -1,0 +1,530 @@
+# Frage 1 – Annotations
+
+**2 Punkte**
+
+Implementieren Sie eine `@Docs` Annotation basierend auf der Verwendung im unten gegebenen Code.
+
+Die Annotation soll über Reflection zur Laufzeit auslesbar sein.
+
+Definieren Sie auch die Retention und das Target der Annotation.
+
+```java
+@Docs(name = "MyClass",
+      url = "https://ssw.jku.at/javadoc/MyClass")
+class C {
+
+    @Docs(name = "MyField",
+          url = "https://ssw.jku.at/javadoc/MyClass/MyField")
+    private int f = 0;
+
+    @Docs(name = "MyMethod",
+          url = "https://ssw.jku.at/javadoc/MyClass/MyMethod")
+    public void m() { }
+}
+```
+
+Hilfreiche APIs:
+
+```java
+public enum ElementType {
+    TYPE,
+    FIELD,
+    METHOD,
+    PARAMETER,
+    CONSTRUCTOR,
+    MODULE,
+    ...
+}
+
+public enum RetentionPolicy {
+    SOURCE,
+    CLASS,
+    RUNTIME
+}
+```
+
+# Frage 2 – Reflection
+
+**2 Punkte**
+
+Welchen Text gibt das nachfolgende Programm auf die Konsole aus?
+
+*(Reihenfolge ist nicht relevant)*
+
+```java
+class A {
+
+    private int a;
+    public int b;
+
+    private void m() { ... }
+
+    public void n() { ... }
+}
+
+class B extends A {
+
+    private int c;
+    public int d;
+
+    private void o() { ... }
+
+    public void p() { ... }
+}
+
+class Main {
+
+    private static void printClass(Class<?> klass) {
+
+        for (Field f : klass.getFields()) {
+            System.out.print(f.getName() + " ");
+        }
+
+        for (Method m : klass.getDeclaredMethods()) {
+            System.out.print(m.getName() + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        printClass(B.class);
+    }
+}
+```
+
+# Frage 3 – JavaFX Properties und Bindings
+
+**4 Punkte**
+
+Implementieren Sie ein Binding zwischen der TextArea `textArea` und dem Label `label` (TODO in der unten gegebenen Klasse).
+
+Der Text (`textProperty`) des Labels soll die Anzahl an Großbuchstaben im Text (`textProperty`) der TextArea anzeigen und sich automatisch updaten, sobald sich der Text der TextArea ändert.
+
+```java
+class TestController {
+
+    @FXML
+    public TextArea textArea;
+
+    @FXML
+    public Label label;
+
+    @FXML
+    public void initialize() {
+
+        // TODO
+    }
+}
+```
+
+Hilfreiche APIs:
+
+```java
+public interface Property {
+
+    public void bind(ObservableValue observable);
+}
+
+public abstract class StringBinding {
+
+    public void bind(
+            ObservableValue<String> value) {
+        ...
+    }
+
+    protected abstract String computeValue();
+}
+
+public final class String {
+
+    public char[] toCharArray() {
+        ...
+    }
+}
+
+public final class Character {
+
+    public static boolean isUpperCase(char ch) {
+        ...
+    }
+}
+```
+
+# Frage 4 – Parallele Ausführung
+
+Aus Übung 4 zur parallelen Ausführung mit dem Fork/Join-Framework ist gegeben:
+
+- Das generische Interface `Problem` für ein Problem in einer parallelen Ausführung:
+
+```java
+public interface Problem<R, P extends Problem<R, P>> {
+    boolean isSmall();
+    Pair<P, P> split();
+    R combine(R result1, R result2);
+    R solveSequential();
+}
+```
+
+- dazu die Record-Klasse `Pair`:
+
+```java
+public record Pair<A, B>(A fst, B snd) {}
+```
+
+- und eine generische Task-Implementierung auf Basis von `Problem`:
+
+```java
+public class ProblemRecursiveTask<R, P extends Problem<R, P>> extends RecursiveTask<R> {
+    private final P problem;
+
+    public ProblemRecursiveTask(P problem) {
+        this.problem = problem;
+    }
+
+    @Override
+    protected R compute() {
+        if (problem.isSmall()) {
+            R result = problem.solveSequential();
+            return result;
+        } else {
+            Pair<P, P> problems = problem.split();
+            ProblemRecursiveTask<R, P> task1 = new ProblemRecursiveTask<>(problems.fst());
+            ProblemRecursiveTask<R, P> task2 = new ProblemRecursiveTask<>(problems.snd());
+            task1.fork();
+            task2.fork();
+            R result1 = task1.join();
+            R result2 = task2.join();
+            R result = problem.combine(result1, result2);
+            return result;
+        }
+    }
+}
+```
+
+## 4.1 SumProblem
+
+**5 Punkte**
+
+Implementieren Sie eine Klasse `SumProblem`, die das Interface `Problem` implementiert und eine parallele Summenbildung für ein `int`-Array ermöglicht.
+
+`SumProblem` soll folgende Felder haben:
+
+- eine Referenz auf das Array vom Typ `int[]`
+- einen unteren Index `from` (inklusive)
+- einen oberen Index `to` (exklusive)
+
+Damit ist ein Objekt vom Typ `SumProblem` für die Summenbildung im Array von Index `from` bis Index `to` zuständig.
+
+Ist die Anzahl der Elemente kleiner als 10, soll die Summenbildung sequentiell erfolgen, sonst parallel mit einer Aufteilung in zwei Unterprobleme.
+
+# Frage 5 – Non-blocking Server mit Selector
+
+Folgend ist die Main-Methode einer Server-Implementierung gegeben, in der ein `Selector` verwendet wird. Damit wird eine nicht-blockierende Kommunikation mit einem Client realisiert.
+
+Clients können sich beim Server anmelden und werden dann für Read-Ereignisse registriert. Die Clients schicken Kommandozeilen, die vom Server gelesen und in Methode `handleCommand` behandelt werden (Art der Behandlung ist nicht relevant).
+
+```java
+public class NonBlockingServer {
+
+    public static void main(String[] args) {
+
+        Thread serverThread = new Thread(() -> {
+
+            try {
+
+                ByteBuffer buffer = ByteBuffer.allocate(128);
+
+                ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+                serverSocketChannel.bind(new InetSocketAddress(PORT));
+                serverSocketChannel.configureBlocking(false);
+
+                Selector selector = Selector.open();
+
+                SelectionKey acceptKey =
+                        serverSocketChannel.register(selector, OP_ACCEPT);
+
+                while (!terminate) {
+
+                    int n = selector.select();
+
+                    if (n > 0) {
+
+                        Set<SelectionKey> keys =
+                                selector.selectedKeys();
+
+                        Iterator<SelectionKey> keyIt =
+                                keys.iterator();
+
+                        while (keyIt.hasNext()) {
+
+                            SelectionKey key = keyIt.next();
+
+                            if (key.isAcceptable()) {
+
+                                SocketChannel clientChannel =
+                                        serverSocketChannel.accept();
+
+                                clientChannel.configureBlocking(false);
+
+                                // TODO 5.1:
+                                // Register the client channel for read events
+
+                            } else if (key.isReadable()) {
+
+                                SocketChannel channel =
+                                        (SocketChannel) key.channel();
+
+                                // TODO 5.2:
+                                // Read line from client using buffer
+
+                                String command =
+                                        CSET.decode(buffer).toString();
+
+                                handleCommand(command);
+                            }
+
+                            keyIt.remove();
+                        }
+                    }
+                }
+
+            } catch (IOException e) {
+                ...
+            }
+
+        });
+
+        serverThread.start();
+    }
+
+    ...
+
+    private static void handleCommand(String command) {
+        ...
+    }
+}
+```
+
+## 5.1 Registrierung
+
+**1 Punkt**
+
+Registrieren Sie den `clientChannel` beim `Selector`.
+
+---
+
+## 5.2 Lesen
+
+**2 Punkte**
+
+Lesen Sie die Daten vom Client. Verwenden Sie den `ByteBuffer buffer`.
+
+## API-Auszug
+
+```java
+public class ByteBuffer {
+
+    public static ByteBuffer allocate(int capacity);
+
+    ByteBuffer clear();
+
+    ByteBuffer reset();
+
+    ByteBuffer flip();
+
+    ByteBuffer rewind();
+}
+
+public class Selector implements Closeable {
+
+    public static Selector open() throws IOException;
+
+    public Set<SelectionKey> keys();
+
+    public Set<SelectionKey> selectedKeys();
+
+    public int selectNow() throws IOException;
+
+    public int select();
+
+    public int select(long timeout);
+}
+
+public class ServerSocketChannel {
+
+    public static ServerSocketChannel open() throws IOException;
+
+    public final ServerSocketChannel bind(SocketAddress local)
+            throws IOException;
+
+    public abstract SocketChannel accept()
+            throws IOException;
+}
+
+public class SocketChannel {
+
+    public static SocketChannel open();
+
+    public abstract boolean connect(SocketAddress remote)
+            throws IOException;
+
+    public final SelectionKey register(
+            Selector sel,
+            int ops)
+            throws ClosedChannelException;
+
+    public abstract int read(ByteBuffer dst)
+            throws IOException;
+
+    public abstract int write(ByteBuffer src)
+            throws IOException;
+
+    public abstract long write(
+            ByteBuffer[] srcs,
+            int offset,
+            int length)
+            throws IOException;
+
+    public final long write(ByteBuffer[] srcs)
+            throws IOException;
+}
+
+public abstract class SelectionKey {
+
+    public static final int OP_READ;
+
+    public static final int OP_WRITE;
+
+    public static final int OP_CONNECT;
+
+    public static final int OP_ACCEPT;
+
+    public final boolean isReadable();
+
+    public final boolean isWritable();
+
+    public final boolean isConnectable();
+
+    public final boolean isAcceptable();
+
+    public abstract SelectableChannel channel();
+
+    public abstract void cancel();
+}
+```
+
+# Frage 6 – Websockets
+
+**4 Punkte**
+
+Nehmen Sie an, Sie haben bereits eine Java-Klasse `Info` implementiert, die bestimmte Informationen beinhaltet, sowie dazu passende Encoder-Klassen `InfoDecoder` und `InfoEncoder`.
+
+Weiters ist ein Broadcast-Serverendpoint gegeben. Vervollständigen Sie die 4 mit `//TODO` markierten Stellen (`a` bis `d`), sodass die folgenden Bedingungen erfüllt sind:
+
+- Von Clients eingehende `Info`-Objekte sollen automatisch an alle anderen aktiv verbundenen Clients weitergeleitet werden. Clients sollen ihre eigenen `Info`-Objekte nicht erneut vom Server erhalten.
+- Zukünftig verbundene Clients erhalten aktuelle Daten nicht, d.h. ein Abspeichern/Nachsenden von `Info`-Objekten am Server ist nicht notwendig ("wer nicht da ist, hat Pech gehabt").
+- Mit `Session::getAsyncRemote` können Sie sich das entsprechende Remote-Objekt holen. Remote-Objekte haben folgende Methoden zum Senden von Daten:
+
+```java
+Remote::sendBinary(ByteBuffer)
+Remote::sendObject(Object)
+Remote::sendPing(ByteBuffer)
+Remote::sendPong(ByteBuffer)
+Remote::sendText(String)
+```
+
+- Beachten Sie Encoder/Decoder.
+
+```java
+@ServerEndpoint(value="/info", /* TODO a */)
+public class BroadcastServerEndpoint {
+    private static final Set<Session> activeClients = /* assume a threadsafe set here */
+
+    @OnOpen
+    public void onOpen(Session session) {
+        // TODO b
+    }
+
+    @OnMessage
+    public void onMessage(Session session, Info info) {
+        // TODO c
+    }
+
+    @OnError
+    public void onError(...) { /* assume this is correctly implemented */ }
+
+    @OnClose
+    public void onClose(Session session) {
+        // TODO d
+    }
+}
+```
+
+# Frage 7 – Foreign Function & Memory
+
+**4 Punkte**
+
+Gegeben ist folgender Java-Code, der die Summe des gegebenen `double`-Arrays `array` mittels FFM API in C berechnen soll:
+
+```java
+double[] array = ... // given
+
+try (Arena offHeap = Arena.ofConfined()) {
+
+    SymbolLookup lib =
+            SymbolLookup.libraryLookup(Paths.get("myLib.dll"), offHeap);
+
+    MemorySegment sumPointer =
+            lib.findOrThrow("array_sum");
+
+    FunctionDescriptor sumDescriptor =
+            FunctionDescriptor.of(/* TODO of task c */);
+
+    MethodHandle sumHandle =
+            Linker.nativeLinker().downcallHandle(sumPointer, sumDescriptor);
+
+    // TODO of task b
+
+    double sum =
+            (double) sumHandle.invoke(/* TODO of task d */);
+
+    System.out.println("Array sum is: " + sum);
+
+} catch (Throwable t) {
+
+    ...
+}
+```
+
+Beantworten Sie folgende Fragen a) - d):
+
+---
+
+## 7.a)
+
+**1 Punkt**
+
+Die C-Funktion `array_sum` berechnet die Summe eines beliebigen `double`-Arrays und gibt diese Summe anschließend zurück.
+
+Schreiben Sie eine passende Signatur für diese Funktion.
+
+---
+
+## 7.b)
+
+**1 Punkt**
+
+Im gegebenen Code fehlt an der `TODO b`-Stelle ein wichtiger Schritt noch zur Gänze.
+
+Schreiben Sie diesen Schritt als Code/Pseudocode oder beschreiben Sie in Worten, was bei diesem Schritt passieren muss.
+
+## 7.c)
+
+**1 Punkt**
+
+Vervollständigen Sie den `FunctionDescriptor` passend zur C-Signatur aus Teilaufgabe a). Verwenden Sie `ValueLayout.JAVA_DOUBLE`, `ValueLayout.ADDRESS` und `ValueLayout.JAVA_INT`.
+
+## 7.d)
+
+**1 Punkt**
+
+Vervollständigen Sie den Aufruf von `sumHandle.invoke(...)` mit den richtigen Argumenten.
