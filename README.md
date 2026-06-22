@@ -52,7 +52,7 @@ One-level collections use a folder with an `index.md` marked as `kind: group`:
 ```text
 content/pr-software2/
 ├── index.md       # /pr-software2
-├── exam2026.md    # /pr-software2/exam2026
+├── ai2026-1.md    # /pr-software2/ai2026-1
 └── exam2025.md    # /pr-software2/exam2025
 ```
 
