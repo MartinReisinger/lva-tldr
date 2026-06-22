@@ -2,6 +2,8 @@
 title: Formal Models
 description: Dense summary of the most important concepts.
 order: 1
+kind: topic
+downloadPath: /formal-models.md
 ---
 
 # Formal Models TL;DR

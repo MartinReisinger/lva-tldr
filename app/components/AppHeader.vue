@@ -12,12 +12,6 @@
       </NuxtLink>
 
       <div class="flex items-center gap-2">
-        <span
-          v-if="$route.path !== '/'"
-          class="hidden text-sm text-muted sm:block"
-        >
-          Formal Models
-        </span>
         <UColorModeButton color="neutral" variant="ghost" />
       </div>
     </UContainer>
