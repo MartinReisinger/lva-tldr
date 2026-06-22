@@ -16,10 +16,10 @@ public @interface Retry {
 **2 Punkte**
 
 ```text
-true false Animal Trainable
+Animal Trainable Object true
 ```
 
-`Animal` ist ein Supertyp von `Dog`, aber `Dog` ist kein Supertyp von `Animal`. Die direkte Oberklasse von `Dog` ist `Animal`; das erste direkt implementierte Interface ist `Trainable`.
+Die direkte Oberklasse von `Dog` ist `Animal`; das erste direkt implementierte Interface ist `Trainable`. Die Oberklasse von `Animal` ist `Object`, und `Trainable` ist ein Interface.
 
 # Frage 3 - JavaFX Properties und Bindings
 

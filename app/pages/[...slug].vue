@@ -71,6 +71,8 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
         </UCard>
       </NuxtLink>
     </div>
+
+    <ContentUpdatedAt :value="page.updatedAt" />
   </UContainer>
 
   <UContainer v-else-if="page" class="py-6 sm:py-10">
@@ -136,6 +138,7 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
     <div class="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
       <article class="min-w-0 pt-6 lg:pt-8">
         <ContentRenderer :value="page" />
+        <ContentUpdatedAt :value="page.updatedAt" />
       </article>
 
       <aside class="hidden lg:block">

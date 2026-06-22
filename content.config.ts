@@ -11,6 +11,7 @@ export default defineContentConfig({
         downloadPath: z.string().optional(),
         originalDownloadPath: z.string().optional(),
         solutionDownloadPath: z.string().optional(),
+        updatedAt: z.string(),
       }),
     }),
   },

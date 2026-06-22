@@ -53,16 +53,15 @@ class Main {
 
     public static void main(String[] args) {
         System.out.print(
-                Animal.class.isAssignableFrom(Dog.class) + " ");
-
-        System.out.print(
-                Dog.class.isAssignableFrom(Animal.class) + " ");
-
-        System.out.print(
                 Dog.class.getSuperclass().getSimpleName() + " ");
 
         System.out.print(
-                Dog.class.getInterfaces()[0].getSimpleName());
+                Dog.class.getInterfaces()[0].getSimpleName() + " ");
+
+        System.out.print(
+                Animal.class.getSuperclass().getSimpleName() + " ");
+
+        System.out.print(Trainable.class.isInterface());
     }
 }
 ```
