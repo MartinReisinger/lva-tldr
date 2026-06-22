@@ -18,7 +18,8 @@ describe('PR Software 2 content group', () => {
     for (const year of years) {
       const exam = readFileSync(`content/pr-software2/exam${year}.md`, 'utf8')
       expect(exam).toContain('kind: topic')
-      expect(exam).toContain(`# PR Software 2 – SS ${year}`)
+      expect(exam).toContain(`title: PR Software 2 – SS ${year}`)
+      expect(exam).not.toMatch(/^# /gm)
       expect(exam).toContain(`originalDownloadPath: /pr-software2/exam${year}-original.md`)
       expect(exam).toContain(`solutionDownloadPath: /pr-software2/exam${year}-solution.md`)
 

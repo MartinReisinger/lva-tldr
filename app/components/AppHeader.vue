@@ -1,19 +1,22 @@
 <template>
-  <header
-    class="sticky top-0 z-50 border-b border-default bg-default/90 backdrop-blur"
+  <UHeader
+    title="LVA TL;DR"
+    :toggle="false"
+    :ui="{
+      root: 'bg-default/90',
+      title: 'flex min-w-0 items-center gap-2 font-semibold',
+    }"
   >
-    <UContainer class="flex h-14 items-center justify-between gap-4">
-      <NuxtLink to="/" class="flex min-w-0 items-center gap-2 font-semibold">
-        <UIcon
-          name="i-lucide-graduation-cap"
-          class="size-5 shrink-0 text-primary"
-        />
-        <span class="truncate">LVA TL;DR</span>
-      </NuxtLink>
+    <template #title>
+      <UIcon
+        name="i-lucide-graduation-cap"
+        class="size-5 shrink-0 text-primary"
+      />
+      <span class="truncate">LVA TL;DR</span>
+    </template>
 
-      <div class="flex items-center gap-2">
-        <UColorModeButton color="neutral" variant="ghost" />
-      </div>
-    </UContainer>
-  </header>
+    <template #right>
+      <UColorModeButton color="neutral" variant="ghost" />
+    </template>
+  </UHeader>
 </template>

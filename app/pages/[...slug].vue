@@ -42,25 +42,15 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
 </script>
 
 <template>
-  <UContainer v-if="page?.kind === 'group'" class="py-10 sm:py-16">
-    <NuxtLink
-      to="/"
-      class="mb-5 inline-flex items-center gap-1 text-sm text-muted transition-colors hover:text-highlighted"
-    >
-      <UIcon name="i-lucide-arrow-left" class="size-4" />
-      All topics
-    </NuxtLink>
-
-    <div class="max-w-2xl">
-      <div class="mb-3 flex items-center gap-3">
-        <span class="rounded-lg bg-primary/10 p-2 text-primary">
-          <UIcon name="i-lucide-folder-open" class="size-6" />
-        </span>
-        <p class="text-sm font-medium text-primary">Summary collection</p>
-      </div>
-      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{{ page.title }}</h1>
-      <p class="mt-3 text-muted">{{ page.description }}</p>
-    </div>
+  <UContainer v-if="page?.kind === 'group'" class="py-6 sm:py-10">
+    <AppPageHeader
+      :title="page.title"
+      :description="page.description"
+      eyebrow="Summary collection"
+      icon="i-lucide-folder-open"
+      back-to="/"
+      back-label="All topics"
+    />
 
     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <NuxtLink
@@ -84,56 +74,67 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
   </UContainer>
 
   <UContainer v-else-if="page" class="py-6 sm:py-10">
-    <NuxtLink
-      v-if="parent"
-      :to="parent.path"
-      class="mb-5 inline-flex items-center gap-1 text-sm text-muted transition-colors hover:text-highlighted"
+    <AppPageHeader
+      :title="page.title"
+      :description="page.description"
+      :back-to="parent?.path ?? '/'"
+      :back-label="parent?.title ?? 'All topics'"
     >
-      <UIcon name="i-lucide-arrow-left" class="size-4" />
-      {{ parent.title }}
-    </NuxtLink>
+      <template
+        v-if="page.downloadPath || page.originalDownloadPath || page.solutionDownloadPath"
+        #links
+      >
+        <UButton
+          v-if="page.downloadPath"
+          icon="i-heroicons-arrow-down-tray"
+          color="neutral"
+          variant="outline"
+          size="sm"
+          label="Download .md"
+          :to="page.downloadPath"
+          download
+          external
+        />
+        <UButton
+          v-if="page.originalDownloadPath"
+          icon="i-heroicons-arrow-down-tray"
+          color="neutral"
+          variant="outline"
+          size="sm"
+          label="Download original .md"
+          :to="page.originalDownloadPath"
+          download
+          external
+        />
+        <UButton
+          v-if="page.solutionDownloadPath"
+          icon="i-heroicons-arrow-down-tray"
+          color="neutral"
+          variant="outline"
+          size="sm"
+          label="Download solution .md"
+          :to="page.solutionDownloadPath"
+          download
+          external
+        />
+      </template>
+    </AppPageHeader>
 
-    <div class="mb-6 lg:hidden">
-      <UContentToc highlight highlight-variant="circuit" :links="tocLinks" />
-    </div>
+    <UContentToc
+      v-if="tocLinks.length"
+      class="lg:hidden"
+      highlight
+      highlight-variant="circuit"
+      :links="tocLinks"
+      :ui="{
+        root: 'z-40 max-h-none overflow-visible',
+        container: 'py-3 sm:py-4',
+        content: 'absolute inset-x-0 top-full max-h-[calc(100vh-var(--ui-header-height)-4rem)] overflow-y-auto border-b border-default bg-default/90 px-4 pb-5 shadow-xl backdrop-blur-xl sm:px-6',
+      }"
+    />
 
     <div class="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
-      <article class="min-w-0 relative">
-        <div
-          v-if="page.downloadPath || page.originalDownloadPath || page.solutionDownloadPath"
-          class="mb-4 flex flex-wrap justify-end gap-2"
-        >
-          <UButton
-            v-if="page.downloadPath"
-            icon="i-heroicons-arrow-down-tray"
-            color="neutral"
-            variant="outline"
-            label="Download .md"
-            :to="page.downloadPath"
-            download
-            external
-          />
-          <UButton
-            v-if="page.originalDownloadPath"
-            icon="i-heroicons-arrow-down-tray"
-            color="neutral"
-            variant="outline"
-            label="Download original .md"
-            :to="page.originalDownloadPath"
-            download
-            external
-          />
-          <UButton
-            v-if="page.solutionDownloadPath"
-            icon="i-heroicons-arrow-down-tray"
-            color="neutral"
-            variant="outline"
-            label="Download solution .md"
-            :to="page.solutionDownloadPath"
-            download
-            external
-          />
-        </div>
+      <article class="min-w-0 pt-6 lg:pt-8">
         <ContentRenderer :value="page" />
       </article>
 

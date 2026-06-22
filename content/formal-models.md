@@ -1,12 +1,10 @@
 ---
-title: Formal Models
+title: Formal Models TL;DR
 description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
 ---
-
-# Formal Models TL;DR
 
 ## Automata
 
