@@ -10,6 +10,14 @@ const expectedQuestions: Record<number, number> = {
   2027: 7,
 }
 
+const expectedTitles: Record<number, string> = {
+  2020: 'SS 2020',
+  2021: 'SS 2021',
+  2025: 'SS 2025',
+  2026: 'AI 2026-2',
+  2027: 'AI 2026-1',
+}
+
 describe('PR Software 2 content group', () => {
   it('defines a group index and all exam pages', () => {
     const index = readFileSync('content/pr-software2/index.md', 'utf8')
@@ -18,7 +26,7 @@ describe('PR Software 2 content group', () => {
     for (const year of years) {
       const exam = readFileSync(`content/pr-software2/exam${year}.md`, 'utf8')
       expect(exam).toContain('kind: topic')
-      expect(exam).toContain(`title: PR Software 2 – SS ${year}`)
+      expect(exam).toContain(`title: ${expectedTitles[year]}`)
       expect(exam).not.toMatch(/^# /gm)
       expect(exam).toContain(`originalDownloadPath: /pr-software2/exam${year}-original.md`)
       expect(exam).toContain(`solutionDownloadPath: /pr-software2/exam${year}-solution.md`)
