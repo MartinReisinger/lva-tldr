@@ -9,6 +9,7 @@ describe("Formal Models content", () => {
     expect(content).toContain("title: Formal Models TL;DR");
     expect(content).toContain("order: 1");
     expect(content).toContain("kind: topic");
+    expect(content).toMatch(/updatedAt: "\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}"/);
     expect(content).not.toContain("<br>");
   });
 

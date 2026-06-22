@@ -4,6 +4,7 @@ description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
+updatedAt: "2026-06-22T10:50:02+02:00"
 ---
 
 ## Automata

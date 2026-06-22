@@ -30,11 +30,13 @@ describe('PR Software 2 content group', () => {
   it('defines a group index and all exam pages', () => {
     const index = readFileSync('content/pr-software2/index.md', 'utf8')
     expect(index).toContain('kind: group')
+    expect(index).toMatch(/updatedAt: "\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}"/)
 
     for (const year of years) {
       const slug = pageSlugs[year]
       const exam = readFileSync(`content/pr-software2/${slug}.md`, 'utf8')
       expect(exam).toContain('kind: topic')
+      expect(exam).toMatch(/updatedAt: "\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}"/)
       expect(exam).toContain(`title: ${expectedTitles[year]}`)
       expect(exam).not.toMatch(/^# /gm)
       expect(exam).toContain(`originalDownloadPath: /pr-software2/${slug}-original.md`)
@@ -71,5 +73,13 @@ describe('PR Software 2 content group', () => {
     expect(exam).toContain('loggedInClients.remove(state.name());')
     expect(exam).not.toContain('OP_WRITE')
     expect(exam).not.toContain('interestOps')
+  })
+
+  it('limits AI 2026-2 reflection to APIs covered in class', () => {
+    const exam = readFileSync('content/pr-software2/ai2026-2.md', 'utf8')
+    expect(exam).toContain('Dog.class.getSuperclass()')
+    expect(exam).toContain('Dog.class.getInterfaces()')
+    expect(exam).toContain('Trainable.class.isInterface()')
+    expect(exam).not.toContain('isAssignableFrom')
   })
 })
