@@ -125,7 +125,6 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
     <UContentToc
       v-if="tocLinks.length"
       class="lg:hidden"
-      highlight
       highlight-variant="circuit"
       :links="tocLinks"
       :ui="{
