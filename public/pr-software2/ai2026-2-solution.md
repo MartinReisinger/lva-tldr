@@ -197,7 +197,7 @@ public class ScoreEndpoint {
 
 **4 Punkte**
 
-```proto
+```java
 service FileService {
   rpc ListFiles(Empty) returns (stream FileName);
   rpc Upload(stream FileChunk) returns (UploadResult);
@@ -210,7 +210,7 @@ service FileService {
 
 **1 Punkt**
 
-```proto
+```java
 rpc ListFiles(Empty) returns (stream FileName);
 ```
 
@@ -218,7 +218,7 @@ rpc ListFiles(Empty) returns (stream FileName);
 
 **1 Punkt**
 
-```proto
+```java
 rpc Upload(stream FileChunk) returns (UploadResult);
 ```
 
@@ -226,7 +226,7 @@ rpc Upload(stream FileChunk) returns (UploadResult);
 
 **1 Punkt**
 
-```proto
+```java
 rpc Download(FileName) returns (stream FileChunk);
 ```
 
@@ -234,6 +234,6 @@ rpc Download(FileName) returns (stream FileChunk);
 
 **1 Punkt**
 
-```proto
+```java
 rpc Observe(stream FileEvent) returns (stream FileEvent);
 ```

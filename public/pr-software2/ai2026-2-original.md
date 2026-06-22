@@ -349,7 +349,7 @@ public interface Map<K, V> {
 
 Für einen Dateidienst sind folgende Nachrichtentypen gegeben:
 
-```proto
+```java
 syntax = "proto3";
 
 option java_multiple_files = true;
