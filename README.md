@@ -1,6 +1,6 @@
 # LVA TL;DR
 
-Compact learning notes with small interactive examples. The first topic is the Formal Models exam reference; additional topics can be added as Markdown pages.
+Compact learning notes with small interactive examples.
 
 ## Stack
 
