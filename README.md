@@ -86,23 +86,6 @@ docker run --rm -p 3000:3000 lva-tldr
 
 The production container runs the Nitro output with Node.js 24.
 
-## Deployment
-
-Pushes to `main` build, publish the image to GHCR, and deploy it over SSH. Configure these GitHub repository secrets:
-
-- `SSH_HOST`
-- `SSH_PRIVATE_KEY`
-
-On the VPS, store the Compose file at `/home/deploy/lva-tldr/compose.yml`. The app binds to `127.0.0.1:3009`.
-
-Set up a reverse proxy pointing `lva-tldr.martindev.at` to `3009` (e.g. using Caddy):
-
-```caddyfile
-lva-tldr.martindev.at {
-    reverse_proxy 127.0.0.1:3009
-}
-```
-
 ## Relevant Documentation
 
 - [Nuxt UI theming](https://ui.nuxt.com/getting-started/theming)
