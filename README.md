@@ -58,7 +58,19 @@ content/pr-software2/
 
 Child pages use `kind: topic`. Deeper nested collections are not supported.
 
-Use `$...$` for inline LaTeX and `$$...$$` for display formulas. Fixed interactive examples use Nuxt Content MDC:
+In `content/`, use the same KaTeX math style as the existing pages: `$...$` for inline formulas and `$$...$$` for display formulas.
+
+```md
+$A_1 \subseteq A_2$
+
+$$
+B_i = E_i + \rho_i \sum_j F_{ij} B_j
+$$
+```
+
+Raw Markdown downloads in `public/` are plain notes. Do not use inline math there; put formulas in fenced `math` code blocks instead.
+
+Fixed interactive examples use Nuxt Content MDC:
 
 ```md
 ::automata-example{variant="power"}
