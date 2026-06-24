@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@nuxt/content"],
   css: ["~/assets/css/main.css", "katex/dist/katex.min.css"],
 
+  vite: {
+    optimizeDeps: {
+      include: [],
+    },
+  },
+
   colorMode: {
     preference: "system",
     fallback: "light",
