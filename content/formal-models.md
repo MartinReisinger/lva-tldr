@@ -4,7 +4,7 @@ description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
-updatedAt: "2026-06-24T20:25:25+02:00"
+updatedAt: "2026-06-24T20:40:47+02:00"
 ---
 
 ## Automata
@@ -212,37 +212,41 @@ $$
 
 #### Parallel
 
+For this example:
+
+$$
+P_0 = a.b.P,\quad Q_0 = b.c.C
+$$
+
 1. compute the synchronization set:
 
 $$
-\Theta = \Sigma(P) \cap \Sigma(Q)
+\Theta = \Sigma(P_0) \cap \Sigma(Q_0)
+= \{a,b\} \cap \{b,c\} = \{b\}
 $$
 
 2.  decide which rule applies.
 
-- Interleaving / Asyncron
+- Interleaving / Asynchronous
 
 If the action is not in $\Theta$, only one side performs the action. The other side stays unchanged.
 
-For $P = a.P_1$ and $Q = b.Q_1$, assume $a \notin \Sigma(Q)$ and $b \notin \Sigma(P)$.
-
 $$
 \begin{aligned}
-P \parallel Q &\xrightarrow{a} P_1 \parallel Q \\
-P \parallel Q &\xrightarrow{b} P \parallel Q_1
+a.b.P \parallel b.c.C &\xrightarrow{a} b.P \parallel b.c.C
+\qquad (a \notin \Theta) \\
+P \parallel c.C &\xrightarrow{c} P \parallel C
+\qquad (c \notin \Theta)
 \end{aligned}
-\qquad (a,b \notin \Theta)
 $$
 
 - Rendez-vous / Synchronization
 
 If the action is in $\Theta$, both sides must perform the action simultaneously.
 
-For $P = a.P_1$ and $Q = a.Q_1$, the shared label $a$ is in $\Theta$.
-
 $$
-P \parallel Q \xrightarrow{a} P_1 \parallel Q_1
-\qquad (a \in \Theta)
+b.P \parallel b.c.C \xrightarrow{b} P \parallel c.C
+\qquad (b \in \Theta)
 $$
 
 ::process-example{variant="combined"}
