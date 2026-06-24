@@ -16,6 +16,9 @@ const example = computed(() => examples[props.variant])
 <template>
   <ExampleBlock :title="example.title">
     <template v-if="variant === 'combined'">
+      <div class="mx-auto mb-3 w-full max-w-xl overflow-x-auto rounded bg-elevated px-3 py-2 font-mono text-xs text-highlighted sm:text-sm">
+        <span>Θ = Σ(a.P + b.Q) ∩ Σ(c.R) = ∅</span>
+      </div>
       <svg viewBox="0 0 560 190" class="graph-svg mx-auto w-full max-w-xl" role="img" aria-label="Process Algebra Evaluation Tree">
         <defs><marker id="arrow-proc" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="currentColor" /></marker></defs>
 
@@ -42,9 +45,6 @@ const example = computed(() => examples[props.variant])
         <rect x="380" y="130" width="160" height="42" rx="6" fill="var(--ui-bg)" stroke="currentColor" />
         <text x="460" y="156" text-anchor="middle" fill="currentColor">(a.P + b.Q) || R</text>
       </svg>
-      <p class="mt-3 text-sm text-muted">
-        Shows prefix resolution (.), choice branching (+), and parallel interleaving (||).
-      </p>
     </template>
     <div v-else class="flex flex-col gap-3 font-mono text-sm sm:flex-row sm:items-center">
       <code class="rounded bg-elevated px-3 py-2">{{ example.before }}</code>
