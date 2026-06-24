@@ -4,7 +4,7 @@ description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
-updatedAt: "2026-06-24T17:51:26+02:00"
+updatedAt: "2026-06-24T20:03:26+02:00"
 ---
 
 ## Automata
@@ -72,6 +72,7 @@ updatedAt: "2026-06-24T17:51:26+02:00"
 - TODO: make a merger of both, walking through all transitions simultaneously
   - A transition can only be taken if both have the transition
   - The product accepts only if both originals accept
+  - Uses the synchronous parallel composition
   - NTS: takes a lot of time and thinking; do last in exam
 
 ::automata-example{variant="product"}

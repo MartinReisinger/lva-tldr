@@ -50,6 +50,7 @@
 - TODO: make a merger of both, walking through all transitions simultaneously
   - A transition can only be taken if both have the transition
   - The product accepts only if both originals accept
+  - Uses the synchronous parallel composition
   - NTS: takes a lot of time and thinking; do last in exam
 
 ---
