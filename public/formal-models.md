@@ -165,13 +165,41 @@ a.P + b.Q &\xrightarrow{b} Q
 
 #### Parallel
 
-Do the same action on the right and left (a.k.a. in parallel); if one is not affected, it stays.
+For this example:
+
+```math
+P_0 = a.b.P,\quad Q_0 = b.c.C
+```
+
+1. compute the synchronization set:
+
+```math
+\Theta = \Sigma(P_0) \cap \Sigma(Q_0)
+= \{a,b\} \cap \{b,c\} = \{b\}
+```
+
+2.  decide which rule applies.
+
+- Interleaving / Asynchronous
+
+If the action is not in `\Theta`, only one side performs the action. The other side stays unchanged.
 
 ```math
 \begin{aligned}
-a.P \parallel b.Q &\xrightarrow{a} P \parallel b.Q \\
-a.P \parallel b.Q &\xrightarrow{b} a.P \parallel Q
+a.b.P \parallel b.c.C &\xrightarrow{a} b.P \parallel b.c.C
+\qquad (a \notin \Theta) \\
+P \parallel c.C &\xrightarrow{c} P \parallel C
+\qquad (c \notin \Theta)
 \end{aligned}
+```
+
+- Rendez-vous / Synchronization
+
+If the action is in `\Theta`, both sides must perform the action simultaneously.
+
+```math
+b.P \parallel b.c.C \xrightarrow{b} P \parallel c.C
+\qquad (b \in \Theta)
 ```
 
 ### Composition
