@@ -4,7 +4,7 @@ description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
-updatedAt: "2026-06-24T17:25:26+02:00"
+updatedAt: "2026-06-24T17:51:26+02:00"
 ---
 
 ## Automata
@@ -57,7 +57,7 @@ updatedAt: "2026-06-24T17:25:26+02:00"
 
 - If deterministic & complete
   - Just flip the final states
-- Else if incomplete & deterministic
+- Else if deterministic & incomplete
   - make complete via a sink ∅
   - then just flip the final states
 - Else (assert nondeterministic)
@@ -381,18 +381,19 @@ TypeOK == coins \in 0..1 /\ brewing \in BOOLEAN
 BrewingNotReachable == brewing = FALSE
 ```
 
-- Invariant:
+- **Invariant:**
   - Must hold in every reachable state.
 
-- Reachability:
+- **Reachability:**
   - Negate the target and check it as an invariant. A violation gives the path to the target.
 
-- Counterexample:
+- **Counterexample:**
   - Read the error top-to-bottom
   - Each step shows the action and changed variables.
 
-- Deadlock:
+- **Deadlock:**
   - The system is stuck because no actions in `Next` are enabled in this state.
+
 
 #### Refinement
 
