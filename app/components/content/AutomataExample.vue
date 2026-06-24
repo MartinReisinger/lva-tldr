@@ -355,10 +355,10 @@ const titles: Record<string, string> = {
               <path d="M10 40 L30 40" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
               <!-- Top curve from X to Y -->
               <path d="M 56 30 Q 80 5 104 30" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
-              <text x="80" y="10" text-anchor="middle" fill="currentColor" font-size="11">b</text>
+              <text x="80" y="10" text-anchor="middle" fill="currentColor" font-size="11">a</text>
               <!-- Bottom curve from Y to X -->
               <path d="M 104 50 Q 80 75 56 50" stroke="currentColor" fill="none" marker-end="url(#arrow-prod-b)" />
-              <text x="80" y="76" text-anchor="middle" fill="currentColor" font-size="11">a</text>
+              <text x="80" y="76" text-anchor="middle" fill="currentColor" font-size="11">b</text>
               
               <g transform="translate(45 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">X</text></g>
               <g transform="translate(115 40)"><circle r="15" fill="var(--ui-bg)" stroke="currentColor" /><circle r="11" fill="none" stroke="currentColor" /><text y="4" text-anchor="middle" fill="currentColor" font-size="12">Y</text></g>
@@ -379,9 +379,9 @@ const titles: Record<string, string> = {
             <text x="135" y="70" text-anchor="middle" fill="currentColor" font-size="12">a</text>
 
             <g transform="translate(75 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="4" text-anchor="middle" fill="currentColor" font-size="10">(1,X)</text></g>
-            <g transform="translate(195 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><text y="4" text-anchor="middle" fill="currentColor" font-size="10">(2,X)</text></g>
+            <g transform="translate(195 75)"><circle r="25" fill="var(--ui-bg)" stroke="currentColor" stroke-width="2" /><circle r="20" fill="none" stroke="currentColor" stroke-width="2" /><text y="4" text-anchor="middle" fill="currentColor" font-size="10">(2,X)</text></g>
             
-            <text x="135" y="125" text-anchor="middle" fill="currentColor" font-size="11" class="opacity-60">Transitions missing due to mismatch</text>
+            <text x="135" y="125" text-anchor="middle" fill="currentColor" font-size="11" class="opacity-60">Only synchronized transitions are kept</text>
           </svg>
         </div>
       </div>
