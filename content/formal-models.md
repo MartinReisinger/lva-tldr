@@ -327,7 +327,7 @@ $$
 Just remember these 3 rules for the equivalences:
 - Swap `F ↔ G`
 - Swap `A ↔ E`
-- Negate everything: `(φ)  (¬φ)`
+- Negate everything `φ ↔ ¬φ`
 
 ::
 
