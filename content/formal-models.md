@@ -4,7 +4,7 @@ description: Dense summary of the most important concepts.
 order: 1
 kind: topic
 downloadPath: /formal-models.md
-updatedAt: "2026-06-22T10:50:02+02:00"
+updatedAt: "2026-06-24T17:25:26+02:00"
 ---
 
 ## Automata
@@ -321,6 +321,15 @@ $$
 | `AF φ`  | `¬EG(¬φ)`  |
 | `EG φ`  | `¬AF(¬φ)`  |
 | `EF φ`  | `¬AG(¬φ)`  |
+
+::example-block{title="Equivalence shortcut" collapsed-label="Show equivalence shortcut"}
+
+Just remember these 3 rules for the equivalences:
+- Swap `F ↔ G`
+- Swap `A ↔ E`
+- Negate everything: `(φ)  (¬φ)`
+
+::
 
 ---
 

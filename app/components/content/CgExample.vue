@@ -26,34 +26,21 @@ type Variant =
   | 'gradient-shading'
   | 'marching-cubes'
   | 'data-types'
-  | 'sampling-reconstruction'
-  | 'cell-grid-types'
   | 'scalar-contours'
   | 'vector-field'
-  | 'streamlines'
   | 'tensor-field'
   | 'stream-tube'
-  | 'pca'
-  | 'tensor-glyphs'
-  | 'fiber-tracking'
-  | 'interpolation'
-  | 'piecewise-linear'
   | 'bezier'
-  | 'quadratic-bezier'
-  | 'cubic-bezier'
-  | 'higher-order-bezier'
   | 'bezier-surface'
   | 'bspline'
-  | 'non-cubic-bspline'
-  | 'nurbs'
 
 const props = defineProps<{ variant: Variant }>()
 
 const rayVariants = ['ray-basics', 'ray-effects', 'ray-acceleration', 'ray-distribution'] as const
 const radiosityVariants = ['radiosity-patches', 'radiosity-equation', 'form-factors', 'area-sampling', 'radiosity-gathering', 'radiosity-shooting', 'progressive-radiosity', 'light-bounces', 'patch-subdivision', 'radiosity-reconstruction'] as const
 const volumeVariants = ['ct-scan', 'volume-ray', 'transfer-function', 'texture-slices', 'alpha-blending', 'ray-volume-transform', 'step-size', 'volume-composition', 'splatting', 'gradient-shading', 'marching-cubes'] as const
-const dataVariants = ['data-types', 'sampling-reconstruction', 'cell-grid-types', 'scalar-contours', 'vector-field', 'streamlines', 'tensor-field', 'stream-tube', 'pca', 'tensor-glyphs', 'fiber-tracking'] as const
-const curveVariants = ['interpolation', 'piecewise-linear', 'bezier', 'quadratic-bezier', 'cubic-bezier', 'higher-order-bezier', 'bezier-surface', 'bspline', 'non-cubic-bspline', 'nurbs'] as const
+const dataVariants = ['data-types', 'scalar-contours', 'vector-field', 'tensor-field', 'stream-tube'] as const
+const curveVariants = ['bezier', 'bezier-surface', 'bspline'] as const
 </script>
 
 <template>
