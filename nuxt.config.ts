@@ -1,3 +1,9 @@
+const contentDatabaseFilename =
+  process.env.NUXT_CONTENT_DB_PATH ??
+  (process.env.npm_lifecycle_event === "typecheck"
+    ? ".data/content/contents.typecheck.sqlite"
+    : ".data/content/contents.sqlite");
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
@@ -19,8 +25,7 @@ export default defineNuxtConfig({
   content: {
     _localDatabase: {
       type: "sqlite",
-      filename:
-        process.env.NUXT_CONTENT_DB_PATH ?? ".data/content/contents.sqlite",
+      filename: contentDatabaseFilename,
     },
     build: {
       markdown: {
