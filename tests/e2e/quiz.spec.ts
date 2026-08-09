@@ -100,3 +100,15 @@ test('shuffle deals a different current question', async ({ page }) => {
 
   expect(await currentQuestionId(page)).not.toBe(currentId)
 })
+
+test('focus mode keeps only the centered quiz visible', async ({ page }) => {
+  await page.goto('/computer-graphics/quiz')
+  await waitForHydration(page)
+
+  await page.getByRole('button', { name: 'Enter focus mode' }).click()
+
+  await expect(page.getByRole('button', { name: 'Exit focus mode' })).toBeVisible()
+  await expect(page.getByText('Question order')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Exit focus mode' }).click()
+  await expect(page.getByRole('button', { name: 'Enter focus mode' })).toBeVisible()
+})
