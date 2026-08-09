@@ -135,13 +135,16 @@ const { data: parent } = await useAsyncData(`parent:${route.path}`, async () => 
       }"
     />
 
-    <div class="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
+    <div
+      class="grid min-w-0 gap-10"
+      :class="tocLinks.length ? 'lg:grid-cols-[minmax(0,1fr)_16rem]' : ''"
+    >
       <article class="min-w-0 pt-6 lg:pt-8">
         <ContentRenderer :value="page" />
         <ContentUpdatedAt :value="page.updatedAt" />
       </article>
 
-      <aside class="hidden lg:block">
+      <aside v-if="tocLinks.length" class="hidden lg:block">
         <UContentToc highlight highlight-variant="circuit" :links="tocLinks" />
       </aside>
     </div>

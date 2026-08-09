@@ -10,6 +10,8 @@
     "dev:host": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
@@ -19,8 +21,11 @@
   "dependencies": {
     "@nuxt/content": "^3.14.0",
     "@nuxt/ui": "^4.8.0",
+    "better-sqlite3": "^12.11.1",
+    "drizzle-orm": "^0.45.2",
     "katex": "^0.16.22",
     "nuxt": "~4.4.6",
+    "nuxt-auth-utils": "^0.5.30",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.3.0",
@@ -30,7 +35,9 @@
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.109",
     "@playwright/test": "^1.60.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.7.0",
+    "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0",
     "vue-tsc": "^3.3.1"

@@ -8,7 +8,8 @@ Compact learning notes with small interactive examples.
 | --- | --- |
 | Framework | Nuxt 4 and Vue 3 |
 | UI | Nuxt UI 4 and Tailwind CSS 4 |
-| Content | Nuxt Content 3 with Markdown/MDC |
+| Content | Nuxt Content 3 with Markdown/MDC and validated quiz banks |
+| Quiz sync | Optional Google OAuth, Drizzle ORM, and SQLite |
 | Mathematics | KaTeX through remark-math and rehype-katex |
 | Tests | Vitest and Playwright |
 | Runtime | Node.js 24, pnpm 11 |
@@ -77,13 +78,34 @@ Fixed interactive examples use Nuxt Content MDC:
 ::
 ```
 
-Keep examples small and explanatory. This is a reference site, not a quiz or graph editor.
+Keep examples small and explanatory. Larger practice systems use the reusable quiz component instead of being embedded in topic prose.
+
+## Quiz authoring
+
+Question banks are Nuxt Content data files in `content/quizzes/`. Each bank has a stable `quizId`, a bank `version`, and an array of questions. Questions need a stable numeric `id`, a `revision`, a supported `type`, and either a text answer or answer options.
+
+Render a bank from a topic Markdown file with:
+
+```md
+::quiz-trainer{quiz-id="computer-graphics"}
+::
+```
+
+The shared trainer completes a question after two correct submissions for that question, with at least five different questions between attempts. A wrong answer resets the unfinished streak. Increment a question's `revision` when its expected answer changes; only that question's saved mastery is reset.
+
+## Optional quiz sync
+
+Quiz progress is always saved locally in the browser. Google sign-in optionally synchronizes it between devices. Copy `.env.example` to `.env` and configure a Google OAuth web client plus a session password of at least 32 characters. The authorized redirect URI is `/auth/google` on the deployed origin.
+
+Authenticated users and their per-quiz progress are stored through Drizzle ORM in SQLite. The database defaults to `.data/quiz-progress.sqlite`; production mounts `.data` on the `quiz-data` Docker volume. Google access tokens are not stored.
 
 ## Project Structure
 
 ```text
 app/                    Nuxt pages and components
 content/                Canonical Markdown topics
+content/quizzes/        Validated quiz question banks
+server/db/              Drizzle schema and SQLite migrations
 tests/unit/             Vitest tests
 tests/e2e/              Playwright tests
 deploy/vps/compose.yml  VPS container definition
