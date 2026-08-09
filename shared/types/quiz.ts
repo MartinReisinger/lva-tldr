@@ -36,6 +36,7 @@ export interface QuizProgress {
   answered: number
   stats: Record<number, QuizQuestionProgress>
   recentIds: number[]
+  questionOrder: number[]
   history: QuizHistoryEntry[]
   currentQuestionId: number | null
   updatedAt: string

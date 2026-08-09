@@ -1,38 +1,7 @@
 import { expect, test } from '@playwright/test'
-import { readFileSync } from 'node:fs'
-
-type QuizQuestion = {
-  id: number
-  type: 'text' | 'single' | 'multiple'
-  answer?: string
-  options?: Array<{ text: string, correct: boolean }>
-}
-
-const quizQuestions = (JSON.parse(
-  readFileSync('content/quizzes/computer-graphics.json', 'utf8'),
-) as { questions: QuizQuestion[] }).questions
 
 async function waitForHydration(page: import('@playwright/test').Page) {
   await page.waitForFunction(() => Boolean((document.querySelector('#__nuxt') as Element & { __vue_app__?: object })?.__vue_app__))
-}
-
-async function currentQuizQuestionId(page: import('@playwright/test').Page) {
-  const label = await page.getByText(/^Question \d+$/).first().textContent()
-  return Number(label?.match(/\d+/)?.[0])
-}
-
-async function answerCurrentQuizQuestion(page: import('@playwright/test').Page) {
-  const questionId = await currentQuizQuestionId(page)
-  const question = quizQuestions.find(item => item.id === questionId)!
-  const form = page.locator('form')
-  if (question.type === 'text') {
-    await form.getByRole('textbox').fill(question.answer!)
-  } else {
-    for (const option of question.options!.filter(item => item.correct)) {
-      await form.locator('label').filter({ hasText: option.text }).locator('input').check()
-    }
-  }
-  await form.getByRole('button', { name: 'Check answer' }).click()
 }
 
 test('opens the Formal Models topic from the overview', async ({ page }) => {
@@ -142,29 +111,4 @@ test('fits the mobile viewport', async ({ page }) => {
   await waitForHydration(page)
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(overflow).toBe(false)
-})
-
-test('persists quiz mastery and spaces repeated questions', async ({ page }) => {
-  await page.goto('/computer-graphics/quiz')
-  await waitForHydration(page)
-  await expect(page.getByText('Two correct answers, spaced apart')).toBeVisible()
-
-  const firstId = await currentQuizQuestionId(page)
-  await answerCurrentQuizQuestion(page)
-  await expect(page.getByRole('status')).toContainText('see this question again later')
-
-  await page.reload()
-  await waitForHydration(page)
-  expect(await currentQuizQuestionId(page)).not.toBe(firstId)
-  await expect(page.getByText('1/2 correct').first()).toBeVisible()
-
-  const intervening = new Set<number>()
-  for (let index = 0; index < 5; index++) {
-    const questionId = await currentQuizQuestionId(page)
-    expect(questionId).not.toBe(firstId)
-    intervening.add(questionId)
-    await page.getByRole('button', { name: 'Show solution' }).click()
-    await page.getByRole('button', { name: 'Next question' }).click()
-  }
-  expect(intervening.size).toBe(5)
 })

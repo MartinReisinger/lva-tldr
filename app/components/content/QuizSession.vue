@@ -3,6 +3,9 @@ import type { QuizQuestion } from '#shared/types/quiz'
 
 const props = defineProps<{ quizId: string, questions: QuizQuestion[] }>()
 const route = useRoute()
+const introStorageKey = `${props.quizId}-quiz-intro-v1`
+const showIntro = ref(false)
+const expandedExplanations = ref<number[]>([])
 const quiz = useSpacedQuiz({
   questions: props.questions,
   quizId: props.quizId,
@@ -30,6 +33,40 @@ const feedback = computed(() => {
   return 'Correct! You\'ll see this question again later to make sure it sticks.'
 })
 
+watch(() => quiz.currentQuestion.value?.id, () => {
+  expandedExplanations.value = []
+})
+
+function setExplanation(index: number, open?: boolean) {
+  const expanded = expandedExplanations.value.includes(index)
+  const shouldOpen = open ?? !expanded
+  expandedExplanations.value = shouldOpen
+    ? [...new Set([...expandedExplanations.value, index])]
+    : expandedExplanations.value.filter(value => value !== index)
+}
+
+useQuizKeyboard({
+  checked: quiz.checked,
+  complete: quiz.complete,
+  hasAnswer: quiz.hasAnswer,
+  next: quiz.chooseNext,
+  optionOrder: quiz.optionOrder,
+  question: quiz.currentQuestion,
+  selected: quiz.selected,
+  submit: () => quiz.submit(false),
+  toggleExplanation: setExplanation,
+  toggleOption: quiz.toggleOption,
+})
+
+onMounted(() => {
+  showIntro.value = localStorage.getItem(introStorageKey) !== 'seen'
+})
+
+function dismissIntro() {
+  showIntro.value = false
+  localStorage.setItem(introStorageKey, 'seen')
+}
+
 async function resetProgress() {
   if (!window.confirm('Reset all progress for this quiz? This also deletes the synced copy.')) return
   await quiz.resetProgress()
@@ -52,43 +89,34 @@ async function resetProgress() {
       description="Your local quiz progress is unchanged."
     />
 
-    <div class="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
+    <div v-if="showIntro" class="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
       <div class="flex items-start gap-3">
         <UIcon name="i-lucide-repeat-2" class="mt-0.5 size-5 shrink-0 text-primary" />
-        <div>
+        <div class="min-w-0 flex-1">
           <p class="font-medium text-highlighted">Two correct answers, spaced apart</p>
           <p class="mt-1 text-sm leading-relaxed text-muted">
             Answer a question correctly twice without getting it wrong in between to complete it.
-            You'll see at least five other questions before it returns. Near the end, completed
-            questions may return as reviews to keep that spacing.
+            The same question never returns until you have submitted five different questions.
+            Questions still waiting for their first correct answer come first.
           </p>
+          <UButton class="mt-3" label="Got it" size="xs" @click="dismissIntro" />
         </div>
       </div>
     </div>
 
-    <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <div class="rounded-lg border border-default bg-muted/30 p-3">
-        <p class="text-xs text-muted">Completed</p>
-        <p class="mt-1 font-semibold text-highlighted">{{ quiz.totals.value.completed }}/{{ questions.length }}</p>
-      </div>
-      <div class="rounded-lg border border-default bg-muted/30 p-3">
-        <p class="text-xs text-muted">Correct in a row</p>
-        <p class="mt-1 font-semibold text-primary">{{ quiz.currentStats.value?.streak ?? 0 }}/2</p>
-      </div>
-      <div class="rounded-lg border border-success/40 bg-success/5 p-3">
-        <p class="text-xs text-muted">Correct</p>
-        <p class="mt-1 font-semibold text-success">{{ quiz.totals.value.correct }}</p>
-      </div>
-      <div class="rounded-lg border border-error/40 bg-error/5 p-3">
-        <p class="text-xs text-muted">Wrong</p>
-        <p class="mt-1 font-semibold text-error">{{ quiz.totals.value.wrong }}</p>
-      </div>
-    </div>
-
     <div class="mb-6">
-      <div class="mb-2 flex justify-between text-xs text-muted">
-        <span>Mastery progress</span>
-        <span>{{ quiz.percentage.value }}%</span>
+      <div class="mb-2 flex items-center justify-between gap-3 text-xs text-muted">
+        <span>Learning progress</span>
+        <div class="flex items-center gap-3">
+          <UButton
+            color="neutral"
+            label="How it works"
+            size="xs"
+            variant="link"
+            @click="showIntro = true"
+          />
+          <span>{{ quiz.percentage.value }}%</span>
+        </div>
       </div>
       <div class="h-2 overflow-hidden rounded-full bg-muted">
         <div
@@ -98,7 +126,7 @@ async function resetProgress() {
       </div>
     </div>
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_17rem]">
+    <div class="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_19rem]">
       <UCard class="min-w-0">
         <div v-if="quiz.complete.value" class="py-10 text-center">
           <UIcon name="i-lucide-trophy" class="mx-auto size-10 text-primary" />
@@ -119,8 +147,11 @@ async function resetProgress() {
           <QuizQuestion
             :question="quiz.currentQuestion.value"
             :selected="quiz.selected.value"
+            :option-order="quiz.optionOrder.value"
+            :expanded-explanations="expandedExplanations"
             :text-answer="quiz.textAnswer.value"
             :checked="quiz.checked.value"
+            @toggle-explanation="setExplanation"
             @toggle="quiz.toggleOption"
             @update:text-answer="quiz.textAnswer.value = $event"
           />
@@ -144,14 +175,15 @@ async function resetProgress() {
               label="Check answer"
               :disabled="!quiz.hasAnswer.value"
             />
-            <UButton
-              v-if="!quiz.checked.value"
-              type="button"
-              color="neutral"
-              label="Show solution"
-              variant="outline"
-              @click="quiz.submit(true)"
-            />
+            <UTooltip v-if="!quiz.checked.value" text="Counts as a wrong submission">
+              <UButton
+                type="button"
+                color="neutral"
+                label="Show solution"
+                variant="outline"
+                @click="quiz.submit(true)"
+              />
+            </UTooltip>
             <UButton
               v-else
               type="button"
@@ -160,9 +192,6 @@ async function resetProgress() {
               @click="quiz.chooseNext"
             />
           </div>
-          <p v-if="!quiz.checked.value" class="mt-2 text-xs text-muted">
-            Showing the solution counts as a wrong submission.
-          </p>
         </form>
       </UCard>
 
@@ -172,6 +201,7 @@ async function resetProgress() {
         :auth="quiz.auth.value"
         :sync-state="quiz.syncState.value"
         @reset="resetProgress"
+        @shuffle="quiz.shuffleUnseen"
         @sign-out="quiz.signOut"
       />
     </div>
