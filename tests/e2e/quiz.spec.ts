@@ -120,6 +120,7 @@ test('shuffle deals a different current question', async ({ page }) => {
 })
 
 test('focus mode keeps only the centered quiz visible', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/computer-graphics/quiz')
   await waitForHydration(page)
 

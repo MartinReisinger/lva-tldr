@@ -115,7 +115,7 @@ async function resetProgress() {
     ref="focusPanel"
     class="not-prose"
     :class="focusMode
-      ? 'fixed inset-0 z-[60] flex min-h-dvh items-center justify-center overflow-y-auto bg-default p-3 sm:p-6'
+      ? 'fixed inset-0 z-[60] flex min-h-dvh items-start justify-center overflow-y-auto bg-default px-3 pb-6 pt-[max(5rem,env(safe-area-inset-top))] sm:items-center sm:p-6'
       : ''"
   >
     <UAlert
