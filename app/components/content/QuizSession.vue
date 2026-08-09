@@ -6,6 +6,8 @@ const route = useRoute()
 const introStorageKey = `${props.quizId}-quiz-intro-v1`
 const showIntro = ref(false)
 const expandedExplanations = ref<number[]>([])
+const focusMode = ref(false)
+const focusPanel = useTemplateRef<HTMLElement>('focusPanel')
 const quiz = useSpacedQuiz({
   questions: props.questions,
   quizId: props.quizId,
@@ -37,6 +39,11 @@ watch(() => quiz.currentQuestion.value?.id, () => {
   expandedExplanations.value = []
 })
 
+watch(focusMode, (isFocused) => {
+  if (!import.meta.client) return
+  document.body.classList.toggle('overflow-hidden', isFocused)
+})
+
 function setExplanation(index: number, open?: boolean) {
   const expanded = expandedExplanations.value.includes(index)
   const shouldOpen = open ?? !expanded
@@ -49,7 +56,7 @@ useQuizKeyboard({
   checked: quiz.checked,
   complete: quiz.complete,
   hasAnswer: quiz.hasAnswer,
-  next: quiz.chooseNext,
+  next: advanceQuestion,
   optionOrder: quiz.optionOrder,
   question: quiz.currentQuestion,
   selected: quiz.selected,
@@ -60,11 +67,35 @@ useQuizKeyboard({
 
 onMounted(() => {
   showIntro.value = localStorage.getItem(introStorageKey) !== 'seen'
+  window.addEventListener('keydown', handleFocusModeKey)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleFocusModeKey)
+  document.body.classList.remove('overflow-hidden')
 })
 
 function dismissIntro() {
   showIntro.value = false
   localStorage.setItem(introStorageKey, 'seen')
+}
+
+function enterFocusMode() {
+  focusMode.value = true
+  nextTick(() => focusPanel.value?.scrollTo({ top: 0 }))
+}
+
+function exitFocusMode() {
+  focusMode.value = false
+}
+
+function handleFocusModeKey(event: KeyboardEvent) {
+  if (event.key === 'Escape' && focusMode.value) exitFocusMode()
+}
+
+function advanceQuestion() {
+  quiz.chooseNext()
+  nextTick(() => focusPanel.value?.scrollTo({ top: 0, behavior: 'smooth' }))
 }
 
 async function resetProgress() {
@@ -79,9 +110,16 @@ async function resetProgress() {
     <p class="mt-2 text-sm">Loading quiz progress…</p>
   </div>
 
-  <div v-else class="not-prose">
+  <div
+    v-else
+    ref="focusPanel"
+    class="not-prose"
+    :class="focusMode
+      ? 'fixed inset-0 z-[60] flex min-h-dvh items-center justify-center overflow-y-auto bg-default p-3 sm:p-6'
+      : ''"
+  >
     <UAlert
-      v-if="route.query.login === 'failed'"
+      v-if="!focusMode && route.query.login === 'failed'"
       class="mb-4"
       color="error"
       icon="i-lucide-circle-alert"
@@ -89,7 +127,7 @@ async function resetProgress() {
       description="Your local quiz progress is unchanged."
     />
 
-    <div v-if="showIntro" class="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
+    <div v-if="!focusMode && showIntro" class="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
       <div class="flex items-start gap-3">
         <UIcon name="i-lucide-repeat-2" class="mt-0.5 size-5 shrink-0 text-primary" />
         <div class="min-w-0 flex-1">
@@ -104,7 +142,7 @@ async function resetProgress() {
       </div>
     </div>
 
-    <div class="mb-6">
+    <div v-if="!focusMode" class="mb-6">
       <div class="mb-2 flex items-center justify-between gap-3 text-xs text-muted">
         <span>Learning progress</span>
         <div class="flex items-center gap-3">
@@ -126,14 +164,23 @@ async function resetProgress() {
       </div>
     </div>
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_19rem]">
-      <UCard class="min-w-0">
+    <div :class="focusMode ? 'mx-auto w-full max-w-3xl' : 'grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_19rem]'">
+      <UCard :class="focusMode ? 'min-w-0 shadow-xl' : 'min-w-0'">
         <div v-if="quiz.complete.value" class="py-10 text-center">
           <UIcon name="i-lucide-trophy" class="mx-auto size-10 text-primary" />
           <h2 class="mt-4 text-2xl font-semibold text-highlighted">Quiz completed</h2>
           <p class="mx-auto mt-2 max-w-md text-muted">
             Every question was answered correctly twice with the required spacing.
           </p>
+          <UButton
+            v-if="focusMode"
+            class="mt-5"
+            color="neutral"
+            icon="i-lucide-minimize-2"
+            label="Exit focus mode"
+            variant="outline"
+            @click="exitFocusMode"
+          />
         </div>
 
         <form v-else-if="quiz.currentQuestion.value" @submit.prevent="quiz.submit(false)">
@@ -141,7 +188,30 @@ async function resetProgress() {
             <UBadge color="neutral" variant="outline">
               Question {{ quiz.currentQuestion.value.id }}
             </UBadge>
-            <span class="text-xs font-medium text-muted">{{ stageLabel }}</span>
+            <div class="flex items-center gap-1">
+              <span class="text-xs font-medium text-muted">{{ stageLabel }}</span>
+              <UTooltip v-if="!focusMode" text="Focus on the quiz">
+                <UButton
+                  aria-label="Enter focus mode"
+                  color="neutral"
+                  icon="i-lucide-maximize-2"
+                  size="xs"
+                  square
+                  variant="ghost"
+                  @click="enterFocusMode"
+                />
+              </UTooltip>
+              <UButton
+                v-else
+                aria-label="Exit focus mode"
+                color="neutral"
+                icon="i-lucide-minimize-2"
+                label="Exit"
+                size="xs"
+                variant="ghost"
+                @click="exitFocusMode"
+              />
+            </div>
           </div>
 
           <QuizQuestion
@@ -167,7 +237,10 @@ async function resetProgress() {
             {{ feedback }}
           </div>
 
-          <div class="mt-6 flex flex-wrap gap-2">
+          <div
+            class="mt-6 flex flex-wrap gap-2"
+            :class="focusMode ? 'sticky bottom-0 border-t border-default bg-default/95 py-4 backdrop-blur' : ''"
+          >
             <UButton
               v-if="!quiz.checked.value"
               type="submit"
@@ -189,13 +262,14 @@ async function resetProgress() {
               type="button"
               trailing-icon="i-lucide-arrow-right"
               label="Next question"
-              @click="quiz.chooseNext"
+              @click="advanceQuestion"
             />
           </div>
         </form>
       </UCard>
 
       <QuizProgressPanel
+        v-if="!focusMode"
         :questions="questions"
         :progress="quiz.progress.value"
         :can-shuffle="quiz.canShuffle.value"
