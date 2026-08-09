@@ -1,16 +1,16 @@
-import type { QuizProgress, QuizQuestion } from '../../shared/types/quiz'
+import type { QuizProgress, QuizQuestion } from '#shared/types/quiz'
 import {
   createQuizProgress,
   normalizeQuizProgress,
   quizTotals,
   recordQuizAnswer,
   selectNextQuestion,
-} from '../../shared/utils/spacedQuiz'
-import { isQuizAnswerCorrect } from '../../shared/utils/quizAnswer'
+} from '#shared/utils/spacedQuiz'
+import { isQuizAnswerCorrect } from '#shared/utils/quizAnswer'
 import {
   mergeQuizProgress,
   migrateLegacyQuizProgress,
-} from '../../shared/utils/quizPersistence'
+} from '#shared/utils/quizPersistence'
 
 interface QuizAuthStatus {
   enabled: boolean

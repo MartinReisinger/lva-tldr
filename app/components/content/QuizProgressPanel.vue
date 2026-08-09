@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { QuizProgress, QuizQuestion } from '../../../shared/types/quiz'
+import type { QuizProgress, QuizQuestion } from '#shared/types/quiz'
 
 const props = defineProps<{
   questions: QuizQuestion[]
