@@ -7,8 +7,8 @@ const quizOption = z.object({
 })
 
 const quizQuestionBase = z.object({
-  id: z.number(),
-  revision: z.number(),
+  id: z.number().int().positive(),
+  revision: z.number().int().positive(),
   question: z.string(),
   reason: z.string().optional(),
 })
@@ -37,8 +37,8 @@ export default defineContentConfig({
       type: 'data',
       source: 'quizzes/*.json',
       schema: z.object({
-        quizId: z.string(),
-        version: z.number(),
+        quizId: z.string().regex(/^[a-z0-9-]{1,64}$/),
+        version: z.number().int().positive(),
         questions: z.array(quizQuestion).min(1),
       }),
     }),

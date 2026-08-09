@@ -59,6 +59,26 @@ describe('spaced quiz progress', () => {
     expect(selectNextQuestion(progress, ids, () => 0)).toBe(1)
   })
 
+  it('shows five different completed reviews before the last unfinished question returns', () => {
+    let progress = createQuizProgress(ids)
+    for (const id of ids.slice(0, -1)) {
+      progress.stats[id].completed = true
+      progress.stats[id].streak = 2
+    }
+    progress = recordQuizAnswer(progress, 8, true, ids)
+
+    const reviews = new Set<number>()
+    for (let position = 0; position < 5; position++) {
+      const next = selectNextQuestion(progress, ids, () => 0)
+      expect(next).not.toBe(8)
+      reviews.add(next!)
+      progress = recordQuizAnswer(progress, next!, false, ids)
+    }
+
+    expect(reviews.size).toBe(5)
+    expect(selectNextQuestion(progress, ids, () => 0)).toBe(8)
+  })
+
   it('merges local and remote progress without losing either completed question', () => {
     const local = recordQuizAnswer(
       recordQuizAnswer(createQuizProgress(ids), 1, true, ids),
@@ -133,9 +153,17 @@ describe('Computer Graphics question bank', () => {
     expect(new Set(questions.map(question => question.id)).size).toBe(84)
 
     for (const question of questions) {
+      expect(Number.isInteger(question.id) && question.id > 0).toBe(true)
+      expect(Number.isInteger(question.revision) && question.revision > 0).toBe(true)
       expect(question.question.trim()).not.toBe('')
-      if (question.type === 'text') expect(question.answer).toBeTruthy()
-      else expect(question.options?.some(option => option.correct)).toBe(true)
+      if (question.type === 'text') {
+        expect(question.answer).toBeTruthy()
+      } else {
+        const correctOptions = question.options?.filter(option => option.correct) ?? []
+        if (question.type === 'single') expect(correctOptions).toHaveLength(1)
+        expect(correctOptions.length).toBeGreaterThan(0)
+        expect(question.options?.every(option => option.explanation)).toBe(true)
+      }
     }
   })
 

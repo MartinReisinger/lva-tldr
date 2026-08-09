@@ -84,6 +84,8 @@ Keep examples small and explanatory. Larger practice systems use the reusable qu
 
 Question banks are Nuxt Content data files in `content/quizzes/`. Each bank has a stable `quizId`, a bank `version`, and an array of questions. Questions need a stable numeric `id`, a `revision`, a supported `type`, and either a text answer or answer options.
 
+See [Quiz authoring](docs/quiz-authoring.md) for the complete JSON format, examples for every question type, revision rules, page integration, persistence behavior, and the validation checklist.
+
 Render a bank from a topic Markdown file with:
 
 ```md
