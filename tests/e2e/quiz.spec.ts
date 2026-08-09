@@ -90,3 +90,13 @@ test('supports keyboard selection, explanations, and advancing', async ({ page }
   await page.keyboard.press('Enter')
   expect(await currentQuestionId(page)).not.toBe(secondId)
 })
+
+test('shuffle deals a different current question', async ({ page }) => {
+  await page.goto('/computer-graphics/quiz')
+  await waitForHydration(page)
+  const currentId = await currentQuestionId(page)
+
+  await page.getByRole('button', { name: 'Shuffle current and unseen questions' }).click()
+
+  expect(await currentQuestionId(page)).not.toBe(currentId)
+})

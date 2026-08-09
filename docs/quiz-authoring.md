@@ -116,7 +116,7 @@ The shared trainer automatically provides:
 - Priority for questions that do not currently have a correct answer; questions waiting for their second correct answer return later.
 - Completed questions return as review questions when needed to preserve spacing near the end. Review results do not undo their completed status.
 - A reset to streak `0/2` after a wrong unfinished submission.
-- A persistent question order that users can shuffle for questions they have not seen yet.
+- A persistent question order whose shuffle action deals a new current question and reorders unseen questions.
 - A fresh randomized answer-option order on every question appearance.
 - Keyboard controls: number keys select visible options or toggle their explanations, and Enter checks or advances.
 - Local browser persistence for anonymous users.

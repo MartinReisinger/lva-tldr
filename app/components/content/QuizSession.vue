@@ -198,6 +198,7 @@ async function resetProgress() {
       <QuizProgressPanel
         :questions="questions"
         :progress="quiz.progress.value"
+        :can-shuffle="quiz.canShuffle.value"
         :auth="quiz.auth.value"
         :sync-state="quiz.syncState.value"
         @reset="resetProgress"

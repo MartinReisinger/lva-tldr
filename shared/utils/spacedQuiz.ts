@@ -132,11 +132,13 @@ export function recordQuizAnswer(
 export function selectNextQuestion(
   progress: QuizProgress,
   questionIds: number[],
+  excludedId?: number,
 ): number | null {
   if (questionIds.every(id => progress.stats[id]?.completed)) return null
 
   const recent = new Set(progress.recentIds)
   const ordered = normalizedOrder(progress, questionIds)
+    .filter(id => id !== excludedId)
   const unfinishedWithoutCorrect = ordered.filter(id =>
     !progress.stats[id]?.completed && progress.stats[id]?.streak === 0,
   )
@@ -182,7 +184,7 @@ export function shuffleUnseenQuestionOrder(
 ) {
   const order = [...progress.questionOrder]
   const positions = order.flatMap((id, index) =>
-    progress.stats[id]?.attempts === 0 && id !== progress.currentQuestionId ? [index] : [],
+    progress.stats[id]?.attempts === 0 ? [index] : [],
   )
   const unseen = positions.map(index => order[index]!)
   for (let index = unseen.length - 1; index > 0; index--) {
