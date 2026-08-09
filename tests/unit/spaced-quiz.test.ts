@@ -96,15 +96,21 @@ describe('spaced quiz progress', () => {
     expect(quizQuestionQueue(progress, ids)).toEqual([2, 3, 4, 5, 6, 7, 8, 1])
   })
 
-  it('shuffles only unseen questions and keeps the current question fixed', () => {
+  it('shuffles the unseen current question while preserving seen positions', () => {
     const progress = recordQuizAnswer(createQuizProgress(ids), 1, false, ids)
     progress.currentQuestionId = 2
     const shuffled = shuffleUnseenQuestionOrder(progress, () => 0)
 
     expect(shuffled[0]).toBe(1)
-    expect(shuffled[1]).toBe(2)
-    expect(new Set(shuffled.slice(2))).toEqual(new Set(ids.slice(2)))
-    expect(shuffled.slice(2)).not.toEqual(ids.slice(2))
+    expect(new Set(shuffled.slice(1))).toEqual(new Set(ids.slice(1)))
+    expect(shuffled[1]).not.toBe(2)
+  })
+
+  it('can exclude the visible question when dealing after a shuffle', () => {
+    const progress = createQuizProgress(ids)
+    progress.currentQuestionId = 1
+
+    expect(selectNextQuestion(progress, ids, 1)).toBe(2)
   })
 
   it('counts the first correct answer toward learning progress', () => {

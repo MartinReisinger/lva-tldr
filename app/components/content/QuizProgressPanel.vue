@@ -5,6 +5,7 @@ import { quizQuestionQueue } from '#shared/utils/spacedQuiz'
 const props = defineProps<{
   questions: QuizQuestion[]
   progress: QuizProgress
+  canShuffle: boolean
   syncState: 'local' | 'syncing' | 'synced' | 'error'
   auth: {
     enabled: boolean
@@ -18,10 +19,6 @@ const orderedQuestions = computed(() => quizQuestionQueue(
   props.progress,
   props.questions.map(question => question.id),
 ).map(id => byId.value.get(id)).filter((question): question is QuizQuestion => Boolean(question)))
-const unseenCount = computed(() => props.questions.filter(question =>
-  props.progress.stats[question.id]?.attempts === 0
-    && question.id !== props.progress.currentQuestionId,
-).length)
 
 function status(question: QuizQuestion) {
   const record = props.progress.stats[question.id]
@@ -92,15 +89,15 @@ function statusClass(question: QuizQuestion) {
           <h2 class="text-sm font-semibold text-highlighted">Question order</h2>
           <p class="mt-0.5 text-xs text-muted">Current question, then the upcoming queue</p>
         </div>
-        <UTooltip text="Shuffle questions you have not seen yet">
+        <UTooltip text="Deal a new question and shuffle the unseen queue">
           <UButton
-            aria-label="Shuffle unseen questions"
+            aria-label="Shuffle current and unseen questions"
             color="neutral"
             icon="i-lucide-shuffle"
             size="xs"
             square
             variant="ghost"
-            :disabled="unseenCount < 2"
+            :disabled="!canShuffle"
             @click="emit('shuffle')"
           />
         </UTooltip>

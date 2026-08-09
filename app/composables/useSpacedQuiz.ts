@@ -53,6 +53,11 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
     : null)
   const totals = computed(() => quizTotals(progress.value))
   const complete = computed(() => totals.value.completed === questionIds.length)
+  const canShuffle = computed(() => selectNextQuestion(
+    progress.value,
+    questionIds,
+    progress.value.currentQuestionId ?? undefined,
+  ) !== null)
   const percentage = computed(() => Math.round(
     totals.value.masterySteps / (questionIds.length * 2) * 100,
   ))
@@ -83,7 +88,14 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
   }
 
   function shuffleUnseen() {
+    const previousQuestionId = progress.value.currentQuestionId ?? undefined
     progress.value.questionOrder = shuffleUnseenQuestionOrder(progress.value)
+    progress.value.currentQuestionId = selectNextQuestion(
+      progress.value,
+      questionIds,
+      previousQuestionId,
+    ) ?? previousQuestionId ?? null
+    resetAnswer()
     persist()
   }
 
@@ -210,7 +222,7 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
   onBeforeUnmount(() => clearTimeout(syncTimer))
 
   return {
-    auth, checked, chooseNext, complete, currentQuestion, currentStats, hasAnswer,
+    auth, canShuffle, checked, chooseNext, complete, currentQuestion, currentStats, hasAnswer,
     history, optionOrder, percentage, progress, ready, resetProgress, selected,
     shuffleUnseen, signOut, submit, syncState, textAnswer, toggleOption, totals,
     wasCorrect, wasReview,
