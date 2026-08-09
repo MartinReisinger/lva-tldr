@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm'
 import { quizProgress } from '../../db/schema'
-import { normalizeQuizProgress } from '../../../shared/utils/spacedQuiz'
+import { normalizeQuizProgress } from '#shared/utils/spacedQuiz'
 
 export default defineEventHandler(async (event) => {
   const user = await requireQuizUser(event)
