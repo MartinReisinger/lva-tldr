@@ -1,6 +1,6 @@
 {
   "quizId": "computer-graphics",
-  "version": 1,
+  "version": 2,
   "questions": [
     {
       "id": 1,
@@ -63,12 +63,12 @@
       "question": "For distribution ray tracing a random ray distribution is used for transparent objects while a uniform ray distribution is used for reflective ones. True or False?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "Distribution ray tracing does not assign 'random' specifically to transparency and 'uniform' specifically to reflection. Both effects are sampled from suitable distributions."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "The statement invents a fixed sampling rule that does not exist. Reflection and transmission rays are sampled according to the effect being approximated."
         }
@@ -160,12 +160,12 @@
       "question": "Complexity of Raytracing. The usage of efficient data structures leads to a sub-linear complexity of ray-triangle intersection tests",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Spatial trees reject large regions at once, so a ray often tests far fewer triangles than the total number in the scene."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Without that pruning, the ray would approach linear testing against all triangles; the purpose of the data structure is precisely to beat that."
         }
@@ -178,12 +178,12 @@
       "question": "Complexity of Raytracing. Testing each ray against each triangle has a complexity of O(N³) for every ray. Correct?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "For one ray, checking every triangle once is O(N), not O(N³). There is only one loop over the triangles."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "O(N³) would require three independent N-sized loops. A brute-force ray uses one triangle loop, so the statement is false."
         }
@@ -196,12 +196,12 @@
       "question": "Intersecting lines with triangles in 3D requires 3 equations in 3 unknowns.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "The ray parameter plus two barycentric coordinates are three unknowns, and the x, y and z coordinates provide three equations."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "The standard line-triangle system can indeed be written as three scalar equations for those three unknowns."
         }
@@ -275,12 +275,12 @@
       "question": "Raycasting is similar to ray tracing, but only primary rays are computed and local shading models are used. Correct?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Raycasting finds the first hit with a primary ray and then uses local shading at that point."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "This sentence is the usual distinction between raycasting and recursive ray tracing."
         }
@@ -541,12 +541,12 @@
       "question": "Progressive Radiosity. In progressive radiosity, the form factors can change in each iteration?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Later iterations may recompute or refine the geometric exchange used for the current shooting step."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "The progressive method is allowed to update the form-factor estimates used between iterations."
         }
@@ -559,12 +559,12 @@
       "question": "With progressive radiosity, we get an enhanced image every frame until the solution converges. Correct?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Every shooting step distributes more previously unshot energy, so the displayed approximation becomes closer to the converged solution."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "A method that only shows the final result. Progressive radiosity is useful precisely because intermediate solutions are meaningful."
         }
@@ -679,12 +679,12 @@
       "question": "The 3D gradients in the local neighborhoods of voxels can be related to boundary surfaces. True or false?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "A strong scalar change across neighboring voxels creates a gradient that points approximately normal to the boundary surface."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Gradients are specifically useful for detecting and orienting boundaries, because they measure the direction of fastest scalar change."
         }
@@ -827,12 +827,12 @@
       "question": "Isosurfaces vs. Isolines. Slicing a volume at a particular plane and computing the contour lines at this plane is equivalent to computing the isosurface and slicing it at the same plane.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Both operations solve the same scalar condition f(x,y,z)=c restricted to the same slicing plane."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Intersecting the already-computed isosurface with the plane gives the same contour condition as computing it directly in that plane."
         }
@@ -990,12 +990,12 @@
       "question": "The third eigenvector of a surface curvature tensor is the normal vector. True or false?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "The gradient of an implicit surface is perpendicular to the level set, so the remaining principal direction of the surface-curvature tensor is the normal."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "The surface has two tangent principal directions and a third orthogonal direction, which is the normal."
         }
@@ -1159,12 +1159,12 @@
       "question": "Hyper-Streamlines. For hyper-streamline visualization of DT-MRI datasets, the major (largest) eigenvalue does not matter.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "The largest eigenvalue tells the diffusion strength along the principal streamline direction, so it does matter."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "The major eigenvalue contributes to the hyper-streamline's representation of the tensor, so saying it does not matter is false."
         }
@@ -1177,12 +1177,12 @@
       "question": "Hyper-Streamlines. For hyper-streamline visualization of DT-MRI datasets, the major (largest) eigenvalues are used as the streamline directions. The minor eigenvectors, however, are not used for visualization. Correct?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "The major eigenvector gives the path direction, and the minor eigenvectors are still useful for orienting the cross-section."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "The sentence is false because it confuses eigenvalues with direction and incorrectly discards the minor eigenvectors."
         }
@@ -1230,32 +1230,32 @@
         {
           "text": "2",
           "correct": true,
-          "explanation": "Die Matrix wirkt in einem zweidimensionalen Raum. Eine reelle symmetrische 2×2-Matrix besitzt daher zwei zueinander orthogonale Eigenrichtungen."
+          "explanation": "The matrix operates in a two-dimensional space. A real symmetric 2×2 matrix therefore has two mutually orthogonal eigendirections."
         },
         {
           "text": "9",
           "correct": false,
-          "explanation": "Die Zahl der möglichen orthogonalen Eigenrichtungen wird durch die Dimension des Raums bestimmt. Bei 2×2 sind es zwei, niemals neun."
+          "explanation": "The dimension of the space determines the number of possible orthogonal eigendirections. For a 2×2 matrix there are two, never nine."
         },
         {
           "text": "4",
           "correct": false,
-          "explanation": "Eine 2×2-Matrix hat zwar vier Einträge, aber Einträge sind keine Eigenvektoren. Im zweidimensionalen Raum gibt es zwei orthogonale Hauptrichtungen."
+          "explanation": "A 2×2 matrix has four entries, but matrix entries are not eigenvectors. A two-dimensional space has two orthogonal principal directions."
         },
         {
           "text": "6",
           "correct": false,
-          "explanation": "Sechs unabhängige Eigenrichtungen können in einem zweidimensionalen Raum nicht existieren. Die maximale Zahl ist zwei."
+          "explanation": "Six independent eigendirections cannot exist in a two-dimensional space. The maximum is two."
         },
         {
           "text": "1",
           "correct": false,
-          "explanation": "Auch wenn beide Eigenwerte gleich sein können, kann man bei einer symmetrischen 2×2-Matrix immer zwei orthogonale Eigenvektoren wählen."
+          "explanation": "Even when both eigenvalues are equal, two orthogonal eigenvectors can always be chosen for a symmetric 2×2 matrix."
         },
         {
           "text": "3",
           "correct": false,
-          "explanation": "Drei unabhängige orthogonale Richtungen benötigen drei Raumdimensionen. Diese Matrix beschreibt aber nur einen zweidimensionalen Raum."
+          "explanation": "Three independent orthogonal directions require three spatial dimensions, but this matrix describes only a two-dimensional space."
         }
       ]
     },
@@ -1268,27 +1268,27 @@
         {
           "text": "9",
           "correct": false,
-          "explanation": "Eine 3×3-Matrix hat neun Einträge, aber die Eigenvektoren beschreiben Richtungen im dreidimensionalen Raum. Davon gibt es drei orthogonale Hauptrichtungen."
+          "explanation": "A 3×3 matrix has nine entries, but its eigenvectors describe directions in three-dimensional space. There are three orthogonal principal directions."
         },
         {
           "text": "6",
           "correct": false,
-          "explanation": "Die Matrix wirkt in drei Dimensionen. Deshalb kann eine orthogonale Eigenbasis höchstens drei Richtungen enthalten, nicht sechs."
+          "explanation": "The matrix operates in three dimensions, so an orthogonal eigenbasis can contain at most three directions, not six."
         },
         {
           "text": "3",
           "correct": true,
-          "explanation": "Nach dem Spektralsatz besitzt eine reelle symmetrische 3×3-Matrix eine orthogonale Basis aus drei Eigenvektoren."
+          "explanation": "By the spectral theorem, a real symmetric 3×3 matrix has an orthogonal basis of three eigenvectors."
         },
         {
           "text": "4",
           "correct": false,
-          "explanation": "Vier unabhängige orthogonale Richtungen passen nicht in einen dreidimensionalen Raum. Für 3×3 sind es drei."
+          "explanation": "Four independent orthogonal directions do not fit in a three-dimensional space. A 3×3 matrix has three."
         },
         {
           "text": "2",
           "correct": false,
-          "explanation": "Zwei Eigenvektoren würden nur zwei Raumrichtungen abdecken. Eine symmetrische 3×3-Matrix hat eine vollständige orthogonale Basis aus drei Eigenvektoren."
+          "explanation": "Two eigenvectors would cover only two spatial directions. A symmetric 3×3 matrix has a complete orthogonal basis of three eigenvectors."
         }
       ]
     },
@@ -1324,27 +1324,27 @@
         {
           "text": "4",
           "correct": false,
-          "explanation": "Vier Basisfunktionen reichen für bilineare Interpolation in 2D. Trilineare Interpolation arbeitet in 3D mit acht Zellenecken."
+          "explanation": "Four basis functions are sufficient for bilinear interpolation in 2D. Trilinear interpolation operates in 3D with eight cell corners."
         },
         {
           "text": "8",
           "correct": true,
-          "explanation": "Ein hexaedrisches 3D-Zellvolumen hat acht Ecken. Jede Ecke erhält ein eigenes Gewicht, daher braucht trilineare Interpolation acht Basisfunktionen."
+          "explanation": "A hexahedral 3D cell has eight corners. Each corner receives its own weight, so trilinear interpolation requires eight basis functions."
         },
         {
           "text": "6",
           "correct": false,
-          "explanation": "Die sechs Flächen eines Würfels bestimmen nicht die Interpolation. Entscheidend sind die acht Eckwerte der Zelle."
+          "explanation": "The six faces of a cube do not determine the interpolation. The eight values at the cell corners are what matter."
         },
         {
           "text": "1",
           "correct": false,
-          "explanation": "Eine einzige Basisfunktion könnte nur einen Wert gewichten. Trilineare Interpolation kombiniert alle acht Eckwerte."
+          "explanation": "A single basis function could weight only one value. Trilinear interpolation combines all eight corner values."
         },
         {
           "text": "3",
           "correct": false,
-          "explanation": "Drei sind die Koordinatenrichtungen x, y und z. Pro Richtung wird linear interpoliert, aber insgesamt werden die acht Eckwerte kombiniert."
+          "explanation": "Three is the number of coordinate directions: x, y and z. Interpolation is linear along each direction, but it combines all eight corner values."
         }
       ]
     },
@@ -1480,12 +1480,12 @@
       "question": "Interpolation in Splines. The interpolation in NURBS is piecewise linear.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "NURBS are piecewise rational polynomials over knot spans, so their segments are not generally straight lines."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "The interpolation is not piecewise linear; higher-degree rational basis functions create curved segments."
         }
@@ -1498,12 +1498,12 @@
       "question": "Interpolation in Splines. The interpolation in splines is piecewise linear.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "A spline joins polynomial pieces of a chosen degree, commonly cubic, rather than necessarily joining line segments."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "'piecewise' only means different polynomial pieces meet at knots; those pieces need not be linear."
         }
@@ -1544,12 +1544,12 @@
       "question": "Higher-Order Blending Functions. Blending functions of higher order can be computed recursively.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "The Cox-de Boor recurrence constructs degree-p B-spline basis functions from basis functions of degree p-1."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Recursive construction is the standard way higher-order B-spline blending functions are defined."
         }
@@ -1562,12 +1562,12 @@
       "question": "The coefficients of a rotation matrix are independent and can therefore be interpolated from keyframe to keyframe. True or False?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "Rotation-matrix entries are linked by orthonormality and determinant constraints, so changing them independently can destroy a valid rotation."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "Rotations need a constrained interpolation such as quaternion SLERP; unlike translation or scale components, matrix entries cannot be interpolated independently."
         }
@@ -1580,12 +1580,12 @@
       "question": "The coefficients of a translation matrix are independent and can therefore be interpolated from keyframe to keyframe.",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "Translation is simply the displacement vector (tx, ty, tz), and those components have no orthogonality constraint tying them together."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Linear interpolation of tx, ty and tz still produces a valid translation at every intermediate keyframe."
         }
@@ -1705,12 +1705,12 @@
       "question": "Rigid body animation of hierarchies can be implemented with scene graphs?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": true,
           "explanation": "A scene graph stores parent-child transforms, so moving a parent automatically moves all rigid descendants consistently."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": false,
           "explanation": "Hierarchical rigid-body transforms are one of the standard uses of a scene graph."
         }
@@ -1953,12 +1953,12 @@
       "question": "For inverse kinematics, a scene graph is traversed in depth-first order from root to leaves. Correct?",
       "options": [
         {
-          "text": "Wahr",
+          "text": "True",
           "correct": false,
           "explanation": "Root-to-leaf scene-graph traversal propagates known transforms, which is forward kinematics, not inverse kinematics."
         },
         {
-          "text": "Falsch",
+          "text": "False",
           "correct": true,
           "explanation": "Inverse kinematics instead solves backward from a desired end-effector constraint to unknown joint values."
         }
@@ -1973,22 +1973,22 @@
         {
           "text": "15",
           "correct": true,
-          "explanation": "Acht binäre Würfelecken ergeben 2⁸ = 256 Belegungen. Durch Rotation, Spiegelung und komplementäre Fälle lassen sie sich auf 15 Grundfälle reduzieren."
+          "explanation": "Eight binary cube corners produce 2⁸ = 256 configurations. Rotation, reflection and complementary cases reduce them to 15 unique base cases."
         },
         {
           "text": "4",
           "correct": false,
-          "explanation": "Vier Fälle reichen nicht, um alle topologisch unterschiedlichen Schnittmuster eines Würfels abzudecken. Nach Symmetriereduktion bleiben 15 Grundfälle."
+          "explanation": "Four cases are not enough to cover all topologically distinct intersection patterns of a cube. After symmetry reduction, 15 base cases remain."
         },
         {
           "text": "256",
           "correct": false,
-          "explanation": "256 ist die Zahl aller rohen Innen/Außen-Belegungen der acht Ecken. Viele davon sind durch Symmetrie äquivalent, daher bleiben nur 15 eindeutige Grundfälle."
+          "explanation": "There are 256 raw inside/outside assignments for the eight corners. Many are equivalent under symmetry, leaving only 15 unique base cases."
         },
         {
           "text": "16",
           "correct": false,
-          "explanation": "Die übliche Reduktion der 256 Konfigurationen ergibt in der in dieser Prüfung verwendeten Zählweise 15 Grundfälle, nicht 16."
+          "explanation": "The standard reduction of the 256 configurations gives 15 base cases under the counting convention used in this exam, not 16."
         }
       ],
       "reason": "The Marching Cubes algorithm has 256 raw corner configurations, reduced by symmetry/complement equivalence to 15 unique cases."

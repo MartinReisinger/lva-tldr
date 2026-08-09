@@ -12,6 +12,7 @@ describe('Computer Graphics question bank', () => {
   it('contains 84 uniquely identified, answerable questions', () => {
     expect(questions).toHaveLength(84)
     expect(bank.quizId).toBe('computer-graphics')
+    expect(bank.version).toBe(2)
     expect(new Set(questions.map(question => question.id)).size).toBe(84)
 
     for (const question of questions) {
@@ -26,6 +27,13 @@ describe('Computer Graphics question bank', () => {
         expect(question.options?.every(option => option.explanation)).toBe(true)
       }
     }
+  })
+
+  it('keeps all learner-facing content in English', () => {
+    const learnerText = JSON.stringify(questions)
+    const germanMarker = /[äöüß]|\b(?:wahr|falsch|eine|einer|eines|nicht|daher|durch|wird|werden|zwischen|zwei|drei|vier|sechs|acht|eigenvektoren|basisfunktionen|würfel|ecken|fälle)\b/i
+
+    expect(learnerText).not.toMatch(germanMarker)
   })
 
   it('checks text, single-choice, and multiple-choice answers exactly', () => {
