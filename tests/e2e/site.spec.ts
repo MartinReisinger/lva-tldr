@@ -151,7 +151,7 @@ test('persists quiz mastery and spaces repeated questions', async ({ page }) => 
 
   const firstId = await currentQuizQuestionId(page)
   await answerCurrentQuizQuestion(page)
-  await expect(page.getByRole('status')).toContainText('streak is 1/2')
+  await expect(page.getByRole('status')).toContainText('see this question again later')
 
   await page.reload()
   await waitForHydration(page)

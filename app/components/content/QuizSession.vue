@@ -13,21 +13,21 @@ const quiz = useSpacedQuiz({
 })
 
 const stageLabel = computed(() => {
-  if (quiz.currentStats.value?.completed) return 'Spacing review'
-  if (quiz.currentStats.value?.streak === 1) return 'Second correct answer needed'
-  if (quiz.currentStats.value?.attempts) return 'Retry · streak 0/2'
-  return 'First attempt'
+  if (quiz.currentStats.value?.completed) return 'Review question'
+  if (quiz.currentStats.value?.streak === 1) return 'One more correct answer'
+  if (quiz.currentStats.value?.attempts) return 'Try again'
+  return 'New question'
 })
 
 const feedback = computed(() => {
   if (quiz.wasReview.value) {
     return quiz.wasCorrect.value
-      ? 'Correct. This completed question filled one spacing position.'
-      : 'That review was wrong, but the question remains completed.'
+      ? 'Correct—nice work!'
+      : 'Not quite. Take a look at the explanation below.'
   }
-  if (!quiz.wasCorrect.value) return 'Not quite. The streak is back to 0/2; review the answer explanations below.'
-  if (quiz.currentStats.value?.completed) return 'Correct again—this question is now completed.'
-  return 'Correct. The streak is 1/2; at least five different questions will appear before this one returns.'
+  if (!quiz.wasCorrect.value) return 'Not quite. Review the explanation below and try again when this question returns.'
+  if (quiz.currentStats.value?.completed) return 'Correct again—nice work! You\'ve completed this question.'
+  return 'Correct! You\'ll see this question again later to make sure it sticks.'
 })
 
 async function resetProgress() {
@@ -58,8 +58,9 @@ async function resetProgress() {
         <div>
           <p class="font-medium text-highlighted">Two correct answers, spaced apart</p>
           <p class="mt-1 text-sm leading-relaxed text-muted">
-            A question is completed after two correct submissions in a row for that question.
-            At least five different questions appear between attempts; a wrong answer resets the streak.
+            Answer a question correctly twice without getting it wrong in between to complete it.
+            You'll see at least five other questions before it returns. Near the end, completed
+            questions may return as reviews to keep that spacing.
           </p>
         </div>
       </div>
@@ -71,7 +72,7 @@ async function resetProgress() {
         <p class="mt-1 font-semibold text-highlighted">{{ quiz.totals.value.completed }}/{{ questions.length }}</p>
       </div>
       <div class="rounded-lg border border-default bg-muted/30 p-3">
-        <p class="text-xs text-muted">Current streak</p>
+        <p class="text-xs text-muted">Correct in a row</p>
         <p class="mt-1 font-semibold text-primary">{{ quiz.currentStats.value?.streak ?? 0 }}/2</p>
       </div>
       <div class="rounded-lg border border-success/40 bg-success/5 p-3">
