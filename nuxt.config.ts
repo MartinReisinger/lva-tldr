@@ -7,7 +7,7 @@ const contentDatabaseFilename =
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
-  modules: ["@nuxt/ui", "@nuxt/content"],
+  modules: ["@nuxt/ui", "@nuxt/content", "nuxt-auth-utils"],
   css: ["~/assets/css/main.css", "katex/dist/katex.min.css"],
 
   vite: {
@@ -38,6 +38,16 @@ export default defineNuxtConfig({
       },
     },
     experimental: { sqliteConnector: "native" },
+  },
+
+  runtimeConfig: {
+    session: {
+      name: "lva-tldr-session",
+      cookie: {
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
 
   app: {

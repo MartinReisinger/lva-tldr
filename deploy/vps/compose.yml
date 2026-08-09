@@ -6,5 +6,15 @@ services:
     environment:
       NODE_ENV: production
       TZ: Europe/Vienna
+      NUXT_QUIZ_DATABASE_PATH: /app/.data/quiz-progress.sqlite
+      NUXT_OAUTH_GOOGLE_CLIENT_ID: ${NUXT_OAUTH_GOOGLE_CLIENT_ID:-}
+      NUXT_OAUTH_GOOGLE_CLIENT_SECRET: ${NUXT_OAUTH_GOOGLE_CLIENT_SECRET:-}
+      NUXT_OAUTH_GOOGLE_REDIRECT_URL: ${NUXT_OAUTH_GOOGLE_REDIRECT_URL:-}
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD:-}
     ports:
       - "127.0.0.1:3009:3000"
+    volumes:
+      - quiz-data:/app/.data
+
+volumes:
+  quiz-data:

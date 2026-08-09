@@ -1,0 +1,1997 @@
+{
+  "quizId": "computer-graphics",
+  "version": 1,
+  "questions": [
+    {
+      "id": 1,
+      "revision": 1,
+      "type": "text",
+      "question": "Assuming a Lambertian opaque scene and no distribution ray-tracing: how long (i.e., how many segments, such as primary, secondary, tertiary, quaternary, ...) must rays be to generate hard shadows",
+      "answer": "2",
+      "reason": "because first ray from pixel to object, second ray from object to light source, if blocked -> hard shadow"
+    },
+    {
+      "id": 2,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Sub-linear complexity for ray-triangle intersection tests means. . .",
+      "options": [
+        {
+          "text": "that not all rays have to be tested for a given triangle",
+          "correct": true,
+          "explanation": "Acceleration structures can avoid processing ray-triangle pairs that are known to be irrelevant, so a triangle is not tested against every ray."
+        },
+        {
+          "text": "that not all triangles have to be tested for a given ray",
+          "correct": true,
+          "explanation": "A spatial hierarchy lets one ray reject whole groups of triangles, so it reaches only a subset of the scene's triangles."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "revision": 1,
+      "type": "single",
+      "question": "The goal of using efficient data structures for ray tracing is. . .",
+      "options": [
+        {
+          "text": "quadratic ray-triangle intersection complexity.",
+          "correct": false,
+          "explanation": "Quadratic growth would get worse faster than the number of triangles. Acceleration structures are meant to reduce the growth, not increase it."
+        },
+        {
+          "text": "sub-linear ray-triangle intersection complexity",
+          "correct": true,
+          "explanation": "Trees and bounding hierarchies discard many triangles at once, so detailed intersection tests can grow more slowly than the triangle count."
+        },
+        {
+          "text": "cubic ray-triangle intersection complexity",
+          "correct": false,
+          "explanation": "Cubic complexity would mean three nested factors of scene size and would be far worse than brute-force testing."
+        },
+        {
+          "text": "linear ray-triangle intersection complexity",
+          "correct": false,
+          "explanation": "Testing every triangle is linear in the triangle count. Efficient data structures try to do better than that average behavior."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "revision": 1,
+      "type": "single",
+      "question": "For distribution ray tracing a random ray distribution is used for transparent objects while a uniform ray distribution is used for reflective ones. True or False?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "Distribution ray tracing does not assign 'random' specifically to transparency and 'uniform' specifically to reflection. Both effects are sampled from suitable distributions."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "The statement invents a fixed sampling rule that does not exist. Reflection and transmission rays are sampled according to the effect being approximated."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Distribution ray tracing. . .",
+      "options": [
+        {
+          "text": "has linear complexity",
+          "correct": false,
+          "explanation": "One ray can spawn several secondary rays, so the amount of work is not generally limited to linear growth."
+        },
+        {
+          "text": "supports interreflections",
+          "correct": true,
+          "explanation": "Secondary rays can hit other surfaces and carry their illumination back, which allows indirect interreflections."
+        },
+        {
+          "text": "has exponential complexity",
+          "correct": true,
+          "explanation": "If every ray spawns several new rays at each bounce, the ray tree can grow exponentially with depth."
+        },
+        {
+          "text": "has sub-linear complexity",
+          "correct": false,
+          "explanation": "Sub-linear describes the number of intersection tests after spatial acceleration, not the total branching cost of distribution ray tracing."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "revision": 1,
+      "type": "single",
+      "question": "What is true about ray tracing?",
+      "options": [
+        {
+          "text": "Scattering is inefficient to compute.",
+          "correct": true,
+          "explanation": "Scattering may require many outgoing samples for one incoming ray, so it is expensive compared with tracing a single deterministic direction."
+        },
+        {
+          "text": "Efficient depth-buffering is essential to reduce complexity.",
+          "correct": false,
+          "explanation": "A depth buffer is central to rasterization. Ray tracing resolves visibility by finding the nearest ray intersection instead."
+        },
+        {
+          "text": "Raycasting is a special form that considers only primary and secondary rays.",
+          "correct": false,
+          "explanation": "Raycasting normally traces primary viewing rays and then shades locally. It does not mean 'primary plus secondary rays'."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Distribution ray tracing supports",
+      "options": [
+        {
+          "text": "Soft shadows with area lights.",
+          "correct": true,
+          "explanation": "Sampling different points on an area light makes some samples visible and others blocked, producing a soft penumbra."
+        },
+        {
+          "text": "Glossy reflections via multiple reflection rays",
+          "correct": true,
+          "explanation": "Sampling several directions around the ideal reflection direction averages them into a glossy rather than perfectly sharp reflection."
+        },
+        {
+          "text": "Anti-aliasing by shooting multiple viewing rays.",
+          "correct": true,
+          "explanation": "Several viewing rays per pixel sample different subpixel positions, reducing jagged edges through supersampling."
+        },
+        {
+          "text": "Fast computation of form factors.",
+          "correct": false,
+          "explanation": "Form factors are a radiosity concept. Distribution ray tracing does not make their computation inherently fast."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "revision": 1,
+      "type": "single",
+      "question": "Complexity of Raytracing. The usage of efficient data structures leads to a sub-linear complexity of ray-triangle intersection tests",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Spatial trees reject large regions at once, so a ray often tests far fewer triangles than the total number in the scene."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Without that pruning, the ray would approach linear testing against all triangles; the purpose of the data structure is precisely to beat that."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "revision": 1,
+      "type": "single",
+      "question": "Complexity of Raytracing. Testing each ray against each triangle has a complexity of O(N³) for every ray. Correct?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "For one ray, checking every triangle once is O(N), not O(N³). There is only one loop over the triangles."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "O(N³) would require three independent N-sized loops. A brute-force ray uses one triangle loop, so the statement is false."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "revision": 1,
+      "type": "single",
+      "question": "Intersecting lines with triangles in 3D requires 3 equations in 3 unknowns.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "The ray parameter plus two barycentric coordinates are three unknowns, and the x, y and z coordinates provide three equations."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "The standard line-triangle system can indeed be written as three scalar equations for those three unknowns."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "revision": 1,
+      "type": "multiple",
+      "question": "What are the differences between global shading and local shading?",
+      "options": [
+        {
+          "text": "Ray tracing or radiosity are considered local shading techniques.",
+          "correct": false,
+          "explanation": "Ray tracing and radiosity account for light transport beyond a single surface point, so they are global shading methods."
+        },
+        {
+          "text": "Local shading considers surface points in the local neighborhood for shading computations.",
+          "correct": false,
+          "explanation": "Local shading uses properties at the current surface point and its lights; it does not gather neighboring surface points as a geometric neighborhood."
+        },
+        {
+          "text": "Global shading techniques support the simulation of caustics.",
+          "correct": true,
+          "explanation": "Caustics require light to travel through or reflect from other surfaces before reaching the shaded point, which needs global light transport."
+        },
+        {
+          "text": "Global shading techniques typically do not use triangles for rendering.",
+          "correct": false,
+          "explanation": "Global shading can still render ordinary triangle geometry. 'Global' describes the illumination model, not the primitive type."
+        },
+        {
+          "text": "Local shading for each surface point is computed with (multiple) light sources.",
+          "correct": true,
+          "explanation": "A local model evaluates the current surface point against one or more light sources using its normal and material."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "revision": 1,
+      "type": "single",
+      "question": "Global vs. Local Shading. What’s the advantage of global shading vs. local shading?",
+      "options": [
+        {
+          "text": "Only global shading supports multiple light sources.",
+          "correct": false,
+          "explanation": "Local models such as Phong shading can sum contributions from many lights too."
+        },
+        {
+          "text": "Only global shading supports interreflections.",
+          "correct": true,
+          "explanation": "Interreflection needs light to bounce from one surface to another, which a purely local shading calculation does not model."
+        },
+        {
+          "text": "Only local shading supports real-time rates.",
+          "correct": false,
+          "explanation": "Global methods can be real-time in some implementations, and local shading is not defined by real-time capability."
+        },
+        {
+          "text": "Only local shading supports anisotropic reflections.",
+          "correct": false,
+          "explanation": "Anisotropic BRDFs can be used in local shading too; anisotropy is a material property, not an exclusive global effect."
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "revision": 1,
+      "type": "single",
+      "question": "Raycasting is similar to ray tracing, but only primary rays are computed and local shading models are used. Correct?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Raycasting finds the first hit with a primary ray and then uses local shading at that point."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "This sentence is the usual distinction between raycasting and recursive ray tracing."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "revision": 1,
+      "type": "single",
+      "question": "Raycasting is ray tracing with only secondary rays.",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "Secondary rays exist only after a primary ray has hit something. Raycasting is based on the primary visibility ray."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "Raycasting is not 'only secondary rays'; it primarily traces the camera ray to determine visible surfaces."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "revision": 1,
+      "type": "single",
+      "question": "For N pixels and M triangles, is the complexity of raycasting with an implementation better than brute-force triangle testing M log N?",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "M log N is not a general formula for accelerated raycasting. The cost depends on pixels, rays, triangles and the acceleration structure."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "There is no universal M log N complexity for this situation; a hierarchy changes the search cost per ray rather than producing that formula."
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "revision": 1,
+      "type": "text",
+      "question": "For a scene graph with 10 patches, how many (known) coefficients does the matrix in a radiosity equation system have?",
+      "answer": "100",
+      "reason": "O(n²)"
+    },
+    {
+      "id": 17,
+      "revision": 1,
+      "type": "single",
+      "question": "What is the result if we approximate the radiosity solution with a Neumann series of just (I −A)−1 = I? I is the identity matrix, and A the matrix containing form factors, etc.",
+      "options": [
+        {
+          "text": "We get only direct (local) illumination.",
+          "correct": false,
+          "explanation": "Direct illumination appears only after applying the transport matrix once. Keeping only I includes no light transport at all."
+        },
+        {
+          "text": "We get indirect (global) illumination, but only the first light bounce.",
+          "correct": false,
+          "explanation": "A first indirect bounce would need additional powers of A. With only I, even the first transfer from a light to another patch is missing."
+        },
+        {
+          "text": "We see only light sources.",
+          "correct": true,
+          "explanation": "I keeps only each patch's own emitted energy, so only patches that are light sources are visible."
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "revision": 1,
+      "type": "multiple",
+      "question": "For which visual effects is radiosity more efficient than ray tracing?",
+      "options": [
+        {
+          "text": "Refractions",
+          "correct": false,
+          "explanation": "Refraction is directional transmission through a surface, while classic radiosity assumes diffuse exchange."
+        },
+        {
+          "text": "Depth of Field Effects",
+          "correct": false,
+          "explanation": "Depth of field comes from sampling a finite camera aperture, which is naturally handled with ray sampling rather than radiosity."
+        },
+        {
+          "text": "Mirror Reflection",
+          "correct": false,
+          "explanation": "A mirror has a single directionally reflected ray, whereas radiosity assumes diffuse reflection over the hemisphere."
+        },
+        {
+          "text": "Diffuse Interreflections",
+          "correct": true,
+          "explanation": "Diffuse interreflection is exactly the energy exchange between diffuse patches that radiosity solves for."
+        },
+        {
+          "text": "Color Bleeding",
+          "correct": true,
+          "explanation": "When colored diffuse surfaces bounce light onto neighbors, their color is transferred, producing color bleeding."
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "revision": 1,
+      "type": "text",
+      "question": "For 5 scene patches, how many unique and non-zero form-factor values exist at maximum?",
+      "answer": "10",
+      "reason": "5 × 5 = 25 form-factor entries; the 5 diagonal self-form-factors are 0 (a planar/convex 1 patch cannot see itself), leaving 20 off-diagonal; reciprocity AiFij = AjFji pairs them up, so 20/2 = 10 are unique."
+    },
+    {
+      "id": 20,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Shooting and Gathering.",
+      "options": [
+        {
+          "text": "Gathering uses iterative methods with O(n²), like the Southwell method.",
+          "correct": false,
+          "explanation": "Southwell selects the component with the largest residual, which matches shooting rather than gathering."
+        },
+        {
+          "text": "Gathering uses iterative methods with O(n²), like Jacobi iterations.",
+          "correct": true,
+          "explanation": "Gathering recomputes every patch from the current values of all other patches, matching Jacobi-style iteration."
+        },
+        {
+          "text": "Shooting uses iterative methods with O(n²), like Jacobi iterations.",
+          "correct": false,
+          "explanation": "Jacobi updates all unknowns from the previous iteration, which is the gathering view, not selective shooting."
+        },
+        {
+          "text": "Shooting uses iterative methods with O(n²), like the Southwell method.",
+          "correct": true,
+          "explanation": "Shooting picks the patch with the most unshot energy and distributes it, analogous to the Southwell update strategy."
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Form factors...",
+      "options": [
+        {
+          "text": "can be determined by sampling and integrating unit areas.",
+          "correct": true,
+          "explanation": "The defining surface integral can be approximated numerically by sampling small areas and summing their contributions."
+        },
+        {
+          "text": "depend on the viewing position.",
+          "correct": false,
+          "explanation": "Form factors depend on surface geometry and visibility, not on where the camera is located."
+        },
+        {
+          "text": "cannot handle occlusion.",
+          "correct": false,
+          "explanation": "Visibility is part of the geometric coupling. If one surface blocks another, their direct form-factor contribution is reduced or zero."
+        },
+        {
+          "text": "are dual in direction.",
+          "correct": true,
+          "explanation": "Exchange in opposite directions is linked by reciprocity, with the patch areas relating the two form factors."
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "revision": 1,
+      "type": "single",
+      "question": "Why does the form-factor computation for radiosity use a division factor of 2π?",
+      "options": [
+        {
+          "text": "Because 2π is the area of a unit circle onto which a sending path is projected to.",
+          "correct": false,
+          "explanation": "2π is not the projected-area normalization used here, and a unit circle itself has area π, not 2π."
+        },
+        {
+          "text": "Because the Lambertian shading equation is also divided by 2π.",
+          "correct": false,
+          "explanation": "The Lambertian normalization involved in the cosine-weighted hemisphere is π, not 2π."
+        },
+        {
+          "text": "It is not divided by 2π, but by π",
+          "correct": true,
+          "explanation": "The cosine-weighted solid angle over a hemisphere integrates to π, so the normalization uses π."
+        },
+        {
+          "text": "Because 2π is the area of a unit hemisphere onto which a sending patch is projected to.",
+          "correct": false,
+          "explanation": "A unit hemisphere has surface area 2π, but form factors use projected, cosine-weighted solid angle, whose integral is π."
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "revision": 1,
+      "type": "multiple",
+      "question": "What applies to form factors?",
+      "options": [
+        {
+          "text": "The surface-to-surface form factor is the radiative energy leaving area A and striking area B, normalized by π.",
+          "correct": true,
+          "explanation": "The geometric integral is normalized by π to obtain the fraction of diffuse energy transferred."
+        },
+        {
+          "text": "The Nusselt analog places a unit cube at a point on a surface, to simplify the calculation of the form factor.",
+          "correct": false,
+          "explanation": "The Nusselt analog uses a hemisphere/projection construction. The cube is the approximation introduced by the hemicube method."
+        },
+        {
+          "text": "The Hemicube method determines the form factor between a point and a polygon.",
+          "correct": true,
+          "explanation": "The hemicube is centered at a surface point, rasterizes surrounding polygons and estimates the point-to-polygon form factor."
+        },
+        {
+          "text": "Area sampling is faster than Hemicube.",
+          "correct": false,
+          "explanation": "Area sampling traces many sample-to-sample visibility connections; the hemicube can estimate many receivers efficiently with rasterization."
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "revision": 1,
+      "type": "multiple",
+      "question": "What applies to form factors?",
+      "options": [
+        {
+          "text": "They can be computed with area sampling.",
+          "correct": true,
+          "explanation": "Sampling points on the two surfaces numerically approximates the form-factor integral."
+        },
+        {
+          "text": "They consider occlusion between surfaces.",
+          "correct": true,
+          "explanation": "An occluder blocks energy transfer, so visibility must be included when computing the form factor."
+        },
+        {
+          "text": "They have values between 0 and 1.",
+          "correct": true,
+          "explanation": "It is a fraction of outgoing energy reaching another surface, so it cannot be below 0 or above 1."
+        },
+        {
+          "text": "The form factor between surface A and B is the same as between B and A.",
+          "correct": true,
+          "explanation": "Marked true in this exam's formulation. More precisely, physical reciprocity is area-weighted: A_i F_ij = A_j F_ji; equal areas make the two values equal."
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "revision": 1,
+      "type": "single",
+      "question": "Progressive Radiosity. In progressive radiosity, the form factors can change in each iteration?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Later iterations may recompute or refine the geometric exchange used for the current shooting step."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "The progressive method is allowed to update the form-factor estimates used between iterations."
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "revision": 1,
+      "type": "single",
+      "question": "With progressive radiosity, we get an enhanced image every frame until the solution converges. Correct?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Every shooting step distributes more previously unshot energy, so the displayed approximation becomes closer to the converged solution."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "A method that only shows the final result. Progressive radiosity is useful precisely because intermediate solutions are meaningful."
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Solving the Radiosity Equation. Which solving approach equals which numerical algorithm?",
+      "options": [
+        {
+          "text": "Gathering: Jacobi iterations",
+          "correct": true,
+          "explanation": "Gathering updates each patch from all current patch values, which is the Jacobi pattern."
+        },
+        {
+          "text": "Approximating Inverse Matrix: Neumann Series",
+          "correct": true,
+          "explanation": "The Neumann series approximates the matrix inverse as I + A + A² + ... ."
+        },
+        {
+          "text": "Shooting: Southwell Algorithm",
+          "correct": true,
+          "explanation": "Southwell repeatedly chooses the largest residual, analogous to shooting the patch with the most unshot energy."
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which of the following statements are correct?",
+      "options": [
+        {
+          "text": "Increasing the geometric resolution for computing radiosity does not significantly slow down performance.",
+          "correct": false,
+          "explanation": "More patches mean many more patch-to-patch interactions, so higher geometric resolution can slow radiosity substantially."
+        },
+        {
+          "text": "Radiosity is best suited for scenes where reflections are dominant.",
+          "correct": false,
+          "explanation": "Classic radiosity is designed for diffuse reflection, not scenes dominated by mirror-like reflection."
+        },
+        {
+          "text": "In radiosity, light sources are approximated with a surface patch.",
+          "correct": true,
+          "explanation": "An area light fits naturally into radiosity as a patch with non-zero emitted energy."
+        },
+        {
+          "text": "Radiosity is based on the principles of heat transfer.",
+          "correct": true,
+          "explanation": "The radiosity equation mirrors diffuse heat-transfer equations, where energy is exchanged between surfaces through geometric coupling factors."
+        },
+        {
+          "text": "While ray tracing is an object space algorithm, radiosity is computed in image space.",
+          "correct": false,
+          "explanation": "Radiosity solves illumination on scene surfaces in object space, while ray tracing is commonly driven by image rays from pixels."
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which statements with respect to the Neumann series being applied to the radiosity solution are correct?",
+      "options": [
+        {
+          "text": "The first term represents the emission.",
+          "correct": true,
+          "explanation": "The first term is the emission vector itself, before any light has bounced to another surface."
+        },
+        {
+          "text": "Terms 3..N represent indirect lighting.",
+          "correct": true,
+          "explanation": "Powers A², A³ and higher correspond to additional bounces, which are indirect illumination."
+        },
+        {
+          "text": "It has a maximum of N terms, while N is the number of patches.",
+          "correct": false,
+          "explanation": "The Neumann series is not limited to the number of patches; conceptually it continues until higher bounce terms become negligible."
+        },
+        {
+          "text": "The second term represents direct lighting.",
+          "correct": true,
+          "explanation": "One multiplication by the transport matrix moves emitted light once, giving direct illumination of other patches."
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "revision": 1,
+      "type": "single",
+      "question": "For what is the SIMD architecture of GPUs better suited?",
+      "options": [
+        {
+          "text": "Radiosity",
+          "correct": true,
+          "explanation": "Radiosity repeatedly performs similar arithmetic over large arrays of patch interactions, which suits SIMD lanes doing the same operation in parallel."
+        },
+        {
+          "text": "Raytracing",
+          "correct": false,
+          "explanation": "Recursive ray tracing often has divergent paths because rays hit different objects, branch differently and terminate at different depths."
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "revision": 1,
+      "type": "single",
+      "question": "The 3D gradients in the local neighborhoods of voxels can be related to boundary surfaces. True or false?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "A strong scalar change across neighboring voxels creates a gradient that points approximately normal to the boundary surface."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Gradients are specifically useful for detecting and orienting boundaries, because they measure the direction of fastest scalar change."
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "revision": 1,
+      "type": "single",
+      "question": "Can ray tracing principles be applied to volumes (volume rendering)?",
+      "options": [
+        {
+          "text": "No, since we don’t know how to distribute / trace rays at a voxel",
+          "correct": false,
+          "explanation": "A voxel field can be sampled along a ray; rays do not need a triangle at every sample location."
+        },
+        {
+          "text": "Yes, but only if the refraction index is given together with opacity at each voxel.",
+          "correct": false,
+          "explanation": "Basic volume raycasting only needs a scalar field plus a transfer function for color/opacity; a refractive index is optional, not mandatory."
+        },
+        {
+          "text": "No, there are no triangles to intersect rays with.",
+          "correct": false,
+          "explanation": "Direct volume rendering works without extracting a triangle mesh first."
+        },
+        {
+          "text": "Yes, if, for example, only primary rays are cast",
+          "correct": true,
+          "explanation": "Primary rays can pass through the volume, sample interpolated voxel values and composite them into the final pixel."
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "revision": 1,
+      "type": "text",
+      "question": "How many unique cases for Marching Cubes polygon fitting exist per cell?",
+      "answer": "15",
+      "reason": ""
+    },
+    {
+      "id": 34,
+      "revision": 1,
+      "type": "single",
+      "question": "Interpolation for volume rendering is normally. . .",
+      "options": [
+        {
+          "text": "NURBS",
+          "correct": false,
+          "explanation": "NURBS are geometric spline surfaces and are far more complex than needed for interpolation inside a regular voxel cell."
+        },
+        {
+          "text": "SPLINE",
+          "correct": false,
+          "explanation": "Generic spline interpolation is possible in principle, but the standard local method for regular 3D grids is trilinear interpolation."
+        },
+        {
+          "text": "trilinear",
+          "correct": true,
+          "explanation": "A voxel cell has eight corners, and linear interpolation along x, y and z combines all eight values efficiently."
+        },
+        {
+          "text": "cubic",
+          "correct": false,
+          "explanation": "Cubic interpolation needs more neighboring samples and more computation than trilinear interpolation."
+        },
+        {
+          "text": "Bézier",
+          "correct": false,
+          "explanation": "Bézier interpolation is designed around control points for curves and surfaces, not ordinary voxel-cell reconstruction."
+        },
+        {
+          "text": "bilinear",
+          "correct": false,
+          "explanation": "Bilinear interpolation uses four samples in 2D. A 3D voxel cell needs interpolation in a third dimension as well."
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "revision": 1,
+      "type": "multiple",
+      "question": "The Marching Cubes method...",
+      "options": [
+        {
+          "text": "distinguishes 15 out of 256 non-redundant splitting cases.",
+          "correct": true,
+          "explanation": "8 binary corner states give 256 raw configurations, and symmetry/complement equivalence reduces them to 15 base cases in this course."
+        },
+        {
+          "text": "extracts an iso-surface that has a constant density.",
+          "correct": true,
+          "explanation": "The generated triangles connect locations where the scalar field equals one chosen isovalue, so density is constant on the extracted surface."
+        },
+        {
+          "text": "extracts an iso-surface that has a constant density gradient.",
+          "correct": false,
+          "explanation": "The gradient may vary along the surface. Marching Cubes fixes the scalar value, not the gradient magnitude."
+        },
+        {
+          "text": "distinguishes 16 out of 256 non-redundant splitting cases.",
+          "correct": false,
+          "explanation": "The lookup configurations are reduced to 15 non-redundant base cases, not 16."
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which statements about Marching Cubes are correct?",
+      "options": [
+        {
+          "text": "Marching Cubes requires a user-defined threshold to separate field values.",
+          "correct": true,
+          "explanation": "The threshold is the isovalue that decides whether each cube corner is classified inside or outside."
+        },
+        {
+          "text": "The Marching Cubes algorithm recovers the isosurface from a volumetric dataset.",
+          "correct": true,
+          "explanation": "From those classifications and interpolated edge crossings, the algorithm reconstructs an approximate isosurface mesh."
+        },
+        {
+          "text": "The final polygon always intersects at least one of the cube’s corners.",
+          "correct": false,
+          "explanation": "Vertices usually lie on cube edges where the isovalue is crossed, not at the cube's corners themselves."
+        },
+        {
+          "text": "16 unique cases (without redundancy) exist for cube separation in the Marching Cubes algorithm.",
+          "correct": false,
+          "explanation": "Symmetry reduces the 256 raw corner patterns to 15 base cases."
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "revision": 1,
+      "type": "single",
+      "question": "Isosurfaces vs. Isolines. Slicing a volume at a particular plane and computing the contour lines at this plane is equivalent to computing the isosurface and slicing it at the same plane.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Both operations solve the same scalar condition f(x,y,z)=c restricted to the same slicing plane."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Intersecting the already-computed isosurface with the plane gives the same contour condition as computing it directly in that plane."
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "revision": 1,
+      "type": "multiple",
+      "question": "When ray-casting is used for volume rendering, then. . .",
+      "options": [
+        {
+          "text": "sampling has to be done along rays.",
+          "correct": true,
+          "explanation": "The ray must evaluate the volume at multiple depths to know what material it passes through."
+        },
+        {
+          "text": "interpolation has to be done within cells.",
+          "correct": true,
+          "explanation": "Most sample positions lie between voxel centers, so neighboring voxel values must be interpolated inside the cell."
+        },
+        {
+          "text": "alpha-blending has to be done along samples.",
+          "correct": true,
+          "explanation": "Color and opacity from successive samples must be combined in depth order to produce one pixel."
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "revision": 1,
+      "type": "single",
+      "question": "What is the maximal number of polygons you would need to separate voxels in a single grid cell for the Marching Cubes method?",
+      "options": [
+        {
+          "text": "6",
+          "correct": false,
+          "explanation": "Six is larger than the maximum triangulation used by the course's Marching Cubes case table."
+        },
+        {
+          "text": "15",
+          "correct": false,
+          "explanation": "15 is the number of unique configuration classes, not the number of polygons generated inside one cell."
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "explanation": "Some configurations need more than two polygons to connect all isosurface intersections."
+        },
+        {
+          "text": "3",
+          "correct": false,
+          "explanation": "Three polygons are enough for many cases, but not for the maximum case used in this table."
+        },
+        {
+          "text": "4",
+          "correct": true,
+          "explanation": "The most complex configuration in the course's case table requires four polygons in one grid cell."
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which techniques can accelerate volume rendering?",
+      "options": [
+        {
+          "text": "Alpha compositing.",
+          "correct": false,
+          "explanation": "Alpha compositing is necessary to combine samples, but doing it does not by itself skip work."
+        },
+        {
+          "text": "Stopping ray traversal when enough opacity is accumulated.",
+          "correct": true,
+          "explanation": "Once accumulated opacity is near 1, samples behind it cannot noticeably affect the pixel, so the ray can stop."
+        },
+        {
+          "text": "Bricking.",
+          "correct": false,
+          "explanation": "Bricking reorganizes data, but it is not counted here as one of the requested acceleration techniques."
+        },
+        {
+          "text": "Space-skipping.",
+          "correct": true,
+          "explanation": "Empty-space skipping jumps over regions known to contribute nothing instead of sampling them point by point."
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "revision": 1,
+      "type": "multiple",
+      "question": "What can accelerate volume rendering?",
+      "options": [
+        {
+          "text": "Octree clustering",
+          "correct": true,
+          "explanation": "An octree groups large homogeneous or empty regions, allowing a ray to skip them with few traversal steps."
+        },
+        {
+          "text": "Ray transform",
+          "correct": false,
+          "explanation": "'ray transform' is not the standard acceleration mechanism identified here for volume rendering."
+        },
+        {
+          "text": "Early stopping ray traversal",
+          "correct": true,
+          "explanation": "When enough opacity has accumulated, later samples are hidden and traversal can terminate early."
+        },
+        {
+          "text": "Maximum Intensity Projection",
+          "correct": false,
+          "explanation": "Maximum Intensity Projection is a rendering method that chooses the largest value along a ray; it is not inherently an acceleration method."
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "revision": 1,
+      "type": "single",
+      "question": "Which is a classical volume rendering technique?",
+      "options": [
+        {
+          "text": "NPR (Non-Photorealistic Rendering)",
+          "correct": false,
+          "explanation": "NPR is a broad style of rendering, not the classical direct volume-rendering method asked for here."
+        },
+        {
+          "text": "Radiosity",
+          "correct": false,
+          "explanation": "Radiosity solves diffuse surface-to-surface light exchange on surfaces, not direct rendering of a voxel volume."
+        },
+        {
+          "text": "Raycasting",
+          "correct": true,
+          "explanation": "Volume raycasting samples and composites values along viewing rays through the volume."
+        },
+        {
+          "text": "Raytracing",
+          "correct": false,
+          "explanation": "General ray tracing usually refers to surface intersections and recursive rays, while volume raycasting is the standard volume technique here."
+        },
+        {
+          "text": "Pathtracing",
+          "correct": false,
+          "explanation": "Path tracing is a global illumination integrator, not the classical volume-rendering method intended by the question."
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "revision": 1,
+      "type": "single",
+      "question": "The third eigenvector of a surface curvature tensor is the normal vector. True or false?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "The gradient of an implicit surface is perpendicular to the level set, so the remaining principal direction of the surface-curvature tensor is the normal."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "The surface has two tangent principal directions and a third orthogonal direction, which is the normal."
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "revision": 1,
+      "type": "text",
+      "question": "The size of a Hessian surface-curvature tensor is N×N (implicitly defined surfaces, global coordinate system). What is N?",
+      "answer": "3",
+      "reason": "it’s 3×3 because there are 3 variables (it holds second-order partials)"
+    },
+    {
+      "id": 45,
+      "revision": 1,
+      "type": "single",
+      "question": "What is the best representation for a wind map?",
+      "options": [
+        {
+          "text": "Tensor Field",
+          "correct": false,
+          "explanation": "A second-order tensor is needed for directional behavior that itself varies with direction, such as diffusion, which is more information than basic wind requires."
+        },
+        {
+          "text": "Vector Field",
+          "correct": true,
+          "explanation": "Wind at each position has a direction and magnitude, exactly the information represented by a vector."
+        },
+        {
+          "text": "Scalar Field",
+          "correct": false,
+          "explanation": "A scalar can store wind speed, but it cannot store wind direction."
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which dataset is typically represented with what field type?",
+      "options": [
+        {
+          "text": "Liquid Diffusion in Brain: Tensor Field",
+          "correct": true,
+          "explanation": "Diffusion in brain tissue can vary with direction, so a tensor captures the full directional diffusion behavior."
+        },
+        {
+          "text": "Flow Simulation: Vector Field",
+          "correct": true,
+          "explanation": "A flow field assigns a velocity vector with direction and speed to each position."
+        },
+        {
+          "text": "Volumetric Data: Scalar Field",
+          "correct": true,
+          "explanation": "Ordinary volume data often stores one value such as density or intensity at each voxel, which is a scalar."
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "revision": 1,
+      "type": "single",
+      "question": "Conventional triangle meshes of 3D scenes are normally. . .",
+      "options": [
+        {
+          "text": "structured and non-uniform",
+          "correct": false,
+          "explanation": "Triangle meshes are generally not arranged in a regular structured lattice, even though triangle sizes may vary."
+        },
+        {
+          "text": "unstructured and uniform",
+          "correct": false,
+          "explanation": "Unstructured is right, but uniform is not; mesh elements typically vary in size and shape to fit the surface."
+        },
+        {
+          "text": "structured and uniform",
+          "correct": false,
+          "explanation": "Conventional triangle meshes are usually neither structured nor uniformly sampled."
+        },
+        {
+          "text": "unstructured and non-uniform",
+          "correct": true,
+          "explanation": "Connectivity is irregular and triangle sizes vary, so the mesh is unstructured and non-uniform."
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "revision": 1,
+      "type": "single",
+      "question": "Interpolation functions in scientific data visualization depend on. . .",
+      "options": [
+        {
+          "text": "the grid topology",
+          "correct": false,
+          "explanation": "Grid topology tells how cells are connected across the dataset, but it does not define the local interpolation formula inside one cell."
+        },
+        {
+          "text": "the cell type",
+          "correct": true,
+          "explanation": "The cell's vertices and geometry determine which basis functions combine their values inside that cell."
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "revision": 1,
+      "type": "multiple",
+      "question": "If the eigenvalues of a diffusion tensor are similar, then. . .",
+      "options": [
+        {
+          "text": "we have a widely isotropic diffusion",
+          "correct": true,
+          "explanation": "Similar eigenvalues mean similar diffusion strength in all principal directions, so no direction strongly dominates."
+        },
+        {
+          "text": "all eigenvectors are orthogonal",
+          "correct": true,
+          "explanation": "The spectral theorem gives an orthogonal set of eigenvectors."
+        },
+        {
+          "text": "all eigenvectors are parallel",
+          "correct": false,
+          "explanation": "Distinct principal directions of a symmetric tensor are orthogonal, not all parallel."
+        },
+        {
+          "text": "we have a widely anisotropic diffusion",
+          "correct": false,
+          "explanation": "Strong anisotropy requires one or more eigenvalues to differ substantially, creating a preferred direction."
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Tensor Glyphs. Which of the following statements are correct?",
+      "options": [
+        {
+          "text": "Tensor glyphs encode eigenvectors of tensor fields with directions and corresponding eigenvalues with their size.",
+          "correct": true,
+          "explanation": "Eigenvector directions orient the glyph, while eigenvalue magnitudes determine how far it extends along those directions."
+        },
+        {
+          "text": "Tensor glyphs can only be visualized with ellipsoids.",
+          "correct": false,
+          "explanation": "Ellipsoids are common because their axes map naturally to eigenvectors, but boxes, superquadrics and other glyph shapes can encode tensors too."
+        },
+        {
+          "text": "Tensor glyphs are a more general form of isosurfaces.",
+          "correct": false,
+          "explanation": "Isosurfaces represent locations of equal scalar value, while tensor glyphs visualize local tensor orientation and magnitude."
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "revision": 1,
+      "type": "single",
+      "question": "Hyper-Streamlines. For hyper-streamline visualization of DT-MRI datasets, the major (largest) eigenvalue does not matter.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "The largest eigenvalue tells the diffusion strength along the principal streamline direction, so it does matter."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "The major eigenvalue contributes to the hyper-streamline's representation of the tensor, so saying it does not matter is false."
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "revision": 1,
+      "type": "single",
+      "question": "Hyper-Streamlines. For hyper-streamline visualization of DT-MRI datasets, the major (largest) eigenvalues are used as the streamline directions. The minor eigenvectors, however, are not used for visualization. Correct?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "The major eigenvector gives the path direction, and the minor eigenvectors are still useful for orienting the cross-section."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "The sentence is false because it confuses eigenvalues with direction and incorrectly discards the minor eigenvectors."
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "revision": 1,
+      "type": "multiple",
+      "question": "3D Stream Lines and Tubes. Which of the following statements are correct?",
+      "options": [
+        {
+          "text": "For generating 3D stream tubes seed points are required.",
+          "correct": true,
+          "explanation": "Numerical integration needs a starting location, and that starting location is the seed point."
+        },
+        {
+          "text": "In comparison to stream lines, stream tubes provide encoding for an additional parameter.",
+          "correct": true,
+          "explanation": "Unlike a thin line, a tube has width or cross-section shape that can encode an additional scalar quantity."
+        },
+        {
+          "text": "The selection of seed points does not influence the quality of the visualizations.",
+          "correct": false,
+          "explanation": "Poor seed placement can miss important flow structures or clutter the view, so it directly affects visualization quality."
+        },
+        {
+          "text": "We can build 3D (stream) tubes by sweeping a circular cross-section along stream lines.",
+          "correct": true,
+          "explanation": "Taking a circular cross-section and sweeping it along a streamline creates a stream tube geometry."
+        },
+        {
+          "text": "In comparison to 3D stream lines, 3D stream tubes do not suffer from the occlusion limitations of vector glyphs.",
+          "correct": false,
+          "explanation": "Tubes have thickness and therefore can occlude one another too; they do not eliminate occlusion problems."
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "revision": 1,
+      "type": "single",
+      "question": "PCA of Tensor Matrix. The principal component analysis of a symmetric 2×2 tensor matrix leads to how many orthogonal eigenvectors?",
+      "options": [
+        {
+          "text": "2",
+          "correct": true,
+          "explanation": "Die Matrix wirkt in einem zweidimensionalen Raum. Eine reelle symmetrische 2×2-Matrix besitzt daher zwei zueinander orthogonale Eigenrichtungen."
+        },
+        {
+          "text": "9",
+          "correct": false,
+          "explanation": "Die Zahl der möglichen orthogonalen Eigenrichtungen wird durch die Dimension des Raums bestimmt. Bei 2×2 sind es zwei, niemals neun."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "explanation": "Eine 2×2-Matrix hat zwar vier Einträge, aber Einträge sind keine Eigenvektoren. Im zweidimensionalen Raum gibt es zwei orthogonale Hauptrichtungen."
+        },
+        {
+          "text": "6",
+          "correct": false,
+          "explanation": "Sechs unabhängige Eigenrichtungen können in einem zweidimensionalen Raum nicht existieren. Die maximale Zahl ist zwei."
+        },
+        {
+          "text": "1",
+          "correct": false,
+          "explanation": "Auch wenn beide Eigenwerte gleich sein können, kann man bei einer symmetrischen 2×2-Matrix immer zwei orthogonale Eigenvektoren wählen."
+        },
+        {
+          "text": "3",
+          "correct": false,
+          "explanation": "Drei unabhängige orthogonale Richtungen benötigen drei Raumdimensionen. Diese Matrix beschreibt aber nur einen zweidimensionalen Raum."
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "revision": 1,
+      "type": "single",
+      "question": "PCA of Hessian Matrix. The principal component analysis of a symmetric 3×3 Hessian matrix leads to how many orthogonal eigenvectors?",
+      "options": [
+        {
+          "text": "9",
+          "correct": false,
+          "explanation": "Eine 3×3-Matrix hat neun Einträge, aber die Eigenvektoren beschreiben Richtungen im dreidimensionalen Raum. Davon gibt es drei orthogonale Hauptrichtungen."
+        },
+        {
+          "text": "6",
+          "correct": false,
+          "explanation": "Die Matrix wirkt in drei Dimensionen. Deshalb kann eine orthogonale Eigenbasis höchstens drei Richtungen enthalten, nicht sechs."
+        },
+        {
+          "text": "3",
+          "correct": true,
+          "explanation": "Nach dem Spektralsatz besitzt eine reelle symmetrische 3×3-Matrix eine orthogonale Basis aus drei Eigenvektoren."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "explanation": "Vier unabhängige orthogonale Richtungen passen nicht in einen dreidimensionalen Raum. Für 3×3 sind es drei."
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "explanation": "Zwei Eigenvektoren würden nur zwei Raumrichtungen abdecken. Eine symmetrische 3×3-Matrix hat eine vollständige orthogonale Basis aus drei Eigenvektoren."
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which property of data representation influences what?",
+      "options": [
+        {
+          "text": "Field type: Content",
+          "correct": true,
+          "explanation": "Field type says what each sample contains, such as one scalar, a vector or a tensor."
+        },
+        {
+          "text": "Grid type: Sampling",
+          "correct": true,
+          "explanation": "Grid type specifies where samples are placed and how the sampling lattice or mesh is organized."
+        },
+        {
+          "text": "Cell type: Interpolation Function",
+          "correct": true,
+          "explanation": "Cell type specifies the local vertex configuration, which determines the basis used to interpolate values inside the cell."
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "revision": 1,
+      "type": "single",
+      "question": "How many basis functions are required for trilinear interpolation?",
+      "options": [
+        {
+          "text": "4",
+          "correct": false,
+          "explanation": "Vier Basisfunktionen reichen für bilineare Interpolation in 2D. Trilineare Interpolation arbeitet in 3D mit acht Zellenecken."
+        },
+        {
+          "text": "8",
+          "correct": true,
+          "explanation": "Ein hexaedrisches 3D-Zellvolumen hat acht Ecken. Jede Ecke erhält ein eigenes Gewicht, daher braucht trilineare Interpolation acht Basisfunktionen."
+        },
+        {
+          "text": "6",
+          "correct": false,
+          "explanation": "Die sechs Flächen eines Würfels bestimmen nicht die Interpolation. Entscheidend sind die acht Eckwerte der Zelle."
+        },
+        {
+          "text": "1",
+          "correct": false,
+          "explanation": "Eine einzige Basisfunktion könnte nur einen Wert gewichten. Trilineare Interpolation kombiniert alle acht Eckwerte."
+        },
+        {
+          "text": "3",
+          "correct": false,
+          "explanation": "Drei sind die Koordinatenrichtungen x, y und z. Pro Richtung wird linear interpoliert, aber insgesamt werden die acht Eckwerte kombiniert."
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "revision": 1,
+      "type": "text",
+      "question": "What is the maximum order of the interpolation (blending) functions for a Bézier surface with 3×4 control points?",
+      "answer": "3",
+      "reason": "Nr of control nodes –"
+    },
+    {
+      "id": 59,
+      "revision": 1,
+      "type": "single",
+      "question": "Can we describe a sphere with a Bézier surface?",
+      "options": [
+        {
+          "text": "Yes",
+          "correct": false,
+          "explanation": "A polynomial Bézier surface can approximate a sphere, but it cannot represent an exact sphere because exact conics require rational weights."
+        },
+        {
+          "text": "No",
+          "correct": true,
+          "explanation": "An exact sphere needs a rational representation such as NURBS; ordinary polynomial Bézier patches are only approximations."
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "revision": 1,
+      "type": "single",
+      "question": "What is true about splines?",
+      "options": [
+        {
+          "text": "Bézier curves/surfaces are more efficient than B-splines for many control points.",
+          "correct": false,
+          "explanation": "Bézier curves have global control, so many control points raise the degree and make editing expensive; B-splines keep a fixed local degree."
+        },
+        {
+          "text": "The degree of a Bézier curve is one less than its number of control points",
+          "correct": true,
+          "explanation": "N Bézier control points use Bernstein polynomials of degree N-1."
+        },
+        {
+          "text": "Changing a control point of a B-spline affects the whole curve/surface (except the edges)",
+          "correct": false,
+          "explanation": "B-spline basis functions have local support, so moving one control point changes only nearby curve spans."
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "revision": 1,
+      "type": "single",
+      "question": "Bézier Curves. The degree of a Bézier curve with N control points is?",
+      "options": [
+        {
+          "text": "N-2",
+          "correct": false,
+          "explanation": "N-2 is one degree too low; N control points create N Bernstein basis functions of degree N-1."
+        },
+        {
+          "text": "N+2",
+          "correct": false,
+          "explanation": "Adding 2 has no relation to the Bézier degree formula."
+        },
+        {
+          "text": "N",
+          "correct": false,
+          "explanation": "The degree is one less than the number of control points, not equal to it."
+        },
+        {
+          "text": "N+1",
+          "correct": false,
+          "explanation": "The curve degree does not exceed the number of control points."
+        },
+        {
+          "text": "N-1",
+          "correct": true,
+          "explanation": "With N control points, the Bézier polynomial degree is N-1."
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "revision": 1,
+      "type": "single",
+      "question": "The degree of a Uniform Cubic B-spline with N control points is?",
+      "options": [
+        {
+          "text": "N",
+          "correct": false,
+          "explanation": "N changes the number of control points and spans, not the degree of a cubic B-spline."
+        },
+        {
+          "text": "N+1",
+          "correct": false,
+          "explanation": "Adding one to N does not define the spline degree."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "explanation": "'cubic' means degree 3, while order 4 is a different convention sometimes used for the same spline."
+        },
+        {
+          "text": "1",
+          "correct": false,
+          "explanation": "Degree 1 would be a piecewise-linear spline, not cubic."
+        },
+        {
+          "text": "N-1",
+          "correct": false,
+          "explanation": "N-1 is the degree formula for a single Bézier curve, not a uniform cubic B-spline."
+        },
+        {
+          "text": "3",
+          "correct": true,
+          "explanation": "'cubic' directly means polynomial degree 3, independent of how many control points are used."
+        },
+        {
+          "text": "2",
+          "correct": false,
+          "explanation": "Degree 2 is quadratic, not cubic."
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "revision": 1,
+      "type": "single",
+      "question": "Interpolation in Splines. The interpolation in NURBS is piecewise linear.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "NURBS are piecewise rational polynomials over knot spans, so their segments are not generally straight lines."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "The interpolation is not piecewise linear; higher-degree rational basis functions create curved segments."
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "revision": 1,
+      "type": "single",
+      "question": "Interpolation in Splines. The interpolation in splines is piecewise linear.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "A spline joins polynomial pieces of a chosen degree, commonly cubic, rather than necessarily joining line segments."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "'piecewise' only means different polynomial pieces meet at knots; those pieces need not be linear."
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "revision": 1,
+      "type": "single",
+      "question": "NURBS. What is the difference between uniform B-splines and NURBS?",
+      "options": [
+        {
+          "text": "Uniform B-splines use rational blending functions.",
+          "correct": false,
+          "explanation": "Ordinary uniform B-splines use polynomial basis functions without rational weights."
+        },
+        {
+          "text": "NURBS use ratios of two polynomials as blending function.",
+          "correct": true,
+          "explanation": "NURBS basis functions divide weighted B-spline polynomials by their weighted sum, making the basis rational."
+        },
+        {
+          "text": "Uniform B-splines can represent conics exactly",
+          "correct": false,
+          "explanation": "Exact conic representation is a key advantage of rational NURBS, not ordinary polynomial B-splines."
+        },
+        {
+          "text": "Uniform B-splines have a non-uniform gap between the blending functions.",
+          "correct": false,
+          "explanation": "A uniform B-spline has uniformly spaced knots; non-uniform spacing is specifically allowed by NURBS/B-spline variants that are non-uniform."
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "revision": 1,
+      "type": "single",
+      "question": "Higher-Order Blending Functions. Blending functions of higher order can be computed recursively.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "The Cox-de Boor recurrence constructs degree-p B-spline basis functions from basis functions of degree p-1."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Recursive construction is the standard way higher-order B-spline blending functions are defined."
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "revision": 1,
+      "type": "single",
+      "question": "The coefficients of a rotation matrix are independent and can therefore be interpolated from keyframe to keyframe. True or False?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "Rotation-matrix entries are linked by orthonormality and determinant constraints, so changing them independently can destroy a valid rotation."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "Rotations need a constrained interpolation such as quaternion SLERP; unlike translation or scale components, matrix entries cannot be interpolated independently."
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "revision": 1,
+      "type": "single",
+      "question": "The coefficients of a translation matrix are independent and can therefore be interpolated from keyframe to keyframe.",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "Translation is simply the displacement vector (tx, ty, tz), and those components have no orthogonality constraint tying them together."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Linear interpolation of tx, ty and tz still produces a valid translation at every intermediate keyframe."
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "revision": 1,
+      "type": "single",
+      "question": "How would you interpolate between unit quaternions with (b,c,d,alpha) coefficients?",
+      "options": [
+        {
+          "text": "Spherically in (b,c,d) and linearly in alpha",
+          "correct": true,
+          "explanation": "The axis direction (b,c,d) must stay normalized, so it is interpolated on the sphere, while the scalar angle alpha can vary linearly."
+        },
+        {
+          "text": "Linearly in (b,c,d) and spherically in alpha",
+          "correct": false,
+          "explanation": "The unit axis should stay on the sphere; linearly interpolating it can change its length, while an angle itself does not need spherical interpolation."
+        },
+        {
+          "text": "Linearly in all coefficients",
+          "correct": false,
+          "explanation": "Linear interpolation of the axis components can move the axis off the unit sphere."
+        },
+        {
+          "text": "Spherically in all coefficients",
+          "correct": false,
+          "explanation": "Alpha is a scalar angle, so spherical interpolation is not meaningful for that single scalar component."
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Which statements about quaternions are correct?",
+      "options": [
+        {
+          "text": "The conjugate of a quaternion q = a + b is q′ = a + 1/b, where a is the imaginary and b the real part.",
+          "correct": false,
+          "explanation": "Quaternion conjugation negates the imaginary/vector part; it is not computed by taking the reciprocal of one component."
+        },
+        {
+          "text": "q is a unit quaternion if |q| = 1.",
+          "correct": true,
+          "explanation": "Norm 1 is exactly the definition of a unit quaternion and is required for representing a pure rotation without scaling."
+        },
+        {
+          "text": "Quaternions can be used to represent any transformation in space.",
+          "correct": false,
+          "explanation": "A unit quaternion represents rotation. Translation and non-uniform scaling require other transform components."
+        },
+        {
+          "text": "They are defined by a vector (imaginary part) and an angle (real part).",
+          "correct": true,
+          "explanation": "Marked true in this course's axis-angle interpretation: the vector part determines the rotation axis information and the real part is tied to the rotation angle."
+        },
+        {
+          "text": "If q1 and q2 are unit quaternions and R1 and R2 the corresponding transformation in matrix form, then q1q2 = R2R1.",
+          "correct": false,
+          "explanation": "Quaternion composition q1q2 corresponds to matrix composition R1R2, not the reversed R2R1."
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "revision": 1,
+      "type": "multiple",
+      "question": "With respect to hierarchical rigid body transformation:",
+      "options": [
+        {
+          "text": "Inverse kinematics solves equation systems.",
+          "correct": true,
+          "explanation": "Inverse kinematics starts with a desired end-effector pose and solves equations for the unknown joint parameters that satisfy it."
+        },
+        {
+          "text": "All coefficients of keyframes' transformation matrices are interpolated.",
+          "correct": false,
+          "explanation": "Translation and scale components can be interpolated directly, but rotation-matrix entries are constrained and need a proper rotation interpolation."
+        },
+        {
+          "text": "Forward kinematics traverses scene graphs.",
+          "correct": true,
+          "explanation": "Forward kinematics propagates known parent transforms down the hierarchy, which is naturally implemented by traversing the scene graph."
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Non-Rigid Body Animation. What tools are normally used for the animation of non-rigid bodies?",
+      "options": [
+        {
+          "text": "Free-Form Deformation",
+          "correct": true,
+          "explanation": "FFD deforms a surrounding control lattice, and interpolation carries that smooth deformation to the enclosed object."
+        },
+        {
+          "text": "Forward Kinematics",
+          "correct": false,
+          "explanation": "Forward kinematics moves linked rigid parts using known joint values; it does not smoothly deform the shape of a body."
+        },
+        {
+          "text": "Inverse Kinematics",
+          "correct": false,
+          "explanation": "Inverse kinematics solves joint parameters for articulated rigid chains; it is not the usual method for deforming a continuous non-rigid object."
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "revision": 1,
+      "type": "single",
+      "question": "Rigid body animation of hierarchies can be implemented with scene graphs?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": true,
+          "explanation": "A scene graph stores parent-child transforms, so moving a parent automatically moves all rigid descendants consistently."
+        },
+        {
+          "text": "Falsch",
+          "correct": false,
+          "explanation": "Hierarchical rigid-body transforms are one of the standard uses of a scene graph."
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "revision": 1,
+      "type": "single",
+      "question": "For rigid body animation of hierarchies (e.g. with scene graphs), the components of all transformation matrices can be interpolated.",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "The rotation part of a transform cannot be interpolated by treating every matrix coefficient independently because the result may stop being orthonormal."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "Hierarchical transforms must separate components or use a valid rotation representation such as quaternions for interpolation."
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Free-Form Deformation. Which statements about free-form deformation (FFD) are correct?",
+      "options": [
+        {
+          "text": "Instead of deforming the object vertices directly, the grid vertices of some (new) control lattices are deformed first. Afterward, the new positions of the enclosed object vertices are computed within each lattice cell.",
+          "correct": true,
+          "explanation": "FFD edits a coarse lattice first, then computes each enclosed object point from the deformed lattice, giving smooth shape changes with few controls."
+        },
+        {
+          "text": "Free-form deformation in 2D space with two-dimensional grid structures uses trilinear interpolants.",
+          "correct": false,
+          "explanation": "A 2D lattice interpolates in two coordinate directions, so the local linear method is bilinear; trilinear interpolation is the 3D analogue."
+        },
+        {
+          "text": "For positional continuity, adjacent control lattices must share the same control points along the boundary plane.",
+          "correct": true,
+          "explanation": "If adjacent lattice cells share the same boundary control points, both sides evaluate to the same boundary positions, giving positional continuity."
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "revision": 1,
+      "type": "single",
+      "question": "The form factor computation needed for radiosity needs to divide the double integral by A_j (the area of the sending patch). Is this correct?",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "With the index convention used by this course, the normalization uses A_i, so dividing by A_j would normalize by the wrong patch area."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "The denominator is A_i in the formula used here, not A_j."
+        }
+      ],
+      "reason": "It is divided by A_i, the area of the receiving patch."
+    },
+    {
+      "id": 77,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Ray-Triangle Intersection Tests: What are efficient data structures to minimize the number of ray-triangle intersection tests?",
+      "options": [
+        {
+          "text": "Kd Trees",
+          "correct": true,
+          "explanation": "A kd-tree recursively splits space with axis-aligned planes, allowing rays to skip branches they cannot intersect."
+        },
+        {
+          "text": "OB trees",
+          "correct": false,
+          "explanation": "'OB trees' are not one of the recognized acceleration structures listed for this ray-triangle problem."
+        },
+        {
+          "text": "Radix trees",
+          "correct": false,
+          "explanation": "Radix trees organize keys or bit prefixes, not spatial geometry for ray intersection pruning."
+        },
+        {
+          "text": "HBB Trees",
+          "correct": true,
+          "explanation": "HBB trees group spatial bounds hierarchically so rays can reject many triangles at once."
+        },
+        {
+          "text": "SPQR trees",
+          "correct": false,
+          "explanation": "SPQR trees represent graph decomposition and are unrelated to spatial ray-triangle acceleration."
+        },
+        {
+          "text": "BSP Trees",
+          "correct": true,
+          "explanation": "BSP trees partition space with planes, so a ray traverses only relevant partitions instead of testing every triangle."
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "revision": 1,
+      "type": "single",
+      "question": "MIP Mapping: In MIP mapping, the voxel with the maximum intensity is projected to the image.",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "This confuses mipmapping with Maximum Intensity Projection. Mipmapping chooses a prefiltered texture resolution level."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "Projecting the largest voxel value along a ray is MIP volume rendering, not mipmapping."
+        }
+      ],
+      "reason": "MIP mapping is texture minification using prefiltered texture levels; maximum-intensity projection is a different volume-rendering technique."
+    },
+    {
+      "id": 79,
+      "revision": 1,
+      "type": "single",
+      "question": "Distribution Raytracing: For distribution ray tracing distributed rays are usually sampled...",
+      "options": [
+        {
+          "text": "with Hamming distance 1.",
+          "correct": false,
+          "explanation": "Hamming distance describes differences between discrete bit strings, not the usual spatial/directional sampling pattern for distributed rays."
+        },
+        {
+          "text": "with Hamming distance 2.",
+          "correct": false,
+          "explanation": "The same problem applies to Hamming distance 2; it is not the standard sampling rule for distribution ray tracing."
+        },
+        {
+          "text": "randomly.",
+          "correct": true,
+          "explanation": "Stochastic sampling distributes rays over the relevant domain and avoids the coherent aliasing patterns of a fixed grid."
+        },
+        {
+          "text": "uniformly.",
+          "correct": false,
+          "explanation": "Perfectly uniform deterministic samples can create structured artifacts; distribution ray tracing normally uses random or stratified sampling."
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Quaternions: Let R be a rotation matrix, q be a unit quaternion, q* its conjugate, and v a vertex vector. What statements are correct?",
+      "options": [
+        {
+          "text": "R*v = q*v",
+          "correct": false,
+          "explanation": "Q*v is only a quaternion product and does not complete the rotation; the conjugate multiplication is required to map the vector back correctly."
+        },
+        {
+          "text": "q1*q2 corresponds to R1*R2",
+          "correct": true,
+          "explanation": "Composing q1 then q2 corresponds to composing the associated rotation matrices as R1R2."
+        },
+        {
+          "text": "R*v = q* * v * q",
+          "correct": false,
+          "explanation": "Q* v q applies the inverse/opposite rotation compared with q v q*."
+        },
+        {
+          "text": "q1*q2 corresponds to R2*R1",
+          "correct": false,
+          "explanation": "The exam uses the same composition order for quaternion and matrix products, not the reversed R2R1 order."
+        },
+        {
+          "text": "R*v = q * v * q*",
+          "correct": true,
+          "explanation": "Representing v as a pure quaternion and computing q v q* rotates the vector while preserving its length."
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "revision": 1,
+      "type": "single",
+      "question": "NURBS vs. B-splines: In comparison to NURBS, B-splines can represent conics exactly, thus they are better suited when modeling with spheres or cylinders. Correct?",
+      "options": [
+        {
+          "text": "True",
+          "correct": false,
+          "explanation": "Ordinary B-splines are polynomial and cannot represent general conics exactly; the rational weights of NURBS provide that capability."
+        },
+        {
+          "text": "False",
+          "correct": true,
+          "explanation": "NURBS, not ordinary B-splines, are the better exact representation for circles, cylinders and other conic geometry."
+        }
+      ],
+      "reason": "NURBS, not ordinary B-splines, can represent conic sections exactly."
+    },
+    {
+      "id": 82,
+      "revision": 1,
+      "type": "multiple",
+      "question": "Curves and Surfaces. Blending functions of Bézier surfaces...",
+      "options": [
+        {
+          "text": "...are two-dimensional functions.",
+          "correct": true,
+          "explanation": "A surface depends on two parameters, usually u and v, so each surface basis function is a function of two variables."
+        },
+        {
+          "text": "...are one-dimensional functions.",
+          "correct": false,
+          "explanation": "One-dimensional basis functions describe a curve; a surface needs dependence on both u and v."
+        },
+        {
+          "text": "...are the same as for Bézier curves.",
+          "correct": false,
+          "explanation": "The surface basis is built from curve bases, but it is their two-parameter product, not the same one-dimensional function."
+        },
+        {
+          "text": "...can be computed by multiplying the blending functions of the Bézier curves in x/y direction that intersects at the control points.",
+          "correct": true,
+          "explanation": "Tensor-product Bézier surfaces form each 2D basis by multiplying one Bézier basis in u with one in v."
+        },
+        {
+          "text": "...can be computed by adding the blending functions of the Bézier curves in x/y direction that intersect at the control points.",
+          "correct": false,
+          "explanation": "Adding the u and v basis functions would not produce the tensor-product weights and would not reproduce the control net correctly."
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "revision": 1,
+      "type": "single",
+      "question": "For inverse kinematics, a scene graph is traversed in depth-first order from root to leaves. Correct?",
+      "options": [
+        {
+          "text": "Wahr",
+          "correct": false,
+          "explanation": "Root-to-leaf scene-graph traversal propagates known transforms, which is forward kinematics, not inverse kinematics."
+        },
+        {
+          "text": "Falsch",
+          "correct": true,
+          "explanation": "Inverse kinematics instead solves backward from a desired end-effector constraint to unknown joint values."
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "revision": 1,
+      "type": "single",
+      "question": "How many unique cases (without redundancy) exist for cube separation in the Marching Cubes algorithm?",
+      "options": [
+        {
+          "text": "15",
+          "correct": true,
+          "explanation": "Acht binäre Würfelecken ergeben 2⁸ = 256 Belegungen. Durch Rotation, Spiegelung und komplementäre Fälle lassen sie sich auf 15 Grundfälle reduzieren."
+        },
+        {
+          "text": "4",
+          "correct": false,
+          "explanation": "Vier Fälle reichen nicht, um alle topologisch unterschiedlichen Schnittmuster eines Würfels abzudecken. Nach Symmetriereduktion bleiben 15 Grundfälle."
+        },
+        {
+          "text": "256",
+          "correct": false,
+          "explanation": "256 ist die Zahl aller rohen Innen/Außen-Belegungen der acht Ecken. Viele davon sind durch Symmetrie äquivalent, daher bleiben nur 15 eindeutige Grundfälle."
+        },
+        {
+          "text": "16",
+          "correct": false,
+          "explanation": "Die übliche Reduktion der 256 Konfigurationen ergibt in der in dieser Prüfung verwendeten Zählweise 15 Grundfälle, nicht 16."
+        }
+      ],
+      "reason": "The Marching Cubes algorithm has 256 raw corner configurations, reduced by symmetry/complement equivalence to 15 unique cases."
+    }
+  ]
+}
