@@ -3,8 +3,8 @@ import type { QuizQuestion } from '#shared/types/quiz'
 
 const props = defineProps<{ quizId: string, questions: QuizQuestion[] }>()
 const route = useRoute()
-const introStorageKey = `${props.quizId}-quiz-intro-v1`
-const showIntro = ref(false)
+const onboardingStorageKey = `${props.quizId}-quiz-onboarding-v1`
+const showOnboarding = ref(false)
 const expandedExplanations = ref<number[]>([])
 const focusMode = ref(false)
 const focusPanel = useTemplateRef<HTMLElement>('focusPanel')
@@ -66,7 +66,7 @@ useQuizKeyboard({
 })
 
 onMounted(() => {
-  showIntro.value = localStorage.getItem(introStorageKey) !== 'seen'
+  showOnboarding.value = localStorage.getItem(onboardingStorageKey) !== 'seen'
   window.addEventListener('keydown', handleFocusModeKey)
 })
 
@@ -75,9 +75,9 @@ onBeforeUnmount(() => {
   document.body.classList.remove('overflow-hidden')
 })
 
-function dismissIntro() {
-  showIntro.value = false
-  localStorage.setItem(introStorageKey, 'seen')
+function dismissOnboarding() {
+  showOnboarding.value = false
+  localStorage.setItem(onboardingStorageKey, 'seen')
 }
 
 function enterFocusMode() {
@@ -127,20 +127,13 @@ async function resetProgress() {
       description="Your local quiz progress is unchanged."
     />
 
-    <div v-if="!focusMode && showIntro" class="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
-      <div class="flex items-start gap-3">
-        <UIcon name="i-lucide-repeat-2" class="mt-0.5 size-5 shrink-0 text-primary" />
-        <div class="min-w-0 flex-1">
-          <p class="font-medium text-highlighted">Two correct answers, spaced apart</p>
-          <p class="mt-1 text-sm leading-relaxed text-muted">
-            Answer a question correctly twice without getting it wrong in between to complete it.
-            The same question never returns until you have submitted five different questions.
-            Questions still waiting for their first correct answer come first.
-          </p>
-          <UButton class="mt-3" label="Got it" size="xs" @click="dismissIntro" />
-        </div>
-      </div>
-    </div>
+    <QuizOnboarding
+      v-if="!focusMode && showOnboarding"
+      :auth="quiz.auth.value"
+      :sync-state="quiz.syncState.value"
+      @dismiss="dismissOnboarding"
+      @sign-out="quiz.signOut"
+    />
 
     <div v-if="!focusMode" class="mb-6">
       <div class="mb-2 flex items-center justify-between gap-3 text-xs text-muted">
@@ -151,7 +144,7 @@ async function resetProgress() {
             label="How it works"
             size="xs"
             variant="link"
-            @click="showIntro = true"
+            @click="showOnboarding = true"
           />
           <span>{{ quiz.percentage.value }}%</span>
         </div>
@@ -273,11 +266,8 @@ async function resetProgress() {
         :questions="questions"
         :progress="quiz.progress.value"
         :can-shuffle="quiz.canShuffle.value"
-        :auth="quiz.auth.value"
-        :sync-state="quiz.syncState.value"
         @reset="resetProgress"
         @shuffle="quiz.shuffleUnseen"
-        @sign-out="quiz.signOut"
       />
     </div>
   </div>
