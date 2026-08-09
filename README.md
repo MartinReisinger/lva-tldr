@@ -93,7 +93,7 @@ Render a bank from a topic Markdown file with:
 ::
 ```
 
-The shared trainer completes a question after two correct submissions for that question, with at least five different questions between attempts. A wrong answer resets the unfinished streak. Increment a question's `revision` when its expected answer changes; only that question's saved mastery is reset.
+The shared trainer completes a question after two correct submissions, always keeps five different questions between attempts, and prioritizes questions without a current correct answer. Answer options are randomized on each appearance; users can shuffle the unseen question queue. A wrong answer resets the unfinished streak. Increment a question's `revision` when its expected answer changes; only that question's saved mastery is reset.
 
 ## Optional quiz sync
 

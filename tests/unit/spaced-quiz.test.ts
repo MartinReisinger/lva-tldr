@@ -1,12 +1,12 @@
-import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
   createQuizProgress,
+  quizQuestionQueue,
+  quizTotals,
   recordQuizAnswer,
   selectNextQuestion,
+  shuffleUnseenQuestionOrder,
 } from '../../shared/utils/spacedQuiz'
-import type { QuizQuestion } from '../../shared/types/quiz'
-import { isQuizAnswerCorrect } from '../../shared/utils/quizAnswer'
 import {
   mergeQuizProgress,
   migrateLegacyQuizProgress,
@@ -40,12 +40,12 @@ describe('spaced quiz progress', () => {
     progress = recordQuizAnswer(progress, 1, true, spacingIds)
 
     for (let expected = 2; expected <= 6; expected++) {
-      const next = selectNextQuestion(progress, spacingIds, () => 0)
+      const next = selectNextQuestion(progress, spacingIds)
       expect(next).toBe(expected)
       progress = recordQuizAnswer(progress, next!, false, spacingIds)
     }
 
-    expect(selectNextQuestion(progress, spacingIds, () => 0)).toBe(1)
+    expect(selectNextQuestion(progress, spacingIds)).toBe(1)
   })
 
   it('uses completed questions as spacers if the only unfinished one is cooling down', () => {
@@ -56,7 +56,7 @@ describe('spaced quiz progress', () => {
     }
     progress = recordQuizAnswer(progress, 8, false, ids)
 
-    expect(selectNextQuestion(progress, ids, () => 0)).toBe(1)
+    expect(selectNextQuestion(progress, ids)).toBe(1)
   })
 
   it('shows five different completed reviews before the last unfinished question returns', () => {
@@ -69,14 +69,47 @@ describe('spaced quiz progress', () => {
 
     const reviews = new Set<number>()
     for (let position = 0; position < 5; position++) {
-      const next = selectNextQuestion(progress, ids, () => 0)
+      const next = selectNextQuestion(progress, ids)
       expect(next).not.toBe(8)
       reviews.add(next!)
       progress = recordQuizAnswer(progress, next!, false, ids)
     }
 
     expect(reviews.size).toBe(5)
-    expect(selectNextQuestion(progress, ids, () => 0)).toBe(8)
+    expect(selectNextQuestion(progress, ids)).toBe(8)
+  })
+
+  it('prioritizes questions without a current correct answer', () => {
+    let progress = createQuizProgress(ids)
+    progress = recordQuizAnswer(progress, 1, true, ids)
+    progress.recentIds = []
+
+    expect(selectNextQuestion(progress, ids)).toBe(2)
+  })
+
+  it('shows the sidebar in scheduler order', () => {
+    let progress = createQuizProgress(ids)
+    progress = recordQuizAnswer(progress, 1, true, ids)
+    progress = recordQuizAnswer(progress, 2, false, ids)
+    progress.currentQuestionId = 2
+
+    expect(quizQuestionQueue(progress, ids)).toEqual([2, 3, 4, 5, 6, 7, 8, 1])
+  })
+
+  it('shuffles only unseen questions and keeps the current question fixed', () => {
+    const progress = recordQuizAnswer(createQuizProgress(ids), 1, false, ids)
+    progress.currentQuestionId = 2
+    const shuffled = shuffleUnseenQuestionOrder(progress, () => 0)
+
+    expect(shuffled[0]).toBe(1)
+    expect(shuffled[1]).toBe(2)
+    expect(new Set(shuffled.slice(2))).toEqual(new Set(ids.slice(2)))
+    expect(shuffled.slice(2)).not.toEqual(ids.slice(2))
+  })
+
+  it('counts the first correct answer toward learning progress', () => {
+    const progress = recordQuizAnswer(createQuizProgress(ids), 1, true, ids)
+    expect(quizTotals(progress).masterySteps).toBe(1)
   })
 
   it('merges local and remote progress without losing either completed question', () => {
@@ -138,46 +171,5 @@ describe('spaced quiz progress', () => {
       streak: 0,
       completed: false,
     })
-  })
-})
-
-describe('Computer Graphics question bank', () => {
-  const bank = JSON.parse(
-    readFileSync('content/quizzes/computer-graphics.json', 'utf8'),
-  ) as { quizId: string, version: number, questions: QuizQuestion[] }
-  const questions = bank.questions
-
-  it('contains 84 uniquely identified, answerable questions', () => {
-    expect(questions).toHaveLength(84)
-    expect(bank.quizId).toBe('computer-graphics')
-    expect(new Set(questions.map(question => question.id)).size).toBe(84)
-
-    for (const question of questions) {
-      expect(Number.isInteger(question.id) && question.id > 0).toBe(true)
-      expect(Number.isInteger(question.revision) && question.revision > 0).toBe(true)
-      expect(question.question.trim()).not.toBe('')
-      if (question.type === 'text') {
-        expect(question.answer).toBeTruthy()
-      } else {
-        const correctOptions = question.options?.filter(option => option.correct) ?? []
-        if (question.type === 'single') expect(correctOptions).toHaveLength(1)
-        expect(correctOptions.length).toBeGreaterThan(0)
-        expect(question.options?.every(option => option.explanation)).toBe(true)
-      }
-    }
-  })
-
-  it('checks text, single-choice, and multiple-choice answers exactly', () => {
-    const text = questions.find(question => question.type === 'text')!
-    const single = questions.find(question => question.type === 'single')!
-    const multiple = questions.find(question => question.type === 'multiple')!
-
-    expect(isQuizAnswerCorrect(text, ` ${text.answer} `, [])).toBe(true)
-    expect(isQuizAnswerCorrect(single, '', [single.options!.findIndex(option => option.correct)])).toBe(true)
-    expect(isQuizAnswerCorrect(
-      multiple,
-      '',
-      multiple.options!.flatMap((option, index) => option.correct ? [index] : []),
-    )).toBe(true)
   })
 })

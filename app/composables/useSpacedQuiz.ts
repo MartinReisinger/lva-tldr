@@ -5,8 +5,9 @@ import {
   quizTotals,
   recordQuizAnswer,
   selectNextQuestion,
+  shuffleUnseenQuestionOrder,
 } from '#shared/utils/spacedQuiz'
-import { isQuizAnswerCorrect } from '#shared/utils/quizAnswer'
+import { isQuizAnswerCorrect, shuffledOptionIndices } from '#shared/utils/quizAnswer'
 import {
   mergeQuizProgress,
   migrateLegacyQuizProgress,
@@ -33,6 +34,7 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
   const progress = ref<QuizProgress>(createQuizProgress(questionIds, undefined, revisions))
   const ready = ref(false)
   const selected = ref<number[]>([])
+  const optionOrder = ref<number[]>([])
   const textAnswer = ref('')
   const checked = ref(false)
   const wasCorrect = ref(false)
@@ -51,7 +53,9 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
     : null)
   const totals = computed(() => quizTotals(progress.value))
   const complete = computed(() => totals.value.completed === questionIds.length)
-  const percentage = computed(() => Math.round(totals.value.completed / questionIds.length * 100))
+  const percentage = computed(() => Math.round(
+    totals.value.masterySteps / (questionIds.length * 2) * 100,
+  ))
   const hasAnswer = computed(() => currentQuestion.value?.type === 'text'
     ? textAnswer.value.trim().length > 0
     : selected.value.length > 0)
@@ -63,6 +67,9 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
 
   function resetAnswer() {
     selected.value = []
+    optionOrder.value = currentQuestion.value
+      ? shuffledOptionIndices(currentQuestion.value)
+      : []
     textAnswer.value = ''
     checked.value = false
     wasCorrect.value = false
@@ -72,6 +79,11 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
   function chooseNext() {
     progress.value.currentQuestionId = selectNextQuestion(progress.value, questionIds)
     resetAnswer()
+    persist()
+  }
+
+  function shuffleUnseen() {
+    progress.value.questionOrder = shuffleUnseenQuestionOrder(progress.value)
     persist()
   }
 
@@ -144,9 +156,11 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
       auth.value = await $fetch<QuizAuthStatus>('/api/quiz/auth')
       if (!auth.value.user) return
       syncState.value = 'syncing'
+      const previousQuestionId = progress.value.currentQuestionId
       const response = await $fetch<{ progress: QuizProgress | null }>(`/api/quiz/${options.quizId}`)
       progress.value = mergeQuizProgress(progress.value, response.progress, questionIds, revisions)
       ensureFreshQuestion()
+      if (progress.value.currentQuestionId !== previousQuestionId) resetAnswer()
       saveLocal()
       await upload()
     } catch {
@@ -187,6 +201,7 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
       }
     }
     ensureFreshQuestion()
+    resetAnswer()
     ready.value = true
     saveLocal()
     await refreshAuthAndSync()
@@ -196,7 +211,8 @@ export function useSpacedQuiz(options: SpacedQuizOptions) {
 
   return {
     auth, checked, chooseNext, complete, currentQuestion, currentStats, hasAnswer,
-    history, percentage, progress, ready, resetProgress, selected, signOut, submit,
-    syncState, textAnswer, toggleOption, totals, wasCorrect, wasReview,
+    history, optionOrder, percentage, progress, ready, resetProgress, selected,
+    shuffleUnseen, signOut, submit, syncState, textAnswer, toggleOption, totals,
+    wasCorrect, wasReview,
   }
 }

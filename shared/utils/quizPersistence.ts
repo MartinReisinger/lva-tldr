@@ -79,6 +79,7 @@ export function mergeQuizProgress(
     .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
     .slice(-100)
   merged.recentIds = latest.recentIds
+  merged.questionOrder = latest.questionOrder
   merged.currentQuestionId = latest.currentQuestionId
   merged.updatedAt = new Date().toISOString()
   return merged

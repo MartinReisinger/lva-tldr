@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { QuizProgress, QuizQuestion } from '#shared/types/quiz'
+import { quizQuestionQueue } from '#shared/utils/spacedQuiz'
 
 const props = defineProps<{
   questions: QuizQuestion[]
@@ -11,7 +12,16 @@ const props = defineProps<{
   }
 }>()
 
-const emit = defineEmits<{ reset: [], signOut: [] }>()
+const emit = defineEmits<{ reset: [], shuffle: [], signOut: [] }>()
+const byId = computed(() => new Map(props.questions.map(question => [question.id, question])))
+const orderedQuestions = computed(() => quizQuestionQueue(
+  props.progress,
+  props.questions.map(question => question.id),
+).map(id => byId.value.get(id)).filter((question): question is QuizQuestion => Boolean(question)))
+const unseenCount = computed(() => props.questions.filter(question =>
+  props.progress.stats[question.id]?.attempts === 0
+    && question.id !== props.progress.currentQuestionId,
+).length)
 
 function status(question: QuizQuestion) {
   const record = props.progress.stats[question.id]
@@ -78,18 +88,36 @@ function statusClass(question: QuizQuestion) {
 
     <UCard>
       <div class="flex items-center justify-between gap-3">
-        <h2 class="text-sm font-semibold text-highlighted">Question progress</h2>
-        <span class="text-xs text-muted">{{ questions.length }} questions</span>
+        <div>
+          <h2 class="text-sm font-semibold text-highlighted">Question order</h2>
+          <p class="mt-0.5 text-xs text-muted">Current question, then the upcoming queue</p>
+        </div>
+        <UTooltip text="Shuffle questions you have not seen yet">
+          <UButton
+            aria-label="Shuffle unseen questions"
+            color="neutral"
+            icon="i-lucide-shuffle"
+            size="xs"
+            square
+            variant="ghost"
+            :disabled="unseenCount < 2"
+            @click="emit('shuffle')"
+          />
+        </UTooltip>
       </div>
       <div class="mt-3 max-h-[30rem] space-y-1 overflow-y-auto pr-1">
         <div
-          v-for="question in questions"
+          v-for="(question, index) in orderedQuestions"
           :key="question.id"
           class="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 text-xs"
           :class="question.id === progress.currentQuestionId ? 'bg-primary/10' : ''"
         >
-          <span class="font-medium text-toned">Q{{ question.id }}</span>
-          <span :class="statusClass(question)">{{ status(question) }}</span>
+          <span class="flex min-w-0 items-center gap-2 font-medium text-toned">
+            <span class="w-5 text-right tabular-nums text-dimmed">{{ index + 1 }}</span>
+            <span>Q{{ question.id }}</span>
+          </span>
+          <span v-if="question.id === progress.currentQuestionId" class="text-primary">Now</span>
+          <span v-else :class="statusClass(question)">{{ status(question) }}</span>
         </div>
       </div>
     </UCard>

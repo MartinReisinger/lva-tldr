@@ -68,7 +68,7 @@ Add `content/quizzes/<quiz-id>.json`. The quiz ID must contain only lowercase le
 
 - `quizId`: Stable identifier used by Nuxt Content, local storage, API routes, and SQLite.
 - `version`: Bank release metadata. Increment it for a meaningful bank-wide revision; it does not reset user progress by itself.
-- `questions`: Non-empty array of question objects.
+- `questions`: At least six question objects so five different questions can always separate repeated attempts.
 
 ### Fields shared by every question
 
@@ -113,8 +113,12 @@ The shared trainer automatically provides:
 
 - Two correct submissions to complete each question.
 - At least five different submitted questions between appearances.
-- Completed questions return as review questions when they are needed to preserve that spacing near the end of a quiz. Review results do not undo their completed status.
+- Priority for questions that do not currently have a correct answer; questions waiting for their second correct answer return later.
+- Completed questions return as review questions when needed to preserve spacing near the end. Review results do not undo their completed status.
 - A reset to streak `0/2` after a wrong unfinished submission.
+- A persistent question order that users can shuffle for questions they have not seen yet.
+- A fresh randomized answer-option order on every question appearance.
+- Keyboard controls: number keys select visible options or toggle their explanations, and Enter checks or advances.
 - Local browser persistence for anonymous users.
 - Optional Google synchronization when configured.
 - Conflict-safe merging between local and synchronized progress.
@@ -136,6 +140,7 @@ Also add focused unit coverage for bank-specific assumptions such as question co
 Review this checklist:
 
 - The filename and `quizId` match.
+- The bank contains at least six questions.
 - Question IDs are unique and stable.
 - Every question has `revision: 1` initially.
 - Text questions have an `answer`.

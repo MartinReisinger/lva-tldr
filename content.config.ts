@@ -39,7 +39,7 @@ export default defineContentConfig({
       schema: z.object({
         quizId: z.string().regex(/^[a-z0-9-]{1,64}$/),
         version: z.number().int().positive(),
-        questions: z.array(quizQuestion).min(1),
+        questions: z.array(quizQuestion).min(6),
       }),
     }),
   },
