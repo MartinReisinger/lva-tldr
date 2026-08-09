@@ -14,6 +14,8 @@ const t = computed(() => {
       analyticsText2:
         " zur anonymen Besucherstatistik. GoatCounter speichert keine personenbezogenen Daten und setzt keine Cookies. Weitere Informationen: ",
       revealEmail: "anzeigen",
+      openSource: "Open Source",
+      openSourceText: "Diese Website ist Open Source. Den Quellcode finden Sie auf ",
     };
   }
   return {
@@ -26,6 +28,8 @@ const t = computed(() => {
     analyticsText2:
       " for anonymous visitor statistics. GoatCounter does not store any personal data and does not set cookies. Further information: ",
     revealEmail: "show",
+    openSource: "Open Source",
+    openSourceText: "This website is open source. You can find the source code on ",
   };
 });
 </script>
@@ -76,6 +80,23 @@ const t = computed(() => {
           target="_blank"
         >
           goatcounter.com/help/privacy
+        </a>
+      </p>
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <p class="font-semibold">{{ t.openSource }}</p>
+      </template>
+      <p>
+        {{ t.openSourceText }}
+        <a
+          class="text-primary underline"
+          href="https://github.com/MartinReisinger/lva-tldr"
+          target="_blank"
+          rel="noreferrer"
+        >
+          github.com/MartinReisinger/lva-tldr
         </a>
       </p>
     </UCard>
