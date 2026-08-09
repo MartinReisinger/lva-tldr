@@ -6,14 +6,9 @@ const props = defineProps<{
   questions: QuizQuestion[]
   progress: QuizProgress
   canShuffle: boolean
-  syncState: 'local' | 'syncing' | 'synced' | 'error'
-  auth: {
-    enabled: boolean
-    user: null | { name: string, email: string, avatar?: string }
-  }
 }>()
 
-const emit = defineEmits<{ reset: [], shuffle: [], signOut: [] }>()
+const emit = defineEmits<{ reset: [], shuffle: [] }>()
 const byId = computed(() => new Map(props.questions.map(question => [question.id, question])))
 const orderedQuestions = computed(() => quizQuestionQueue(
   props.progress,
@@ -40,49 +35,6 @@ function statusClass(question: QuizQuestion) {
 
 <template>
   <aside class="space-y-4">
-    <UCard>
-      <div class="flex items-center gap-3">
-        <UAvatar
-          v-if="auth.user"
-          :src="auth.user.avatar"
-          :alt="auth.user.name"
-          size="sm"
-        />
-        <UIcon v-else name="i-lucide-hard-drive" class="size-5 text-primary" />
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-medium text-highlighted">
-            {{ auth.user?.name ?? 'Saved on this device' }}
-          </p>
-          <p class="truncate text-xs text-muted">
-            <template v-if="auth.user">
-              {{ syncState === 'syncing' ? 'Syncing…' : syncState === 'error' ? 'Sync failed; local copy is safe' : 'Synced with Google' }}
-            </template>
-            <template v-else>Anonymous local progress</template>
-          </p>
-        </div>
-      </div>
-      <div class="mt-4">
-        <UButton
-          v-if="auth.enabled && !auth.user"
-          to="/auth/google"
-          external
-          block
-          color="neutral"
-          icon="i-lucide-log-in"
-          label="Sign in with Google"
-          variant="outline"
-        />
-        <UButton
-          v-else-if="auth.user"
-          block
-          color="neutral"
-          label="Sign out"
-          variant="ghost"
-          @click="emit('signOut')"
-        />
-      </div>
-    </UCard>
-
     <UCard>
       <div class="flex items-center justify-between gap-3">
         <div>

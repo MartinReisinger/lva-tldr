@@ -36,11 +36,18 @@ async function answerCurrentQuestion(page: import('@playwright/test').Page) {
   await form.getByRole('button', { name: 'Check answer' }).click()
 }
 
+async function finishOnboarding(page: import('@playwright/test').Page) {
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await page.getByRole('button', { name: 'Got it' }).click()
+}
+
 test('persists partial mastery and always spaces repeated questions', async ({ page }) => {
   await page.goto('/computer-graphics/quiz')
   await waitForHydration(page)
   await expect(page.getByText('Two correct answers, spaced apart')).toBeVisible()
-  await page.getByRole('button', { name: 'Got it' }).click()
+  await finishOnboarding(page)
+  await expect(page.getByText('Saved on this device')).toHaveCount(0)
 
   const firstId = await currentQuestionId(page)
   await answerCurrentQuestion(page)
@@ -66,6 +73,17 @@ test('persists partial mastery and always spaces repeated questions', async ({ p
     await page.getByRole('button', { name: 'Next question' }).click()
   }
   expect(intervening.size).toBe(5)
+})
+
+test('reopens the multi-step onboarding from How it works', async ({ page }) => {
+  await page.goto('/computer-graphics/quiz')
+  await waitForHydration(page)
+  await finishOnboarding(page)
+
+  await page.getByRole('button', { name: 'How it works' }).click()
+  await expect(page.getByText('Two correct answers, spaced apart')).toBeVisible()
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await expect(page.getByText('Saved on this device')).toBeVisible()
 })
 
 test('supports keyboard selection, explanations, and advancing', async ({ page }) => {
