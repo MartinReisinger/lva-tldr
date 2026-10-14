@@ -16,8 +16,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
+ENV NUXT_QUIZ_DATABASE_PATH=/app/.data/quiz-progress.sqlite
 
 COPY --from=builder /app/.output ./.output
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/docker-entrypoint.sh"]
 
 EXPOSE 3000
 

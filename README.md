@@ -115,9 +115,16 @@ deploy/vps/compose.yml  VPS container definition
 
 ## Docker
 
+Coolify configuration and the unresolved Forgejo mirror/volume prerequisites
+are documented in [COOLIFY_MIGRATION.md](COOLIFY_MIGRATION.md). Deployment is
+manual-only. The existing quiz database must be mounted at `/app/.data` before
+starting the image; the entrypoint rejects missing or empty databases.
+Local development still initializes its database normally.
+
 ```bash
 docker build -t lva-tldr .
-docker run --rm -p 3000:3000 lva-tldr
+# Supply an existing test copy of quiz-progress.sqlite, never the live VPS data.
+docker run --rm -p 3000:3000 -v "$PWD/.data:/app/.data" lva-tldr
 ```
 
 The production container runs the Nitro output with Node.js 24.
