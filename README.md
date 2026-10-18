@@ -115,9 +115,14 @@ deploy/vps/compose.yml  VPS container definition
 
 ## Docker
 
-Coolify configuration and the unresolved Forgejo mirror/volume prerequisites
-are documented in [COOLIFY_MIGRATION.md](COOLIFY_MIGRATION.md). Deployment is
-manual-only. The existing quiz database must be mounted at `/app/.data` before
+The established GitHub Actions deployment is restored locally. Pushes to `main`
+and manual runs build the Dockerfile, push to GHCR, and deploy over SSH as `deploy`.
+Secrets remain `SSH_PRIVATE_KEY` and `SSH_HOST`; no Forgejo mirror is required.
+The workflow installs the Compose template and waits for readiness.
+An existing `.env` and `lva-tldr_quiz-data` volume with `quiz-progress.sqlite` are required.
+The live legacy container currently has no persistent quiz volume. Resolve that
+prerequisite before approving a deployment of the current image; do not substitute a development DB.
+Push and production changes require Martin's approval. The existing quiz database must be mounted at `/app/.data` before
 starting the image; the entrypoint rejects missing or empty databases.
 Local development still initializes its database normally.
 
