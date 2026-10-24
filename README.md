@@ -95,6 +95,12 @@ Render a bank from a topic Markdown file with:
 
 The shared trainer completes a question after two correct submissions, always keeps five different questions between attempts, and prioritizes questions without a current correct answer. Answer options are randomized on each appearance; shuffling deals a new current question and reorders the unseen queue. A wrong answer resets the unfinished streak. Increment a question's `revision` when its expected answer changes; only that question's saved mastery is reset.
 
+## Contact address
+
+Set `NUXT_PUBLIC_CONTACT_EMAIL` in the ignored `.env` file. Production Compose passes it to Nuxt at runtime.
+The address appears only in the Impressum after clicking to reveal it; the privacy page links to the Impressum.
+The contact address is public website data, so use a project mailbox rather than a personal address.
+
 ## Optional quiz sync
 
 Quiz progress is always saved locally in the browser. Google sign-in optionally synchronizes it between devices. Copy `.env.example` to `.env` and configure a Google OAuth web client plus a session password of at least 32 characters. The authorized redirect URI is `/auth/google` on the deployed origin.

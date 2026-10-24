@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    public: { contactEmail: "" },
     session: {
       name: "lva-tldr-session",
       cookie: {

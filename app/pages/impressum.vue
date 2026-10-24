@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const locale = useLocale();
+const config = useRuntimeConfig();
 const emailRevealed = ref(false);
 
 const t = computed(() => {
@@ -52,18 +53,18 @@ const t = computed(() => {
       <p>
         E-Mail:
         <button
-          v-if="!emailRevealed"
+          v-if="!emailRevealed && config.public.contactEmail"
           class="text-primary underline cursor-pointer hover:text-primary/80"
           @click="emailRevealed = true"
         >
           {{ t.revealEmail }}
         </button>
         <a
-          v-else
+          v-else-if="config.public.contactEmail"
           class="text-primary underline"
-          href="mailto:contact@example.invalid"
+          :href="`mailto:${config.public.contactEmail}`"
         >
-          contact@example.invalid
+          {{ config.public.contactEmail }}
         </a>
       </p>
     </UCard>
